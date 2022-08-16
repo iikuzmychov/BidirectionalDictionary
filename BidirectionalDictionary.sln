@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidirectionalDictionary", "src\BidirectionalDictionary\BidirectionalDictionary.csproj", "{5E8040A5-9CBF-4057-ADF4-1F58EB682ED4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidirectionalDictionary.Tests", "src\tests\BidirectionalDictionary.Tests\BidirectionalDictionary.Tests.csproj", "{C2D580BB-AD60-46DF-B7BC-44BCE5540323}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidirectionalDictionary.Tests", "src\tests\BidirectionalDictionary.Tests\BidirectionalDictionary.Tests.csproj", "{252223B5-1141-4072-B429-183641E1DB30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{5E8040A5-9CBF-4057-ADF4-1F58EB682ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E8040A5-9CBF-4057-ADF4-1F58EB682ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E8040A5-9CBF-4057-ADF4-1F58EB682ED4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2D580BB-AD60-46DF-B7BC-44BCE5540323}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2D580BB-AD60-46DF-B7BC-44BCE5540323}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2D580BB-AD60-46DF-B7BC-44BCE5540323}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2D580BB-AD60-46DF-B7BC-44BCE5540323}.Release|Any CPU.Build.0 = Release|Any CPU
+		{252223B5-1141-4072-B429-183641E1DB30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{252223B5-1141-4072-B429-183641E1DB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{252223B5-1141-4072-B429-183641E1DB30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{252223B5-1141-4072-B429-183641E1DB30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
