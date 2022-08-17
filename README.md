@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 var capitalCountryDictionary = new BidirectionalDictionary<string, string>()
 {
-    { "Italy", "Rome" },
-    { "Mumbai", "India" },
-    { "USA", "Washington, D.C." },
+    ["Italy"]  = "Rome",
+    ["Mumbai"] = "India",
+    ["USA"]    = "Washington, D.C.",
 };
 
 var captial = capitalCountryDictionary["Italy"]); // "Rome"
