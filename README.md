@@ -5,13 +5,13 @@
 ```cs
 using System.Collections.Generic;
 
-var capitalCountryDictionary = new BidirectionalDictionary<string, string>()
+var countryCapitalDictionary = new BidirectionalDictionary<string, string>()
 {
-    ["Italy"]  = "Rome",
-    ["Mumbai"] = "India",
-    ["USA"]    = "Washington, D.C.",
+    ["Italy"] = "Rome",
+    ["India"] = "Mumbai",
+    ["USA"]   = "Washington, D.C.",
 };
 
-var captial = capitalCountryDictionary["Italy"]); // "Rome"
-var country = capitalCountryDictionary.Inverse["Rome"]; // "Italy"
+var captial = countryCapitalDictionary["Italy"]); // "Rome"
+var country = countryCapitalDictionary.Inverse["Rome"]; // "Italy"
 ```
