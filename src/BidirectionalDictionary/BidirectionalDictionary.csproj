@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <nullable>enable</nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Ihor Kuzmychov (iiKuzmychov)</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
