@@ -2,7 +2,7 @@
 
 # BidirectionalDictionary
 
-The **bidirectional dictionary** is a dictionary with non-null unique values, that provide access to an inverse dictionary.
+The **bidirectional dictionary** is a dictionary with non-null unique values that provides access to an inverse dictionary.
 
 ## Example
 
