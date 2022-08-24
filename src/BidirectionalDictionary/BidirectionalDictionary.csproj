@@ -5,6 +5,11 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Ihor Kuzmychov (iiKuzmychov)</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Title>BidirectionalDictionary</Title>
+    <Description>The bidirectional dictionary is a dictionary with non-null unique values, that provide access to an inverse dictionary.</Description>
+    <PackageProjectUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</RepositoryUrl>
+    <PackageTags>bidirectional;bidirect;bi;bidictionary;bimap;twoway;dictionary;map</PackageTags>
   </PropertyGroup>
 
 </Project>
