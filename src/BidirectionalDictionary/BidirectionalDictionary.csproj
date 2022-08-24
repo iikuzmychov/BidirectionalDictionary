@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Ihor Kuzmychov (iiKuzmychov)</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -12,4 +14,6 @@
     <PackageTags>bidirectional;bidirect;bi;bidictionary;bimap;twoway;dictionary;map</PackageTags>
   </PropertyGroup>
 
+  
+  
 </Project>

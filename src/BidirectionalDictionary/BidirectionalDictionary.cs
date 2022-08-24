@@ -1,22 +1,16 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 
-#if NETSTANDARD2_1_OR_GREATER
-    #nullable enable
-#endif
-
 namespace System.Collections.Generic
 {
     [DebuggerDisplay("Count = {Count}")]
     public class BidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
-#if NETSTANDARD2_1_OR_GREATER
         where TKey : notnull
         where TValue : notnull
-#endif
     {
         protected readonly Dictionary<TKey, TValue> _baseDictionary;
 
-#region Properties
+        #region Properties
 
         public BidirectionalDictionary<TValue, TKey> Inverse { get; }
         public IEqualityComparer<TKey> KeyComparer { get; }
@@ -62,9 +56,9 @@ namespace System.Collections.Generic
             }
         }
 
-#endregion
+        #endregion
 
-#region Constructors
+        #region Constructors
 
         public BidirectionalDictionary() : this(new Dictionary<TKey, TValue>()) { }
 
@@ -72,28 +66,14 @@ namespace System.Collections.Generic
 
         public BidirectionalDictionary(IDictionary<TKey, TValue> dictionary)
             : this(new Dictionary<TKey, TValue>(dictionary)) { }
-
-#if NETSTANDARD2_1_OR_GREATER
         public BidirectionalDictionary(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
-#elif NETSTANDARD2_0
-        public BidirectionalDictionary(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
-#endif
             : this(new Dictionary<TKey, TValue>(keyComparer), valueComparer) { }
 
-#if NETSTANDARD2_1_OR_GREATER
         public BidirectionalDictionary(int capacity, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
-#elif NETSTANDARD2_0
-        public BidirectionalDictionary(int capacity, IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
-#endif
             : this(new Dictionary<TKey, TValue>(capacity, keyComparer), valueComparer) { }
 
-#if NETSTANDARD2_1_OR_GREATER
         public BidirectionalDictionary(IDictionary<TKey, TValue> dictionary,
             IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
-#elif NETSTANDARD2_0
-        public BidirectionalDictionary(IDictionary<TKey, TValue> dictionary,
-            IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
-#endif
             : this(new Dictionary<TKey, TValue>(dictionary, keyComparer), valueComparer) { }
 
         private BidirectionalDictionary(BidirectionalDictionary<TValue, TKey> inverse)
@@ -104,11 +84,7 @@ namespace System.Collections.Generic
             Inverse         = inverse;
         }
 
-#if NETSTANDARD2_1_OR_GREATER
         private BidirectionalDictionary(Dictionary<TKey, TValue> dictionary, IEqualityComparer<TValue>? valueComparer = null)
-#elif NETSTANDARD2_0
-        private BidirectionalDictionary(Dictionary<TKey, TValue> dictionary, IEqualityComparer<TValue> valueComparer = null)
-#endif
         {
             _baseDictionary = dictionary;
             KeyComparer     = dictionary.Comparer;
@@ -116,9 +92,9 @@ namespace System.Collections.Generic
             Inverse         = new BidirectionalDictionary<TValue, TKey>(this);
         }
 
-#endregion
+        #endregion
 
-#region Methods
+        #region Methods
 
         public void Add(TKey key, TValue value)
         {
@@ -235,6 +211,6 @@ namespace System.Collections.Generic
         IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
             => _baseDictionary.GetEnumerator();
 
-#endregion
+        #endregion
     }
 }
