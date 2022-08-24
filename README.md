@@ -14,7 +14,7 @@ var countryCapitalDictionary = new BidirectionalDictionary<string, string>()
     ["USA"]   = "Washington, D.C.",
 };
 
-var capital = countryCapitalDictionary["Italy"]); // "Rome"
+var capital = countryCapitalDictionary["Italy"]; // "Rome"
 var country = countryCapitalDictionary.Inverse["Rome"]; // "Italy"
 ```
 
