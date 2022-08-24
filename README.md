@@ -1,4 +1,4 @@
-[![Nuget](https://img.shields.io/nuget/v/BidirectionalMap)](https://www.nuget.org/packages/BidirectionalDictionary/)
+[![Nuget](https://img.shields.io/nuget/v/BidirectionalDictionary)](https://www.nuget.org/packages/BidirectionalDictionary/)
 
 # BidirectionalDictionary
 
