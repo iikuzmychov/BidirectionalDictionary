@@ -72,11 +72,43 @@ public partial class BidirectionalDictionaryTests
 
     [Fact]
     [Trait("Constructor", null)]
-    public void Constructor_NullSourceDictionary_ThrowsArgumentNullException()
+    public void Constructor_NullSourceIDictionary_ThrowsArgumentNullException()
     {
-        var dictionary = (Dictionary<char, int>?)null;
+        var dictionary = (IDictionary<char, int>?)null;
 
         Assert.Throws<ArgumentNullException>(() => _ = new BidirectionalDictionary<char, int>(dictionary!));
+    }
+
+    [Fact]
+    [Trait("Constructor", null)]
+    public void Constructor_FilledKeyValuePairsList_CreatesBiDictionaryFromSourceDictionary()
+    {
+        var list = new List<KeyValuePair<char, int>>
+        {
+            { new ('a', 1) },
+            { new ('b', 2) },
+        };
+
+        var biDictionary = new BidirectionalDictionary<char, int>(list);
+
+        Assert.Equal(list, biDictionary);
+        Assert.Equal(list.Select(pair => pair.Key), biDictionary.Keys);
+        Assert.Equal(list.Select(pair => pair.Value), biDictionary.Values);
+        Assert.Equal(EqualityComparer<char>.Default, biDictionary.KeyComparer);
+        Assert.Equal(EqualityComparer<int>.Default, biDictionary.ValueComparer);
+        Assert.Equal(list.Select(pair => pair.Key), biDictionary.Inverse.Values);
+        Assert.Equal(list.Select(pair => pair.Value), biDictionary.Inverse.Keys);
+        Assert.Equal(EqualityComparer<char>.Default, biDictionary.Inverse.ValueComparer);
+        Assert.Equal(EqualityComparer<int>.Default, biDictionary.Inverse.KeyComparer);
+    }
+
+    [Fact]
+    [Trait("Constructor", null)]
+    public void Constructor_NullKeyValuePairsEnumerable_ThrowsArgumentNullException()
+    {
+        var collection = (ICollection<KeyValuePair<char, int>>?)null;
+
+        Assert.Throws<ArgumentNullException>(() => _ = new BidirectionalDictionary<char, int>(collection!));
     }
 
     /*[Fact]

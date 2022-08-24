@@ -119,6 +119,20 @@ namespace System.Collections.Generic
             : this(new Dictionary<TKey, TValue>(dictionary)) { }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BidirectionalDictionary{TKey, TValue}"/> class
+        /// that contains elements copied from the specified <see cref="IEnumerable{T}"/>
+        /// and uses the default equality comparers.
+        /// </summary>
+        /// <param name="collection">The <see cref="IEnumerable{T}"/> whose elements are copied to the new <see cref="BidirectionalDictionary{TKey, TValue}"/>.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public BidirectionalDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection)
+#if NETSTANDARD2_1_OR_GREATER
+            : this(new Dictionary<TKey, TValue>(collection)) { }
+#elif NETSTANDARD2_0
+            : this(new Dictionary<TKey, TValue>(collection?.ToDictionary(pair => pair.Key, pair => pair.Value))) { }
+#endif
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BidirectionalDictionary{TKey, TValue}"/> class that is empty,
         /// has the default initial capacity, and uses the specified equality comparers.
         /// </summary>
@@ -155,6 +169,25 @@ namespace System.Collections.Generic
         public BidirectionalDictionary(IDictionary<TKey, TValue> dictionary,
             IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : this(new Dictionary<TKey, TValue>(dictionary, keyComparer), valueComparer) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BidirectionalDictionary{TKey, TValue}"/> class that
+        /// contains elements copied from the specified <see cref="IEnumerable{T}"/>, and uses the specified equality comparers.
+        /// </summary>
+        /// <param name="collection">The <see cref="IEnumerable{T}"/> whose elements are copied to the new <see cref="BidirectionalDictionary{TKey, TValue}"/>.</param>
+        /// <param name="keyComparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+        /// comparing keys, or null to use the default <see cref="IEqualityComparer{T}"/> for the type of the key.</param>
+        /// <param name="valueComparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+        /// comparing values, or null to use the default <see cref="IEqualityComparer{T}"/> for the type of the value.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public BidirectionalDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection,
+            IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+#if NETSTANDARD2_1_OR_GREATER
+            : this(new Dictionary<TKey, TValue>(collection, keyComparer), valueComparer) { }
+#elif NETSTANDARD2_0
+            : this(new Dictionary<TKey, TValue>(collection?.ToDictionary(pair => pair.Key, pair => pair.Value, keyComparer)),
+                  valueComparer) { }
+#endif
 
         private BidirectionalDictionary(BidirectionalDictionary<TValue, TKey> inverse)
         {
