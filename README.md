@@ -1,3 +1,5 @@
+[![Nuget](https://img.shields.io/nuget/v/BidirectionalMap)](https://www.nuget.org/packages/BidirectionalDictionary/)
+
 # BidirectionalDictionary
 
 The **bidirectional dictionary** is a dictionary with non-null unique values, that provide access to an inverse dictionary.
