@@ -13,7 +13,7 @@ namespace System.Collections.Generic
         #region Properties
 
         public BidirectionalDictionary<TValue, TKey> Inverse { get; }
-        public IEqualityComparer<TKey> KeyComparer { get; }
+        public IEqualityComparer<TKey> KeyComparer => _baseDictionary.Comparer;
         public IEqualityComparer<TValue> ValueComparer { get; }
         public int Count => _baseDictionary.Count;
         public ICollection<TKey> Keys => _baseDictionary.Keys;
@@ -66,6 +66,7 @@ namespace System.Collections.Generic
 
         public BidirectionalDictionary(IDictionary<TKey, TValue> dictionary)
             : this(new Dictionary<TKey, TValue>(dictionary)) { }
+
         public BidirectionalDictionary(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : this(new Dictionary<TKey, TValue>(keyComparer), valueComparer) { }
 
@@ -79,7 +80,6 @@ namespace System.Collections.Generic
         private BidirectionalDictionary(BidirectionalDictionary<TValue, TKey> inverse)
         {
             _baseDictionary = inverse._baseDictionary.ToDictionary(pair => pair.Value, pair => pair.Key, inverse.ValueComparer);
-            KeyComparer     = inverse.ValueComparer;
             ValueComparer   = inverse.KeyComparer;
             Inverse         = inverse;
         }
@@ -87,7 +87,6 @@ namespace System.Collections.Generic
         private BidirectionalDictionary(Dictionary<TKey, TValue> dictionary, IEqualityComparer<TValue>? valueComparer = null)
         {
             _baseDictionary = dictionary;
-            KeyComparer     = dictionary.Comparer;
             ValueComparer   = valueComparer ?? EqualityComparer<TValue>.Default;
             Inverse         = new BidirectionalDictionary<TValue, TKey>(this);
         }
