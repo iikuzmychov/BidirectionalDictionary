@@ -8,10 +8,19 @@
     <Authors>Ihor Kuzmychov (iiKuzmychov)</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Title>BidirectionalDictionary</Title>
-    <Description>The bidirectional dictionary is a dictionary with non-null unique values, that provide access to an inverse dictionary.</Description>
+    <Description>The bidirectional dictionary is a dictionary with non-null unique values that provides access to an inverse dictionary.</Description>
     <PackageProjectUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</RepositoryUrl>
     <PackageTags>bidirectional;bidirect;bi;bidictionary;bimap;twoway;dictionary;map</PackageTags>
+    <Version>1.0.1</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
   
 </Project>
