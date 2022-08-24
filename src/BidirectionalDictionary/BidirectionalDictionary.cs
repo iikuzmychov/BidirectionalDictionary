@@ -12,15 +12,45 @@ namespace System.Collections.Generic
 
         #region Properties
 
+        /// <summary>
+        /// Gets the inverse <see cref="BidirectionalDictionary{TKey,TValue}"/>.
+        /// </summary>
         public BidirectionalDictionary<TValue, TKey> Inverse { get; }
+
+        /// <summary>
+        /// Gets the <see cref="IEqualityComparer{T}"/> that is used to determine equality of keys for the dictionary.
+        /// </summary>
         public IEqualityComparer<TKey> KeyComparer => _baseDictionary.Comparer;
+
+        /// <summary>
+        /// Gets the <see cref="IEqualityComparer{T}"/> that is used to determine equality of values for the dictionary.
+        /// </summary>
         public IEqualityComparer<TValue> ValueComparer { get; }
+
+        /// <summary>
+        /// Gets the number of key/value pairs contained in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
+        /// </summary>
         public int Count => _baseDictionary.Count;
+
+        /// <summary>
+        /// Gets a collection containing the keys in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
+        /// </summary>
         public ICollection<TKey> Keys => _baseDictionary.Keys;
+
+        /// <summary>
+        /// Gets a collection containing the values in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
+        /// </summary>
         public ICollection<TValue> Values => _baseDictionary.Values;
-        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => _baseDictionary.Keys;
-        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => _baseDictionary.Values;
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
+
+        /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <param name="key">The key of the value to get or set.</param>
+        /// <returns>The value associated with the specified key. If the specified key is not found, a get operation throws a
+        /// <see cref="KeyNotFoundException"/>, and a set operation creates a new element with the specified key.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="KeyNotFoundException"></exception>
         public TValue this[TKey key]
         {
             get => _baseDictionary[key];
@@ -56,23 +86,72 @@ namespace System.Collections.Generic
             }
         }
 
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => _baseDictionary.Keys;
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => _baseDictionary.Values;
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
+
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BidirectionalDictionary{TKey, TValue}"/> class that is empty,
+        /// has the default initial capacity, and uses the default equality comparers.
+        /// </summary>
         public BidirectionalDictionary() : this(new Dictionary<TKey, TValue>()) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BidirectionalDictionary{TKey, TValue}"/> class that is empty,
+        /// has the specified initial capacity, and uses the default equality comparers.
+        /// </summary>
+        /// <param name="capacity">The initial number of elements that <see cref="BidirectionalDictionary{TKey, TValue}"/> can contain.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public BidirectionalDictionary(int capacity) : this(capacity, null, null) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BidirectionalDictionary{TKey, TValue}"/> class
+        /// that contains elements copied from the specified <see cref="IDictionary{TKey, TValue}"/>
+        /// and uses the default equality comparers.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="IDictionary{TKey, TValue}"/> whose elements are copied to the new <see cref="BidirectionalDictionary{TKey, TValue}"/>.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public BidirectionalDictionary(IDictionary<TKey, TValue> dictionary)
             : this(new Dictionary<TKey, TValue>(dictionary)) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BidirectionalDictionary{TKey, TValue}"/> class that is empty,
+        /// has the default initial capacity, and uses the specified equality comparers.
+        /// </summary>
+        /// <param name="keyComparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+        /// comparing keys, or null to use the default <see cref="IEqualityComparer{T}"/> for the type of the key.</param>
+        /// <param name="valueComparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+        /// comparing values, or null to use the default <see cref="IEqualityComparer{T}"/> for the type of the value.</param>
         public BidirectionalDictionary(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : this(new Dictionary<TKey, TValue>(keyComparer), valueComparer) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BidirectionalDictionary{TKey, TValue}"/> class that is empty,
+        /// has the specified initial capacity, and uses the specified equality comparers.
+        /// </summary>
+        /// <param name="capacity">The initial number of elements that <see cref="BidirectionalDictionary{TKey, TValue}"/> can contain.</param>
+        /// <param name="keyComparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+        /// comparing keys, or null to use the default <see cref="IEqualityComparer{T}"/> for the type of the key.</param>
+        /// <param name="valueComparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+        /// comparing values, or null to use the default <see cref="IEqualityComparer{T}"/> for the type of the value.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public BidirectionalDictionary(int capacity, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : this(new Dictionary<TKey, TValue>(capacity, keyComparer), valueComparer) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BidirectionalDictionary{TKey, TValue}"/> class that
+        /// contains elements copied from the specified <see cref="IDictionary{TKey, TValue}"/>, and uses the specified equality comparers.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="IDictionary{TKey, TValue}"/> whose elements are copied to the new <see cref="BidirectionalDictionary{TKey, TValue}"/>.</param>
+        /// <param name="keyComparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+        /// comparing keys, or null to use the default <see cref="IEqualityComparer{T}"/> for the type of the key.</param>
+        /// <param name="valueComparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+        /// comparing values, or null to use the default <see cref="IEqualityComparer{T}"/> for the type of the value.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public BidirectionalDictionary(IDictionary<TKey, TValue> dictionary,
             IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : this(new Dictionary<TKey, TValue>(dictionary, keyComparer), valueComparer) { }
@@ -95,6 +174,13 @@ namespace System.Collections.Generic
 
         #region Methods
 
+        /// <summary>
+        /// Adds the specified key and value to the dictionary.
+        /// </summary>
+        /// <param name="key">The key of the element to add.</param>
+        /// <param name="value">The value of the element to add.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public void Add(TKey key, TValue value)
         {
             if (key == null)
@@ -113,8 +199,25 @@ namespace System.Collections.Generic
             Inverse._baseDictionary.Add(value, key);
         }
 
+        /// <summary>
+        /// Removes the value with the specified key from the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
+        /// </summary>
+        /// <param name="key">The key of the element to remove.</param>
+        /// <returns><see langword="true"/> if the element is successfully found and removed; otherwise, <see langword="false"/>.
+        /// This method returns <see langword="false"/> if key is not found in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public bool Remove(TKey key) => Remove(key, out _);
 
+        /// <summary>
+        /// Removes the value with the specified key from the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
+        /// </summary>
+        /// <param name="key">The key of the element to remove.</param>
+        /// <param name="value">When this method returns, contains the value associated with the specified key,
+        /// if the key is found; otherwise, the default value for the type of the value parameter.
+        /// This parameter is passed uninitialized.</param>
+        /// <returns><see langword="true"/> if the element is successfully found and removed; otherwise, <see langword="false"/>.
+        /// This method returns <see langword="false"/> if key is not found in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public bool Remove(TKey key, out TValue value)
         {
             if (key == null)
@@ -130,16 +233,39 @@ namespace System.Collections.Generic
 #endif
         }
 
+        /// <summary>
+        /// Removes all keys and values from the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
+        /// </summary>
         public void Clear()
         {
             _baseDictionary.Clear();
             Inverse._baseDictionary.Clear();
         }
 
+        /// <summary>
+        /// Determines whether the <see cref="BidirectionalDictionary{TKey, TValue}"/> contains the specified key.
+        /// </summary>
+        /// <param name="key">The key to locate in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.</param>
+        /// <returns><see langword="true"/> if the <see cref="BidirectionalDictionary{TKey, TValue}"/> contains
+        /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
         public bool ContainsKey(TKey key) => _baseDictionary.ContainsKey(key);
 
+        /// <summary>
+        /// Determines whether the <see cref="BidirectionalDictionary{TKey, TValue}"/> contains the specified value.
+        /// </summary>
+        /// <param name="value">The value to locate in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.</param>
+        /// <returns><see langword="true"/> if the <see cref="BidirectionalDictionary{TKey, TValue}"/> contains
+        /// an element with the specified value; otherwise, <see langword="false"/>.</returns>
         public bool ContainsValue(TValue value) => Inverse.ContainsKey(value);
 
+        /// <summary>
+        /// Attempts to add the specified key and value to the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
+        /// </summary>
+        /// <param name="key">The key of the element to add.</param>
+        /// <param name="value">The value of the element to add.</param>
+        /// <returns><see langword="true"/> if the key/value pair was added to the <see cref="BidirectionalDictionary{TKey, TValue}"/>
+        /// successfully; otherwise, <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public bool TryAdd(TKey key, TValue value)
         {
             if (key == null)
@@ -157,6 +283,15 @@ namespace System.Collections.Generic
             return true;
         }
 
+        /// <summary>
+        /// Gets the value associated with the specified key.
+        /// </summary>
+        /// <param name="key">The key of the value to get.</param>
+        /// <param name="value">When this method returns, contains the value associated with the specified key,
+        /// if the key is found; otherwise, the default value for the type of the value parameter.
+        /// This parameter is passed uninitialized.</param>
+        /// <returns><see langword="true"/> if the <see cref="BidirectionalDictionary{TKey, TValue}"/> contains
+        /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
         public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value);
 
         /*public void EnsureCapacity(int capacity)
