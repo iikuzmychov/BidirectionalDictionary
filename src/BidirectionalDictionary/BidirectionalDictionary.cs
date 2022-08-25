@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace System.Collections.Generic
@@ -35,12 +36,12 @@ namespace System.Collections.Generic
         /// <summary>
         /// Gets a collection containing the keys in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
         /// </summary>
-        public ICollection<TKey> Keys => _baseDictionary.Keys;
+        public Dictionary<TKey, TValue>.KeyCollection Keys => _baseDictionary.Keys;
 
         /// <summary>
         /// Gets a collection containing the values in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
         /// </summary>
-        public ICollection<TValue> Values => _baseDictionary.Values;
+        public Dictionary<TKey, TValue>.ValueCollection Values => _baseDictionary.Values;
 
         /// <summary>
         /// Gets or sets the value associated with the specified key.
@@ -86,8 +87,10 @@ namespace System.Collections.Generic
             }
         }
 
-        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => _baseDictionary.Keys;
-        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => _baseDictionary.Values;
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys => Keys;
+        ICollection<TValue> IDictionary<TKey, TValue>.Values => Values;
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
         bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
         #endregion
