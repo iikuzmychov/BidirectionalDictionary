@@ -3,6 +3,11 @@ using System.Linq;
 
 namespace System.Collections.Generic
 {
+    /// <summary>
+    /// Represents a dictionary with non-null unique values that provides access to an inverse dictionary.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the keys in the dictionary.</typeparam>
+    /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
     [DebuggerTypeProxy(typeof(IDictionaryDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
     public class BidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
