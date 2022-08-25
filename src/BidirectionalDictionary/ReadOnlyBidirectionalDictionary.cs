@@ -2,6 +2,7 @@
 
 namespace System.Collections.Generic
 {
+    [DebuggerTypeProxy(typeof(IDictionaryDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
         where TKey : notnull
@@ -56,10 +57,19 @@ namespace System.Collections.Generic
             set => throw new NotSupportedException();
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ICollection<TKey> IDictionary<TKey, TValue>.Keys => Keys;
+        
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ICollection<TValue> IDictionary<TKey, TValue>.Values => Values;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
+        
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
+        
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
         #endregion
