@@ -49,17 +49,18 @@ namespace System.Collections.ObjectModel
         public Dictionary<TKey, TValue>.ValueCollection Values => _baseDictionary.Values;
 
         /// <summary>
-        /// Gets or sets the value associated with the specified key.
+        /// Gets the value associated with the specified key.
         /// </summary>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key. If the specified key is not found, a get operation throws a
-        /// <see cref="KeyNotFoundException"/>. A set operation is always throws <see cref="NotSupportedException"/>.</returns>
+        /// <see cref="KeyNotFoundException"/>.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="KeyNotFoundException"></exception>
-        /// <exception cref="NotSupportedException"></exception>
-        public TValue this[TKey key]
+        public TValue this[TKey key] => _baseDictionary[key];
+
+        TValue IDictionary<TKey, TValue>.this[TKey key]
         {
-            get => _baseDictionary[key];
+            get => this[key];
             set => throw new NotSupportedException();
         }
 
