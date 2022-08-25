@@ -5,7 +5,7 @@
 
 The **bidirectional dictionary** is a dictionary with non-null unique values that provides access to an inverse dictionary.
 
-## Example
+### Example #1
 
 ```cs
 using System.Collections.Generic;
@@ -19,6 +19,18 @@ var countryCapitalDictionary = new BidirectionalDictionary<string, string>()
 
 var capital = countryCapitalDictionary["Italy"]; // "Rome"
 var country = countryCapitalDictionary.Inverse["Rome"]; // "Italy"
+```
+
+Also, you can create a read-only instance of a bidirectional dictionary.
+
+### Example #2
+
+```cs
+using System.Collections.ObjectModel;
+
+var readOnlyDictionary = new ReadOnlyBidirectionalDictionary<string, string>(countryCapitalDictionary);
+var capital            = readOnlyDictionary["Italy"]; // "Rome"
+var country            = readOnlyDictionary.Inverse["Rome"]; // "Italy"
 ```
 
 ## License
