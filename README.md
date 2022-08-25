@@ -5,6 +5,8 @@
 
 The **bidirectional dictionary** is a dictionary with non-null unique values that provides access to an inverse dictionary.
 
+## Example
+
 ```cs
 using System.Collections.Generic;
 
