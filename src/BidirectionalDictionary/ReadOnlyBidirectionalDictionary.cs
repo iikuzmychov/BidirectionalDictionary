@@ -3,6 +3,11 @@ using System.Diagnostics;
 
 namespace System.Collections.ObjectModel
 {
+    /// <summary>
+    /// Represents a read-only dictionary with non-null unique values that provides access to an inverse read-only dictionary.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the keys in the dictionary.</typeparam>
+    /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
     [DebuggerTypeProxy(typeof(IDictionaryDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
