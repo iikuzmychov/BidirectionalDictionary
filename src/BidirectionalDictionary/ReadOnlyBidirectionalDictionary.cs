@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.ConstrainedExecution;
 
 namespace System.Collections.ObjectModel
 {
@@ -87,12 +88,6 @@ namespace System.Collections.ObjectModel
 
         #region Methods
 
-        public void Add(TKey key, TValue value) => throw new NotSupportedException();
-
-        public bool Remove(TKey key) => throw new NotSupportedException();
-
-        public void Clear() => throw new NotSupportedException();
-
         /// <summary>
         /// Determines whether the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/> contains the specified key.
         /// </summary>
@@ -122,9 +117,15 @@ namespace System.Collections.ObjectModel
 
         public IEnumerator GetEnumerator() => _baseDictionary.GetEnumerator();
 
+        void IDictionary<TKey, TValue>.Add(TKey key, TValue value) => throw new NotSupportedException();
+
+        bool IDictionary<TKey, TValue>.Remove(TKey key) => throw new NotSupportedException();
+
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => throw new NotSupportedException();
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) => throw new NotSupportedException();
+
+        void ICollection<KeyValuePair<TKey, TValue>>.Clear() => throw new NotSupportedException();
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) =>
             ((ICollection<KeyValuePair<TKey, TValue>>)_baseDictionary).Contains(item);
