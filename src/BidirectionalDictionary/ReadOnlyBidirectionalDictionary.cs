@@ -85,10 +85,10 @@ namespace System.Collections.ObjectModel
             Inverse         = new ReadOnlyBidirectionalDictionary<TValue, TKey>(this);
         }
 
-        private ReadOnlyBidirectionalDictionary(ReadOnlyBidirectionalDictionary<TValue, TKey> readOnlyBidirectionalDictionary)
+        private ReadOnlyBidirectionalDictionary(ReadOnlyBidirectionalDictionary<TValue, TKey> inverse)
         {
-            _baseDictionary = readOnlyBidirectionalDictionary._baseDictionary.Inverse;
-            Inverse         = readOnlyBidirectionalDictionary;
+            _baseDictionary = inverse._baseDictionary.Inverse;
+            Inverse         = inverse;
         }
 
         #endregion
