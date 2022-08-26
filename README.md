@@ -26,7 +26,8 @@ Also, you can create a read-only instance of a bidirectional dictionary:
 ```cs
 using System.Collections.ObjectModel;
 
-var readOnlyDictionary = new ReadOnlyBidirectionalDictionary<string, string>(countryCapitalDictionary);
+var readOnlyDictionary        = new ReadOnlyBidirectionalDictionary<string, string>(countryCapitalDictionary);
+var readOnlyInverseDictionary = readOnlyDictionary.Inverse;
 ```
 
 ## License
