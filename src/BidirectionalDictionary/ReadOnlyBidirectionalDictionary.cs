@@ -24,16 +24,6 @@ namespace System.Collections.ObjectModel
         public ReadOnlyBidirectionalDictionary<TValue, TKey> Inverse { get; }
 
         /// <summary>
-        /// Gets the <see cref="IEqualityComparer{T}"/> that is used to determine equality of keys for the dictionary.
-        /// </summary>
-        public IEqualityComparer<TKey> KeyComparer => _baseDictionary.KeyComparer;
-
-        /// <summary>
-        /// Gets the <see cref="IEqualityComparer{T}"/> that is used to determine equality of values for the dictionary.
-        /// </summary>
-        public IEqualityComparer<TValue> ValueComparer => _baseDictionary.ValueComparer;
-
-        /// <summary>
         /// Gets the number of key/value pairs contained in the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/>.
         /// </summary>
         public int Count => _baseDictionary.Count;
@@ -83,10 +73,22 @@ namespace System.Collections.ObjectModel
 
         #region Constructors
 
-        public ReadOnlyBidirectionalDictionary(BidirectionalDictionary<TKey, TValue> dictionary)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/> class
+        /// that is a wrapper around the specified bidirectional dictionary.
+        /// </summary>
+        /// <param name="bidirectionalDictionary">The bidirectional dictionary to wrap.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public ReadOnlyBidirectionalDictionary(BidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
         {
-            _baseDictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
-            Inverse         = new ReadOnlyBidirectionalDictionary<TValue, TKey>(dictionary.Inverse);
+            _baseDictionary = bidirectionalDictionary ?? throw new ArgumentNullException(nameof(bidirectionalDictionary));
+            Inverse         = new ReadOnlyBidirectionalDictionary<TValue, TKey>(this);
+        }
+
+        private ReadOnlyBidirectionalDictionary(ReadOnlyBidirectionalDictionary<TValue, TKey> readOnlyBidirectionalDictionary)
+        {
+            _baseDictionary = readOnlyBidirectionalDictionary._baseDictionary.Inverse;
+            Inverse         = readOnlyBidirectionalDictionary;
         }
 
         #endregion
