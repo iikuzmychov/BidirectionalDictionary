@@ -67,7 +67,7 @@ namespace System.Collections.ObjectModel
         IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
         
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => true;
 
         #endregion
 
