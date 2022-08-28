@@ -31,4 +31,4 @@ var readOnlyDictionary = new ReadOnlyBidirectionalDictionary<string, string>(cou
 
 ## License
 
-The project is licensed under the [MIT](https://github.com/iiKuzmychov/BidirectionalDictionary/blob/master/LICENSE.md) license.
+BidirectionalDictionary is licensed under the [MIT](https://github.com/iiKuzmychov/BidirectionalDictionary/blob/master/LICENSE.md) license.
