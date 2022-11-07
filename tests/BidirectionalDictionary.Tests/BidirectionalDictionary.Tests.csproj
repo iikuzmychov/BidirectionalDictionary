@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BidirectionalDictionary\BidirectionalDictionary.csproj" />
+    <ProjectReference Include="..\..\src\BidirectionalDictionary\BidirectionalDictionary.csproj" />
   </ItemGroup>
 
 </Project>
