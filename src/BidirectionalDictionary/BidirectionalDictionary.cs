@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace System.Collections.Generic
@@ -361,7 +362,13 @@ namespace System.Collections.Generic
             _baseDictionary.TrimExcess(capacity);
             Inverse._baseDictionary.TrimExcess(capacity);
         }*/
-        
+
+        /// <summary>
+        /// Returns a read-only <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"></see> wrapper for the current dictionary.
+        /// </summary>
+        /// <returns>An object that acts as a read-only wrapper around the current <see cref="BidirectionalDictionary{TKey, TValue}"></see>.</returns>
+        public ReadOnlyBidirectionalDictionary<TKey, TValue> AsReadOnly() => new ReadOnlyBidirectionalDictionary<TKey, TValue>(this);
+
         public IEnumerator GetEnumerator() => _baseDictionary.GetEnumerator();
 
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
