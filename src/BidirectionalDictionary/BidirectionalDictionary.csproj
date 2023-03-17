@@ -15,7 +15,7 @@
     <PackageProjectUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</RepositoryUrl>
     <PackageTags>bidirectional;bidirect;bi;bidictionary;bimap;two-way;two;way;dictionary;map;readonly;read-only</PackageTags>
-    <Version>1.1.1</Version>
+    <Version>1.2.0</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
