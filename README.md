@@ -1,4 +1,5 @@
-[![Nuget](https://img.shields.io/nuget/v/BidirectionalDictionary)](https://www.nuget.org/packages/BidirectionalDictionary/)
+[![NuGet](https://img.shields.io/nuget/v/BidirectionalDictionary)](https://www.nuget.org/packages/BidirectionalDictionary/)
+[![Downloads](https://img.shields.io/nuget/dt/BidirectionalDictionary)](https://www.nuget.org/packages/BidirectionalDictionary/)
 [![License](https://img.shields.io/github/license/iiKuzmychov/BidirectionalDictionary)](https://github.com/iiKuzmychov/BidirectionalDictionary/blob/master/LICENSE.md)
 
 # BidirectionalDictionary
