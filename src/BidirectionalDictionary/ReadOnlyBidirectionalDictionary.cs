@@ -14,7 +14,7 @@ namespace System.Collections.ObjectModel
         where TKey : notnull
         where TValue : notnull
     {
-        private readonly BidirectionalDictionary<TKey, TValue> _baseDictionary;
+        private readonly IBidirectionalDictionary<TKey, TValue> _baseDictionary;
 
         #region Properties
 
@@ -31,12 +31,12 @@ namespace System.Collections.ObjectModel
         /// <summary>
         /// Gets a collection containing the keys in the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/>.
         /// </summary>
-        public Dictionary<TKey, TValue>.KeyCollection Keys => _baseDictionary.Keys;
+        public ICollection<TKey> Keys => _baseDictionary.Keys;
 
         /// <summary>
         /// Gets a collection containing the values in the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/>.
         /// </summary>
-        public Dictionary<TKey, TValue>.ValueCollection Values => _baseDictionary.Values;
+        public ICollection<TValue> Values => _baseDictionary.Values;
 
         /// <summary>
         /// Gets the value associated with the specified key.
@@ -86,7 +86,7 @@ namespace System.Collections.ObjectModel
         /// </summary>
         /// <param name="bidirectionalDictionary">The bidirectional dictionary to wrap.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public ReadOnlyBidirectionalDictionary(BidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
+        public ReadOnlyBidirectionalDictionary(IBidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
         {
             _baseDictionary = bidirectionalDictionary ?? throw new ArgumentNullException(nameof(bidirectionalDictionary));
             Inverse         = new ReadOnlyBidirectionalDictionary<TValue, TKey>(this);
