@@ -5,5 +5,6 @@
         where TValue : notnull
     {
         public IReadOnlyBidirectionalDictionary<TValue, TKey> Inverse { get; }
+        public bool ContainsValue(TValue value);
     }
 }
