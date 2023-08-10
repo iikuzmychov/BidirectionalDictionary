@@ -2,13 +2,13 @@
 
 namespace System.Collections.Generic
 {
-    internal sealed class IDictionaryDebugView<TKey, TValue>
+    internal sealed class DictionaryDebugView<TKey, TValue>
         where TKey : notnull
         where TValue : notnull
     {
-        private IDictionary<TKey, TValue> _dictionary;
+        private readonly IDictionary<TKey, TValue> _dictionary;
 
-        public IDictionaryDebugView(IDictionary<TKey, TValue> dictionary)
+        public DictionaryDebugView(IDictionary<TKey, TValue> dictionary)
         {
             _dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
         }
