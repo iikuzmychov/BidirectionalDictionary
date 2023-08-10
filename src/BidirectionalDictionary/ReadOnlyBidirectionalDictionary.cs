@@ -48,6 +48,7 @@ namespace System.Collections.ObjectModel
         /// <exception cref="KeyNotFoundException"></exception>
         public TValue this[TKey key] => _baseDictionary[key];
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TValue IDictionary<TKey, TValue>.this[TKey key]
         {
             get => this[key];
