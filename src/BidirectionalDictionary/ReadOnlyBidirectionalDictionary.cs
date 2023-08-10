@@ -10,7 +10,7 @@ namespace System.Collections.ObjectModel
     /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
     [DebuggerTypeProxy(typeof(DictionaryDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
+    public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>
         where TKey : notnull
         where TValue : notnull
     {
@@ -47,6 +47,12 @@ namespace System.Collections.ObjectModel
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="KeyNotFoundException"></exception>
         public TValue this[TKey key] => _baseDictionary[key];
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IBidirectionalDictionary<TValue, TKey> IBidirectionalDictionary<TKey, TValue>.Inverse => Inverse;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyBidirectionalDictionary<TValue, TKey> IReadOnlyBidirectionalDictionary<TKey, TValue>.Inverse => Inverse;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TValue IDictionary<TKey, TValue>.this[TKey key]

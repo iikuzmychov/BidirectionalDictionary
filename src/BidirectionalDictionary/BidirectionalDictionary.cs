@@ -11,7 +11,7 @@ namespace System.Collections.Generic
     /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
     [DebuggerTypeProxy(typeof(DictionaryDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class BidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
+    public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>
         where TKey : notnull
         where TValue : notnull
     {
@@ -92,6 +92,12 @@ namespace System.Collections.Generic
                 }
             }
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IBidirectionalDictionary<TValue, TKey> IBidirectionalDictionary<TKey, TValue>.Inverse => Inverse;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyBidirectionalDictionary<TValue, TKey> IReadOnlyBidirectionalDictionary<TKey, TValue>.Inverse => Inverse.AsReadOnly();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ICollection<TKey> IDictionary<TKey, TValue>.Keys => Keys;
