@@ -33,7 +33,7 @@ Use for `BidirectionalDictionary`:
 var readOnlyDictionary = dictionary.AsReadOnly();
 ```
 
-Use `IBidirectionalDictionary`:
+Use for `IBidirectionalDictionary`:
 
 ```cs
 using System.Collections.ObjectModel;
