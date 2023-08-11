@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>Ihor Kuzmychov (iiKuzmychov)</Authors>
+    <Authors>Ihor Kuzmychov (iikuzmychov)</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Title>BidirectionalDictionary</Title>
     <Description>Proper implementation of a bidirectional dictionary (also know as "BiMap" or "Two-way dictionary") for .NET Standard 2.0.</Description>
