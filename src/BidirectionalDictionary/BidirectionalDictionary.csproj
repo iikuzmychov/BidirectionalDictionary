@@ -11,11 +11,11 @@
     <Authors>Ihor Kuzmychov (iiKuzmychov)</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Title>BidirectionalDictionary</Title>
-    <Description>The bidirectional dictionary is a dictionary with non-null unique values that provides access to an inverse dictionary.</Description>
+    <Description>Proper implementation of a bidirectional dictionary (also know as "BiMap" or "Two-way dictionary") for .NET Standard 2.0.</Description>
     <PackageProjectUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</RepositoryUrl>
     <PackageTags>bidirectional;bidirect;bi;bidictionary;bimap;two-way;two;way;dictionary;map;readonly;read-only</PackageTags>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
