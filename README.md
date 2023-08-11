@@ -4,9 +4,10 @@
 
 # BidirectionalDictionary
 
-The **bidirectional dictionary** is a dictionary with non-null unique values that provides access to an inverse dictionary.
+Proper implementation of a bidirectional dictionary (also know as "BiMap" or "Two-way dictionary")
+for [.NET Standard 2.0](https://learn.microsoft.com/pl-pl/dotnet/standard/net-standard?tabs=net-standard-2-0#select-net-standard-version).
 
-## Example
+## Example of usage
 
 ```cs
 using System.Collections.Generic;
@@ -14,18 +15,45 @@ using System.Collections.Generic;
 var countryCapitalDictionary = new BidirectionalDictionary<string, string>()
 {
     ["Italy"] = "Rome",
-    ["India"] = "Mumbai",
+    ["India"] = "New Delhi",
     ["USA"]   = "Washington, D.C.",
 };
 
-var capital = countryCapitalDictionary["Italy"]; // "Rome"
-var country = countryCapitalDictionary.Inverse["Rome"]; // "Italy"
+Console.Write(countryCapitalDictionary["Italy"]); // "Rome"
+Console.Write(countryCapitalDictionary.Inverse["Rome"]); // "Italy"
 ```
 
-Also, you can create a read-only instance of a bidirectional dictionary:
+## Read-only support
+
+If you need an read-only version of the bidirectional dictionary, the library provides
+an easy way to achieve this.
+
+Use for `BidirectionalDictionary`:
+
 ```cs
-var readOnlyDictionary = countryCapitalDictionary.AsReadOnly(); // ReadOnlyBidirectionalDictionary<string, string>
+var readOnlyDictionary = dictionary.AsReadOnly();
 ```
+
+Use `IBidirectionalDictionary`:
+
+```cs
+using System.Collections.ObjectModel;
+
+var readOnlyDictionary = new ReadOnlyBidirectionalDictionary<string, string>(dictionary);
+```
+
+## Interfaces
+
+This library provides the following interfaces for greater flexibility:
+
+- `IBidirectionalDictionary`
+- `IReadOnlyBidirectionalDictionary`
+
+Both `BidirectionalDictionary` and `ReadOnlyBidirectionalDictionary` implement these
+interfaces, making it easier for you to work with various levels of abstractions.
+
 ## License
 
-BidirectionalDictionary is licensed under the [MIT](https://github.com/iiKuzmychov/BidirectionalDictionary/blob/master/LICENSE.md) license.
+The library is licensed under the
+[MIT](https://github.com/iiKuzmychov/BidirectionalDictionary/blob/master/LICENSE.md)
+license.
