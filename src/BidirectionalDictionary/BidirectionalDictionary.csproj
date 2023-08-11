@@ -11,7 +11,7 @@
     <Authors>Ihor Kuzmychov (iikuzmychov)</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Title>BidirectionalDictionary</Title>
-    <Description>Proper implementation of a bidirectional dictionary (also know as "BiMap" or "Two-way dictionary") for .NET Standard 2.0.</Description>
+    <Description>Proper implementation of a bidirectional dictionary, also known as "BiMap" or "Two-way dictionary", for .NET Standard 2.0.</Description>
     <PackageProjectUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</RepositoryUrl>
     <PackageTags>bidirectional;bidirect;bi;bidictionary;bimap;two-way;two;way;dictionary;map;readonly;read-only</PackageTags>
