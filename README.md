@@ -18,8 +18,8 @@ var countryCapitalDictionary = new BidirectionalDictionary<string, string>()
     ["USA"]   = "Washington, D.C.",
 };
 
-Console.Write(countryCapitalDictionary["Italy"]); // "Rome"
-Console.Write(countryCapitalDictionary.Inverse["Rome"]); // "Italy"
+Console.WriteLine(countryCapitalDictionary["Italy"]); // "Rome"
+Console.WriteLine(countryCapitalDictionary.Inverse["Rome"]); // "Italy"
 ```
 
 ## Read-only support
