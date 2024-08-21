@@ -30,6 +30,7 @@ an easy way to achieve this.
 Use for `BidirectionalDictionary`:
 
 ```cs
+BidirectionalDictionary dictionary = ...; 
 var readOnlyDictionary = dictionary.AsReadOnly();
 ```
 
@@ -38,6 +39,7 @@ Use for `IBidirectionalDictionary`:
 ```cs
 using System.Collections.ObjectModel;
 
+IBidirectionalDictionary dictionary = ...;
 var readOnlyDictionary = new ReadOnlyBidirectionalDictionary<string, string>(dictionary);
 ```
 
