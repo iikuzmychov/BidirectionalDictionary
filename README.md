@@ -22,6 +22,16 @@ Console.WriteLine(countryCapitalDictionary["Italy"]); // "Rome"
 Console.WriteLine(countryCapitalDictionary.Inverse["Rome"]); // "Italy"
 ```
 
+## Interfaces
+
+This library provides the following interfaces for greater flexibility:
+
+- `IBidirectionalDictionary`
+- `IReadOnlyBidirectionalDictionary`
+
+Both `BidirectionalDictionary` and `ReadOnlyBidirectionalDictionary` implement these
+interfaces, making it easier for you to work with various levels of abstraction.
+
 ## Read-only support
 
 If you need an read-only version of the bidirectional dictionary, the library provides
@@ -42,16 +52,6 @@ using System.Collections.ObjectModel;
 IBidirectionalDictionary dictionary = ...;
 var readOnlyDictionary = new ReadOnlyBidirectionalDictionary<string, string>(dictionary);
 ```
-
-## Interfaces
-
-This library provides the following interfaces for greater flexibility:
-
-- `IBidirectionalDictionary`
-- `IReadOnlyBidirectionalDictionary`
-
-Both `BidirectionalDictionary` and `ReadOnlyBidirectionalDictionary` implement these
-interfaces, making it easier for you to work with various levels of abstractions.
 
 ## License
 
