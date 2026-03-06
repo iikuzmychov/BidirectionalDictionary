@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
 
+namespace BidirectionalDictionary.Tests;
+
 public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Theory]
@@ -31,14 +33,14 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [InlineData(null, null)]
     public void ICollectionKeyValuePair_Contains_FilledBiDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentException(char? key, int? value)
     {
-#pragma warning disable CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning disable CS8714
         var biDictionary = new BidirectionalDictionary<char?, int?>()
         {
             { 'a', 0 },
         };
 
         var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char?, int?>(biDictionary);
-#pragma warning restore CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning restore CS8714
 
         var pair = new KeyValuePair<char?, int?>(key, value);
 

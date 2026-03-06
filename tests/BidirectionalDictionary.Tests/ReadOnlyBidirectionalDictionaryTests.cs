@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
 
+namespace BidirectionalDictionary.Tests;
+
 public partial class ReadOnlyBidirectionalDictionaryTests
 {
     #region Constructor tests
@@ -58,14 +60,14 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [Trait("Method", null)]
     public void ContainsKey_FilledReadOnlyBiDictionaryAndNullKey_ThrowsArgumentNullException()
     {
-#pragma warning disable CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning disable CS8714
         var biDictionary = new BidirectionalDictionary<char?, int>()
         {
             { 'a', 0 },
         };
         
         var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char?, int>(biDictionary);
-#pragma warning restore CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning restore CS8714
 
         var key = (char?)null;
 
@@ -95,14 +97,14 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [Trait("Method", null)]
     public void ContainsValue_FilledReadOnlyBiDictionaryAndNullKey_ThrowsArgumentNullException()
     {
-#pragma warning disable CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning disable CS8714
         var biDictionary = new BidirectionalDictionary<char, int?>()
         {
             { 'a', 0 },
         };
 
         var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int?>(biDictionary);
-#pragma warning restore CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning restore CS8714
 
         var value = (char?)null;
 
@@ -149,10 +151,10 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [Trait("Method", null)]
     public void TryGetValue_EmptyReadOnlyBiDictionaryAndNullKey_ThrowsArgumentNullException()
     {
-#pragma warning disable CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning disable CS8714
         var biDictionary         = new BidirectionalDictionary<char?, int?>();
         var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char?, int?>(biDictionary);
-#pragma warning restore CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning restore CS8714
 
         var key = (char?)null;
 
@@ -186,10 +188,10 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [Trait("Indexer", null)]
     public void Indexer_Get_EmptyReadOnlyBiDictionaryAndNullKey_ThrowsArgumentNullException()
     {
-#pragma warning disable CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning disable CS8714
         var biDictionary         = new BidirectionalDictionary<char?, int>();
         var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char?, int>(biDictionary);
-#pragma warning restore CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning restore CS8714
 
         var key = (char?)null;
 
