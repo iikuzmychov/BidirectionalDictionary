@@ -351,7 +351,8 @@ namespace System.Collections.Generic
         /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
         public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value);
 
-        /*public void EnsureCapacity(int capacity)
+#if NETSTANDARD2_1_OR_GREATER
+        public void EnsureCapacity(int capacity)
         {
             _baseDictionary.EnsureCapacity(capacity);
             Inverse._baseDictionary.EnsureCapacity(capacity);
@@ -367,13 +368,14 @@ namespace System.Collections.Generic
         {
             _baseDictionary.TrimExcess(capacity);
             Inverse._baseDictionary.TrimExcess(capacity);
-        }*/
+        }
+#endif
 
         /// <summary>
         /// Returns a read-only <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"></see> wrapper for the current dictionary.
         /// </summary>
         /// <returns>An object that acts as a read-only wrapper around the current <see cref="BidirectionalDictionary{TKey, TValue}"></see>.</returns>
-        public ReadOnlyBidirectionalDictionary<TKey, TValue> AsReadOnly() => new ReadOnlyBidirectionalDictionary<TKey, TValue>(this);
+        public ReadOnlyBidirectionalDictionary<TKey, TValue> AsReadOnly() => new(this);
 
         public IEnumerator GetEnumerator() => _baseDictionary.GetEnumerator();
 
