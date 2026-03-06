@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/BidirectionalDictionary/BidirectionalDictionary.csproj" />
+  <Project Path="tests/BidirectionalDictionary.Tests/BidirectionalDictionary.Tests.csproj" />
+</Solution>
