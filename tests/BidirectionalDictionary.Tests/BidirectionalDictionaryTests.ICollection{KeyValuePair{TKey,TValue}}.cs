@@ -1,3 +1,5 @@
+namespace BidirectionalDictionary.Tests;
+
 public partial class BidirectionalDictionaryTests
 {
     [Theory]
@@ -26,9 +28,9 @@ public partial class BidirectionalDictionaryTests
     [InlineData('a', null)]
     public void ICollectionKeyValuePair_Add_EmptyBiDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentNullException(char? key, int? value)
     {
-#pragma warning disable CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning disable CS8714
         var biDictionary = new BidirectionalDictionary<char?, int?>();
-#pragma warning restore CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning restore CS8714
 
         var pair = new KeyValuePair<char?, int?>(key, value);
         
@@ -122,9 +124,9 @@ public partial class BidirectionalDictionaryTests
     [InlineData(null, null)]
     public void ICollectionKeyValuePair_Remove_EmptyBiDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentNullException(char? key, int? value)
     {
-#pragma warning disable CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning disable CS8714
         var biDictionary = new BidirectionalDictionary<char?, int?>();
-#pragma warning restore CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning restore CS8714
 
         var pair = new KeyValuePair<char?, int?>(key, value);
 
@@ -166,12 +168,12 @@ public partial class BidirectionalDictionaryTests
     [InlineData(null, null)]
     public void ICollectionKeyValuePair_Contains_FilledBiDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentException(char? key, int? value)
     {
-#pragma warning disable CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning disable CS8714
         var biDictionary = new BidirectionalDictionary<char?, int?>()
         {
             { 'a', 0 },
         };
-#pragma warning restore CS8714 // Тип не может быть использован как параметр типа в универсальном типе или методе. Допустимость значения NULL для аргумента типа не соответствует ограничению "notnull".
+#pragma warning restore CS8714
 
         var pair = new KeyValuePair<char?, int?>(key, value);
 
