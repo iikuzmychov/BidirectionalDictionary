@@ -4,7 +4,6 @@ namespace System.Collections.Generic
 {
     internal sealed class DictionaryDebugView<TKey, TValue>
         where TKey : notnull
-        where TValue : notnull
     {
         private readonly IDictionary<TKey, TValue> _dictionary;
 
@@ -19,7 +18,6 @@ namespace System.Collections.Generic
             get
             {
                 var items = new KeyValuePair<TKey, TValue>[_dictionary.Count];
-
                 _dictionary.CopyTo(items, 0);
 
                 return items;
