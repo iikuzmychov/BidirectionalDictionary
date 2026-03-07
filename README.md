@@ -30,6 +30,8 @@ The wrapper uses the same underlying data and blocks modifications through the r
 From `BidirectionalDictionary`:
 
 ```cs
+using System.Collections.Generic;
+
 BidirectionalDictionary<Key, Value> bidirectionalDictionary = ...; 
 var readOnly = bidirectionalDictionary.AsReadOnly();
 ```
@@ -37,6 +39,7 @@ var readOnly = bidirectionalDictionary.AsReadOnly();
 From `IBidirectionalDictionary`:
 
 ```cs
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 IBidirectionalDictionary<Key, Value> bidirectionalDictionary = ...;
