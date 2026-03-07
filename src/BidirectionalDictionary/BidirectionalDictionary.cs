@@ -280,7 +280,7 @@ namespace System.Collections.Generic
                 throw new ArgumentNullException(nameof(key));
 
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-            return _baseDictionary.Remove(key, out value) &&
+            return _baseDictionary.Remove(key, out value!) &&
                 Inverse._baseDictionary.Remove(value);
 #elif NETSTANDARD2_0
             return _baseDictionary.TryGetValue(key, out value) &&
@@ -348,7 +348,7 @@ namespace System.Collections.Generic
         /// This parameter is passed uninitialized.</param>
         /// <returns><see langword="true"/> if the <see cref="BidirectionalDictionary{TKey, TValue}"/> contains
         /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
-        public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value);
+        public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value!);
 
 #if NETSTANDARD2_1_OR_GREATER
         public void EnsureCapacity(int capacity)

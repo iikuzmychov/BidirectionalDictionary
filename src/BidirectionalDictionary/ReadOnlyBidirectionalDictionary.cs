@@ -127,7 +127,7 @@ namespace System.Collections.ObjectModel
         /// This parameter is passed uninitialized.</param>
         /// <returns><see langword="true"/> if the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/> contains
         /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
-        public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value);
+        public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value!);
 
         public IEnumerator GetEnumerator() => _baseDictionary.GetEnumerator();
 
