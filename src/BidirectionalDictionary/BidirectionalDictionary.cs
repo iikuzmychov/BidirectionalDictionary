@@ -150,7 +150,7 @@ namespace System.Collections.Generic
         /// <param name="collection">The <see cref="IEnumerable{T}"/> whose elements are copied to the new <see cref="BidirectionalDictionary{TKey, TValue}"/>.</param>
         /// <exception cref="ArgumentNullException"></exception>
         public BidirectionalDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection)
-#if NETSTANDARD2_1_OR_GREATER
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
             : this(new Dictionary<TKey, TValue>(collection)) { }
 #elif NETSTANDARD2_0
             : this(new Dictionary<TKey, TValue>(collection?.ToDictionary(pair => pair.Key, pair => pair.Value))) { }
@@ -206,11 +206,10 @@ namespace System.Collections.Generic
         /// <exception cref="ArgumentNullException"></exception>
         public BidirectionalDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection,
             IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
-#if NETSTANDARD2_1_OR_GREATER
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
             : this(new Dictionary<TKey, TValue>(collection, keyComparer), valueComparer) { }
 #elif NETSTANDARD2_0
-            : this(new Dictionary<TKey, TValue>(collection?.ToDictionary(pair => pair.Key, pair => pair.Value, keyComparer)),
-                  valueComparer) { }
+            : this(new Dictionary<TKey, TValue>(collection?.ToDictionary(pair => pair.Key, pair => pair.Value, keyComparer)), valueComparer) { }
 #endif
 
         private BidirectionalDictionary(BidirectionalDictionary<TValue, TKey> inverse)
@@ -280,7 +279,7 @@ namespace System.Collections.Generic
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
-#if NETSTANDARD2_1_OR_GREATER
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
             return _baseDictionary.Remove(key, out value) &&
                 Inverse._baseDictionary.Remove(value);
 #elif NETSTANDARD2_0
