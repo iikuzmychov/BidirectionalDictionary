@@ -14,7 +14,7 @@
     <Description>Proper implementation of a bidirectional dictionary, also known as "BiMap" or "Two-way dictionary", for .NET Standard 2.0 and higher.</Description>
     <PackageProjectUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</RepositoryUrl>
-    <PackageTags>bidirectional;bidirect;bi;bidictionary;bimap;two-way;two;way;dictionary;map;readonly;read-only</PackageTags>
+    <PackageTags>bidirectional-dictionary;bidirectional;bidirect;bidictionary;bimap;two-way;dictionary;map;readonly;read-only</PackageTags>
     <Version>1.3.0</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
