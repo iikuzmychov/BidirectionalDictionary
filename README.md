@@ -4,54 +4,102 @@
 
 # BidirectionalDictionary
 
-Proper implementation of a bidirectional dictionary, also known as "BiMap" or "Two-way dictionary", for [.NET Standard 2.0](https://learn.microsoft.com/dotnet/standard/net-standard?tabs=net-standard-2-0#select-net-standard-version).
+Proper implementation of a bidirectional dictionary, also known as "BiMap" or "two-way dictionary", for [.NET Standard 2.0](https://learn.microsoft.com/dotnet/standard/net-standard?tabs=net-standard-2-0#select-net-standard-version) and higher.
 
-## Example of usage
+## Quick sample
 
 ```cs
 using System.Collections.Generic;
 
-var countryCapitalDictionary = new BidirectionalDictionary<string, string>()
+var countryCapitals = new BidirectionalDictionary<string, string>()
 {
     ["Italy"] = "Rome",
     ["India"] = "New Delhi",
     ["USA"]   = "Washington, D.C.",
 };
 
-Console.WriteLine(countryCapitalDictionary["Italy"]); // "Rome"
-Console.WriteLine(countryCapitalDictionary.Inverse["Rome"]); // "Italy"
+Console.WriteLine(countryCapitals["Italy"]); // "Rome"
+Console.WriteLine(countryCapitals.Inverse["Rome"]); // "Italy"
 ```
-
-## Interfaces
-
-This library provides the following interfaces for greater flexibility:
-
-- `IBidirectionalDictionary`
-- `IReadOnlyBidirectionalDictionary`
-
-Both `BidirectionalDictionary` and `ReadOnlyBidirectionalDictionary` implement these
-interfaces, making it easier for you to work with various levels of abstraction.
 
 ## Read-only support
 
-If you need an read-only version of the bidirectional dictionary, the library provides
-an easy way to achieve this.
+You can expose a read-only view over an existing bidirectional dictionary, keeping inversion capabilities intact.
+The wrapper uses the same underlying data and blocks modifications through the read-only API.
 
-Use for `BidirectionalDictionary`:
+From `BidirectionalDictionary`:
 
 ```cs
-BidirectionalDictionary dictionary = ...; 
-var readOnlyDictionary = dictionary.AsReadOnly();
+BidirectionalDictionary<Key, Value> bidirectionalDictionary = ...; 
+var readOnly = bidirectionalDictionary.AsReadOnly();
 ```
 
-Use for `IBidirectionalDictionary`:
+From `IBidirectionalDictionary`:
 
 ```cs
 using System.Collections.ObjectModel;
 
-IBidirectionalDictionary dictionary = ...;
-var readOnlyDictionary = new ReadOnlyBidirectionalDictionary<string, string>(dictionary);
+IBidirectionalDictionary<Key, Value> bidirectionalDictionary = ...;
+var readOnly = new ReadOnlyBidirectionalDictionary<Key, Value>(dictionary);
 ```
+
+## Interfaces
+
+To support abstraction-friendly code, the package exposes two interfaces:
+
+- `IBidirectionalDictionary`
+- `IReadOnlyBidirectionalDictionary`
+
+Both `BidirectionalDictionary` and `ReadOnlyBidirectionalDictionary` implement these interfaces,
+so you can depend on contracts instead of concrete types when needed.
+
+## LINQ extensions
+
+The package includes LINQ-extensions to create a `BidirectionalDictionary` directly from sequences.
+
+From `KeyValuePair<TKey, TValue>`:
+
+```cs
+using System.Linq;
+
+IEnumerable<KeyValuePair<int, string>> source = new[]
+{
+    new KeyValuePair<int, string>(1, "one"),
+    new KeyValuePair<int, string>(2, "two")
+};
+
+var bidirectionalDictionary = source.ToBidirectionalDictionary();
+```
+
+From tuple sequence:
+
+```cs
+using System.Linq;
+
+IEnumerable<(string Key, string Value)> source = new[]
+{
+    (Key: "US", Value: "United States"),
+    (Key: "IT", Value: "Italy")
+};
+
+var bidirectionalDictionary = source.ToBidirectionalDictionary();
+```
+
+From arbitrary source with selectors:
+
+```cs
+using System.Linq;
+
+var users = new[]
+{
+    new { Id = 10, Email = "a@example.com" },
+    new { Id = 20, Email = "b@example.com" }
+};
+
+var bidirectionalDictionary = users.ToBidirectionalDictionary(user => user.Id, user => user.Email);
+```
+
+You can also pass custom comparers via overloads with `keyComparer` and `valueComparer`.
 
 ## License
 
