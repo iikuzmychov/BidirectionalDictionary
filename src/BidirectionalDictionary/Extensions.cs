@@ -162,6 +162,7 @@ public static partial class Enumerable
         return bidirectionalDictionary;
     }
 
+#if NET6_0_OR_GREATER
     private static BidirectionalDictionary<TKey, TSource> SpanToBidirectionalDictionary<TSource, TKey>(
         ReadOnlySpan<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -179,6 +180,7 @@ public static partial class Enumerable
 
         return bidirectionalDictionary;
     }
+#endif
 
     public static BidirectionalDictionary<TKey, TElement> ToBidirectionalDictionary<TSource, TKey, TElement>(
         this IEnumerable<TSource> source,
@@ -247,6 +249,7 @@ public static partial class Enumerable
         return bidirectionalDictionary;
     }
 
+#if NET6_0_OR_GREATER
     private static BidirectionalDictionary<TKey, TElement> SpanToBidirectionalDictionary<TSource, TKey, TElement>(
         ReadOnlySpan<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -265,4 +268,5 @@ public static partial class Enumerable
 
         return bidirectionalDictionary;
     }
+#endif
 }
