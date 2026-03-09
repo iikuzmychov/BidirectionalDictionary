@@ -457,6 +457,108 @@ public partial class BidirectionalDictionaryTests
         Assert.Throws<ArgumentNullException>(() => _ = biDictionary.TryGetValue(key, out _));
     }
 
+    [Theory]
+    [Trait("Method", null)]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(10)]
+    public void EnsureCapacity_EmptyBiDictionaryAndValidCapacity_DoesNotChangeState(int capacity)
+    {
+        var biDictionary = new BidirectionalDictionary<char, int>();
+
+        biDictionary.EnsureCapacity(capacity);
+
+        Assert.Empty(biDictionary);
+        Assert.Empty(biDictionary.Keys);
+        Assert.Empty(biDictionary.Values);
+        Assert.Empty(biDictionary.Inverse.Keys);
+        Assert.Empty(biDictionary.Inverse.Values);
+    }
+
+    [Theory]
+    [Trait("Method", null)]
+    [InlineData(-1)]
+    [InlineData(int.MinValue)]
+    public void EnsureCapacity_EmptyBiDictionaryAndInvalidCapacity_ThrowsArgumentOutOfRangeException(int capacity)
+    {
+        var biDictionary = new BidirectionalDictionary<char, int>();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => biDictionary.EnsureCapacity(capacity));
+
+        // checking that biDictionary has not changed
+        Assert.Empty(biDictionary);
+        Assert.Empty(biDictionary.Keys);
+        Assert.Empty(biDictionary.Values);
+        Assert.Empty(biDictionary.Inverse.Keys);
+        Assert.Empty(biDictionary.Inverse.Values);
+    }
+
+    [Fact]
+    [Trait("Method", null)]
+    public void TrimExcess_FilledBiDictionary_TrimmedSuccessfullyAndDoesNotChangeState()
+    {
+        var biDictionary = new BidirectionalDictionary<char, int>()
+        {
+            { 'a', 0 },
+            { 'b', 1 },
+        };
+
+        biDictionary.TrimExcess();
+
+        Assert.Equal(2, biDictionary.Count);
+        Assert.Equal(2, biDictionary.Inverse.Count);
+        Assert.Contains(new KeyValuePair<char, int>('a', 0), biDictionary);
+        Assert.Contains(new KeyValuePair<char, int>('b', 1), biDictionary);
+        Assert.Contains(new KeyValuePair<int, char>(0, 'a'), biDictionary.Inverse);
+        Assert.Contains(new KeyValuePair<int, char>(1, 'b'), biDictionary.Inverse);
+    }
+
+    [Theory]
+    [Trait("Method", null)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(10)]
+    public void TrimExcess_FilledBiDictionaryAndValidCapacity_TrimmedSuccessfullyAndDoesNotChangeState(int capacity)
+    {
+        var biDictionary = new BidirectionalDictionary<char, int>()
+        {
+            { 'a', 0 },
+            { 'b', 1 },
+        };
+
+        biDictionary.TrimExcess(capacity);
+
+        Assert.Equal(2, biDictionary.Count);
+        Assert.Equal(2, biDictionary.Inverse.Count);
+        Assert.Contains(new KeyValuePair<char, int>('a', 0), biDictionary);
+        Assert.Contains(new KeyValuePair<char, int>('b', 1), biDictionary);
+        Assert.Contains(new KeyValuePair<int, char>(0, 'a'), biDictionary.Inverse);
+        Assert.Contains(new KeyValuePair<int, char>(1, 'b'), biDictionary.Inverse);
+    }
+
+    [Theory]
+    [Trait("Method", null)]
+    [InlineData(-1)]
+    [InlineData(1)]
+    public void TrimExcess_FilledBiDictionaryAndInvalidCapacity_ThrowsArgumentOutOfRangeException(int capacity)
+    {
+        var biDictionary = new BidirectionalDictionary<char, int>()
+        {
+            { 'a', 0 },
+            { 'b', 1 },
+        };
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => biDictionary.TrimExcess(capacity));
+
+        // checking that biDictionary has not changed
+        Assert.Equal(2, biDictionary.Count);
+        Assert.Equal(2, biDictionary.Inverse.Count);
+        Assert.Contains(new KeyValuePair<char, int>('a', 0), biDictionary);
+        Assert.Contains(new KeyValuePair<char, int>('b', 1), biDictionary);
+        Assert.Contains(new KeyValuePair<int, char>(0, 'a'), biDictionary.Inverse);
+        Assert.Contains(new KeyValuePair<int, char>(1, 'b'), biDictionary.Inverse);
+    }
+
     #endregion
 
     #region Indexer tests
