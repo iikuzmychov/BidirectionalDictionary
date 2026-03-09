@@ -351,18 +351,42 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value!);
 
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+    /// <summary>
+    /// Ensures that the bidirectional dictionary can hold up to 'capacity' entries without any further expansion of its backing storage.
+    /// </summary>
     public void EnsureCapacity(int capacity)
     {
         _baseDictionary.EnsureCapacity(capacity);
         Inverse._baseDictionary.EnsureCapacity(capacity);
     }
 
+    /// <summary>
+    /// Sets the capacity of this bidirectional dictionary to what it would be if it had been originally initialized with all its entries.
+    /// </summary>
+    /// <remarks>
+    /// This method can be used to minimize the memory overhead
+    /// once it is known that no new elements will be added.
+    /// <br/>
+    /// To allocate minimum size storage array, execute the following statements:
+    /// <code>
+    /// bidirectionalDictionary.Clear();
+    /// bidirectionalDictionary.TrimExcess();
+    /// </code>
+    /// </remarks>
     public void TrimExcess()
     {
         _baseDictionary.TrimExcess();
         Inverse._baseDictionary.TrimExcess();
     }
 
+    /// <summary>
+    /// Sets the capacity of this bidirectional dictionary to hold up 'capacity' entries without any further expansion of its backing storage
+    /// </summary>
+    /// <remarks>
+    /// This method can be used to minimize the memory overhead
+    /// once it is known that no new elements will be added.
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">Passed capacity is lower than entries count.</exception>
     public void TrimExcess(int capacity)
     {
         _baseDictionary.TrimExcess(capacity);
