@@ -350,7 +350,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
     public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value!);
 
-#if NETSTANDARD2_1_OR_GREATER
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
     public void EnsureCapacity(int capacity)
     {
         _baseDictionary.EnsureCapacity(capacity);
