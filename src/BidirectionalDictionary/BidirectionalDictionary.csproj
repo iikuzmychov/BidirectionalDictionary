@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Ihor Kuzmychov (iikuzmychov)</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Title>BidirectionalDictionary</Title>
