@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace System.Linq;
 
-public static partial class Enumerable
+public static class BidirectionalDictionaryEnumerableExtensions
 {
     /// <summary>
     /// Creates a <see cref="BidirectionalDictionary{TKey,TValue}"/> from an <see cref="IEnumerable{T}"/> according to the default comparers for the key and value types.
