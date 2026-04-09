@@ -1,6 +1,6 @@
 namespace BidirectionalDictionary.Tests;
 
-public class EnumerableExtensionsTests
+public class BidirectionalDictionaryEnumerableExtensionsTests
 {
     [Fact]
     [Trait("Extension", null)]
