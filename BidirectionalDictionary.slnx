@@ -11,4 +11,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/BidirectionalDictionary.Tests/BidirectionalDictionary.Tests.csproj" />
   </Folder>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/BidirectionalDictionary.Benchmarks/BidirectionalDictionary.Benchmarks.csproj" />
+  </Folder>
 </Solution>
