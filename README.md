@@ -104,6 +104,11 @@ var bidirectionalDictionary = users.ToBidirectionalDictionary(user => user.Id, u
 
 You can also pass custom comparers via overloads with `keyComparer` and `valueComparer`.
 
+## Benchmarks
+
+Benchmark details and generated GitHub reports are available in
+[`benchmarks/BidirectionalDictionary.Benchmarks`](https://github.com/iiKuzmychov/BidirectionalDictionary/tree/master/benchmarks/BidirectionalDictionary.Benchmarks).
+
 ## License
 
 The library is licensed under the
