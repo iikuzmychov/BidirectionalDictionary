@@ -2,7 +2,7 @@ using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 
-namespace Benchmarks.Columns;
+namespace BidirectionalDictionary.Benchmarks.Columns;
 
 internal abstract class MethodNamePartColumn : IColumn
 {

@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
 
-namespace Benchmarks;
+namespace BidirectionalDictionary.Benchmarks;
 
 [Config(typeof(BenchmarkConfig))]
 [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]

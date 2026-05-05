@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
 
-namespace Benchmarks.Benchmarks;
+namespace BidirectionalDictionary.Benchmarks.Benchmarks;
 
 public class ReadOnlyBenchmarks : BenchmarkBase
 {

@@ -1,7 +1,7 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
 
-namespace Benchmarks.Benchmarks;
+namespace BidirectionalDictionary.Benchmarks.Benchmarks;
 
 public class MutableBenchmarks : BenchmarkBase
 {
