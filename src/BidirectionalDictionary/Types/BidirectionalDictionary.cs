@@ -15,7 +15,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     where TKey : notnull
     where TValue : notnull
 {
-    protected readonly Dictionary<TKey, TValue> _baseDictionary;
+    private readonly Dictionary<TKey, TValue> _baseDictionary;
 
     #region Properties
 
