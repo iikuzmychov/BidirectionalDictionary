@@ -15,7 +15,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     where TKey : notnull
     where TValue : notnull
 {
-    private readonly Dictionary<TKey, TValue> _baseDictionary;
+    private readonly Dictionary<TKey, TValue> _dictionary;
     private KeyCollection? _keys;
     private ValueCollection? _values;
 
@@ -29,7 +29,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <summary>
     /// Gets the <see cref="IEqualityComparer{T}"/> that is used to determine equality of keys for the dictionary.
     /// </summary>
-    public IEqualityComparer<TKey> KeyComparer => _baseDictionary.Comparer;
+    public IEqualityComparer<TKey> KeyComparer => _dictionary.Comparer;
 
     /// <summary>
     /// Gets the <see cref="IEqualityComparer{T}"/> that is used to determine equality of values for the dictionary.
@@ -39,7 +39,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <summary>
     /// Gets the number of key/value pairs contained in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
     /// </summary>
-    public int Count => _baseDictionary.Count;
+    public int Count => _dictionary.Count;
 
     /// <summary>
     /// Gets a collection containing the keys in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
@@ -62,7 +62,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <exception cref="KeyNotFoundException"></exception>
     public TValue this[TKey key]
     {
-        get => _baseDictionary[key];
+        get => _dictionary[key];
         set
         {
             if (key == null)
@@ -82,10 +82,10 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
                 }
                 else
                 {
-                    _baseDictionary[key] = value;
+                    _dictionary[key] = value;
 
-                    Inverse._baseDictionary.Remove(oldValue);
-                    Inverse._baseDictionary.Add(value, key);
+                    Inverse._dictionary.Remove(oldValue);
+                    Inverse._dictionary.Add(value, key);
                 }
             }
             else
@@ -219,9 +219,9 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
         IEqualityComparer<TValue>? valueComparer = null,
         int? inverseCapacity = null)
     {
-        _baseDictionary = dictionary;
-        ValueComparer   = valueComparer ?? EqualityComparer<TValue>.Default;
-        Inverse         = new BidirectionalDictionary<TValue, TKey>(
+        _dictionary = dictionary;
+        ValueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
+        Inverse = new BidirectionalDictionary<TValue, TKey>(
             CreateInverseDictionary(dictionary, ValueComparer, inverseCapacity ?? dictionary.Count),
             KeyComparer,
             this);
@@ -232,9 +232,9 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
         IEqualityComparer<TValue> valueComparer,
         BidirectionalDictionary<TValue, TKey> inverse)
     {
-        _baseDictionary = dictionary;
-        ValueComparer   = valueComparer;
-        Inverse         = inverse;
+        _dictionary = dictionary;
+        ValueComparer = valueComparer;
+        Inverse = inverse;
     }
 
     private static Dictionary<TValue, TKey> CreateInverseDictionary(
@@ -277,8 +277,8 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
         if (ContainsValue(value))
             throw new ArgumentException("The same value already exists.", nameof(value));
 
-        _baseDictionary.Add(key, value);
-        Inverse._baseDictionary.Add(value, key);
+        _dictionary.Add(key, value);
+        Inverse._dictionary.Add(value, key);
     }
 
     /// <summary>
@@ -306,12 +306,12 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
             throw new ArgumentNullException(nameof(key));
 
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-        return _baseDictionary.Remove(key, out value!) &&
-            Inverse._baseDictionary.Remove(value);
+        return _dictionary.Remove(key, out value!) &&
+            Inverse._dictionary.Remove(value);
 #elif NETSTANDARD2_0
-        return _baseDictionary.TryGetValue(key, out value) &&
-            _baseDictionary.Remove(key) &&
-            Inverse._baseDictionary.Remove(value);
+        return _dictionary.TryGetValue(key, out value) &&
+            _dictionary.Remove(key) &&
+            Inverse._dictionary.Remove(value);
 #endif
     }
 
@@ -320,8 +320,8 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// </summary>
     public void Clear()
     {
-        _baseDictionary.Clear();
-        Inverse._baseDictionary.Clear();
+        _dictionary.Clear();
+        Inverse._dictionary.Clear();
     }
 
     /// <summary>
@@ -330,7 +330,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <param name="key">The key to locate in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="BidirectionalDictionary{TKey, TValue}"/> contains
     /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
-    public bool ContainsKey(TKey key) => _baseDictionary.ContainsKey(key);
+    public bool ContainsKey(TKey key) => _dictionary.ContainsKey(key);
 
     /// <summary>
     /// Determines whether the <see cref="BidirectionalDictionary{TKey, TValue}"/> contains the specified value.
@@ -359,8 +359,8 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
         if (ContainsKey(key) || ContainsValue(value))
             return false;
 
-        _baseDictionary.Add(key, value);
-        Inverse._baseDictionary.Add(value, key);
+        _dictionary.Add(key, value);
+        Inverse._dictionary.Add(value, key);
 
         return true;
     }
@@ -374,7 +374,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// This parameter is passed uninitialized.</param>
     /// <returns><see langword="true"/> if the <see cref="BidirectionalDictionary{TKey, TValue}"/> contains
     /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
-    public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value!);
+    public bool TryGetValue(TKey key, out TValue value) => _dictionary.TryGetValue(key, out value!);
 
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
     /// <summary>
@@ -382,8 +382,8 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// </summary>
     public void EnsureCapacity(int capacity)
     {
-        _baseDictionary.EnsureCapacity(capacity);
-        Inverse._baseDictionary.EnsureCapacity(capacity);
+        _dictionary.EnsureCapacity(capacity);
+        Inverse._dictionary.EnsureCapacity(capacity);
     }
 
     /// <summary>
@@ -401,8 +401,8 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// </remarks>
     public void TrimExcess()
     {
-        _baseDictionary.TrimExcess();
-        Inverse._baseDictionary.TrimExcess();
+        _dictionary.TrimExcess();
+        Inverse._dictionary.TrimExcess();
     }
 
     /// <summary>
@@ -415,8 +415,8 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <exception cref="ArgumentOutOfRangeException">Passed capacity is lower than entries count.</exception>
     public void TrimExcess(int capacity)
     {
-        _baseDictionary.TrimExcess(capacity);
-        Inverse._baseDictionary.TrimExcess(capacity);
+        _dictionary.TrimExcess(capacity);
+        Inverse._dictionary.TrimExcess(capacity);
     }
 #endif
 
@@ -426,9 +426,9 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <returns>An object that acts as a read-only wrapper around the current <see cref="BidirectionalDictionary{TKey, TValue}"></see>.</returns>
     public ReadOnlyBidirectionalDictionary<TKey, TValue> AsReadOnly() => new(this);
 
-    public Enumerator GetEnumerator() => new(_baseDictionary);
+    public Enumerator GetEnumerator() => new(_dictionary);
 
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_baseDictionary).GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_dictionary).GetEnumerator();
 
     void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
@@ -440,8 +440,8 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
         if (item.Value == null)
             throw new ArgumentNullException("The item value == null.", nameof(item));
 
-        return ((ICollection<KeyValuePair<TKey, TValue>>)_baseDictionary).Remove(item) &&
-            Inverse._baseDictionary.Remove(item.Value);
+        return ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Remove(item) &&
+            Inverse._dictionary.Remove(item.Value);
     }
 
     bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
@@ -452,14 +452,14 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
         if (item.Value == null)
             throw new ArgumentNullException("The item value == null.", nameof(item));
 
-        return ((ICollection<KeyValuePair<TKey, TValue>>)_baseDictionary).Contains(item);
+        return ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Contains(item);
     }
 
     void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) =>
-        ((ICollection<KeyValuePair<TKey, TValue>>)_baseDictionary).CopyTo(array, arrayIndex);
+        ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).CopyTo(array, arrayIndex);
 
     IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
-        => _baseDictionary.GetEnumerator();
+        => _dictionary.GetEnumerator();
 
     #endregion
 
@@ -510,13 +510,13 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
         bool ICollection<TKey>.IsReadOnly => true;
 
-        bool ICollection.IsSynchronized => ((ICollection)_bidirectionalDictionary._baseDictionary.Keys).IsSynchronized;
+        bool ICollection.IsSynchronized => ((ICollection)_bidirectionalDictionary._dictionary.Keys).IsSynchronized;
 
-        object ICollection.SyncRoot => ((ICollection)_bidirectionalDictionary._baseDictionary.Keys).SyncRoot;
+        object ICollection.SyncRoot => ((ICollection)_bidirectionalDictionary._dictionary.Keys).SyncRoot;
 
         public bool Contains(TKey item) => _bidirectionalDictionary.ContainsKey(item);
 
-        public void CopyTo(TKey[] array, int arrayIndex) => _bidirectionalDictionary._baseDictionary.Keys.CopyTo(array, arrayIndex);
+        public void CopyTo(TKey[] array, int arrayIndex) => _bidirectionalDictionary._dictionary.Keys.CopyTo(array, arrayIndex);
 
         public Enumerator GetEnumerator() => new(_bidirectionalDictionary);
 
@@ -526,7 +526,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
         bool ICollection<TKey>.Remove(TKey item) => throw new NotSupportedException();
 
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)_bidirectionalDictionary._baseDictionary.Keys).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_bidirectionalDictionary._dictionary.Keys).CopyTo(array, index);
 
         IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator() => GetEnumerator();
 
@@ -540,7 +540,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
             internal Enumerator(BidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
             {
                 _bidirectionalDictionary = bidirectionalDictionary;
-                _enumerator = bidirectionalDictionary._baseDictionary.Keys.GetEnumerator();
+                _enumerator = bidirectionalDictionary._dictionary.Keys.GetEnumerator();
             }
 
             public readonly TKey Current => _enumerator.Current;
@@ -552,7 +552,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
             void IEnumerator.Reset()
             {
                 ((IEnumerator)_enumerator).Reset(); // validates old version, but resets boxed copy
-                _enumerator = _bidirectionalDictionary._baseDictionary.Keys.GetEnumerator();
+                _enumerator = _bidirectionalDictionary._dictionary.Keys.GetEnumerator();
             }
 
             public void Dispose() => _enumerator.Dispose();
@@ -574,13 +574,13 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
         bool ICollection<TValue>.IsReadOnly => true;
 
-        bool ICollection.IsSynchronized => ((ICollection)_bidirectionalDictionary._baseDictionary.Values).IsSynchronized;
+        bool ICollection.IsSynchronized => ((ICollection)_bidirectionalDictionary._dictionary.Values).IsSynchronized;
 
-        object ICollection.SyncRoot => ((ICollection)_bidirectionalDictionary._baseDictionary.Values).SyncRoot;
+        object ICollection.SyncRoot => ((ICollection)_bidirectionalDictionary._dictionary.Values).SyncRoot;
 
         public bool Contains(TValue item) => _bidirectionalDictionary.ContainsValue(item);
 
-        public void CopyTo(TValue[] array, int arrayIndex) => _bidirectionalDictionary._baseDictionary.Values.CopyTo(array, arrayIndex);
+        public void CopyTo(TValue[] array, int arrayIndex) => _bidirectionalDictionary._dictionary.Values.CopyTo(array, arrayIndex);
 
         public Enumerator GetEnumerator() => new(_bidirectionalDictionary);
 
@@ -590,7 +590,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
         bool ICollection<TValue>.Remove(TValue item) => throw new NotSupportedException();
 
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)_bidirectionalDictionary._baseDictionary.Values).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_bidirectionalDictionary._dictionary.Values).CopyTo(array, index);
 
         IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => GetEnumerator();
 
@@ -604,7 +604,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
             internal Enumerator(BidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
             {
                 _bidirectionalDictionary = bidirectionalDictionary;
-                _enumerator = bidirectionalDictionary._baseDictionary.Values.GetEnumerator();
+                _enumerator = bidirectionalDictionary._dictionary.Values.GetEnumerator();
             }
 
             public TValue Current => _enumerator.Current;
@@ -616,7 +616,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
             void IEnumerator.Reset()
             {
                 ((IEnumerator)_enumerator).Reset(); // validates old version, but resets boxed copy
-                _enumerator = _bidirectionalDictionary._baseDictionary.Values.GetEnumerator();
+                _enumerator = _bidirectionalDictionary._dictionary.Values.GetEnumerator();
             }
 
             public void Dispose() => _enumerator.Dispose();

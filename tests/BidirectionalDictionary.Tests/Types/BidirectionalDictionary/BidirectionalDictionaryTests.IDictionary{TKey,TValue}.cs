@@ -4,30 +4,30 @@ public partial class BidirectionalDictionaryTests
 {
     [Fact]
     [Trait("Method", "IDictionary<TKey, TValue>")]
-    public void IDictionary_Keys_FilledBiDictionary_ReturnsKeys()
+    public void IDictionary_Keys_FilledBidirectionalDictionary_ReturnsKeys()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
             { 'b', 1 },
         };
 
-        var keys = ((IDictionary<char, int>)biDictionary).Keys;
+        var keys = ((IDictionary<char, int>)bidirectionalDictionary).Keys;
 
         Assert.Equal(['a', 'b'], keys);
     }
 
     [Fact]
     [Trait("Method", "IDictionary<TKey, TValue>")]
-    public void IDictionary_Values_FilledBiDictionary_ReturnsValues()
+    public void IDictionary_Values_FilledBidirectionalDictionary_ReturnsValues()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
             { 'b', 1 },
         };
 
-        var values = ((IDictionary<char, int>)biDictionary).Values;
+        var values = ((IDictionary<char, int>)bidirectionalDictionary).Values;
 
         Assert.Equal([0, 1], values);
     }

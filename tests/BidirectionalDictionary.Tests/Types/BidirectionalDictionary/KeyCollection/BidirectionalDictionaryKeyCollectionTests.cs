@@ -4,57 +4,57 @@ public partial class BidirectionalDictionaryKeyCollectionTests
 {
     [Fact]
     [Trait("Property", "Keys")]
-    public void Keys_FilledBiDictionary_ReturnsKeys()
+    public void Keys_FilledBidirectionalDictionary_ReturnsKeys()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
             { 'b', 1 },
         };
 
-        Assert.Equal(['a', 'b'], biDictionary.Keys);
+        Assert.Equal(['a', 'b'], bidirectionalDictionary.Keys);
     }
 
     [Fact]
     [Trait("Constructor", "KeyCollection")]
-    public void Constructor_NullBiDictionary_ThrowsArgumentNullException()
+    public void Constructor_NullBidirectionalDictionary_ThrowsArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => _ = new BidirectionalDictionary<char, int>.KeyCollection(null!));
     }
 
     [Fact]
     [Trait("Method", "KeyCollection")]
-    public void Count_FilledBiDictionary_ReturnsCount()
+    public void Count_FilledBidirectionalDictionary_ReturnsCount()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        Assert.Single(biDictionary.Keys);
+        Assert.Single(bidirectionalDictionary.Keys);
     }
 
     [Theory]
     [Trait("Method", "KeyCollection")]
     [InlineData('a', true)]
     [InlineData('b', false)]
-    public void Contains_FilledBiDictionary_ReturnsExpectedResult(char key, bool expectedResult)
+    public void Contains_FilledBidirectionalDictionary_ReturnsExpectedResult(char key, bool expectedResult)
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var result = biDictionary.Keys.Contains(key);
+        var result = bidirectionalDictionary.Keys.Contains(key);
 
         Assert.Equal(expectedResult, result);
     }
 
     [Fact]
     [Trait("Method", "KeyCollection")]
-    public void CopyTo_FilledBiDictionary_CopiesKeys()
+    public void CopyTo_FilledBidirectionalDictionary_CopiesKeys()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
             { 'b', 1 },
@@ -62,7 +62,7 @@ public partial class BidirectionalDictionaryKeyCollectionTests
 
         var array = new char[3];
 
-        biDictionary.Keys.CopyTo(array, 1);
+        bidirectionalDictionary.Keys.CopyTo(array, 1);
 
         Assert.Equal([default, 'a', 'b'], array);
     }

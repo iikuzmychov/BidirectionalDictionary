@@ -6,30 +6,30 @@ public partial class BidirectionalDictionaryKeyCollectionTests
 {
     [Fact]
     [Trait("Method", "IEnumerable<TKey>")]
-    public void IEnumerableT_GetEnumerator_FilledBiDictionary_EnumeratesKeys()
+    public void IEnumerableT_GetEnumerator_FilledBidirectionalDictionary_EnumeratesKeys()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
             { 'b', 1 },
         };
 
-        var keys = ((IEnumerable<char>)biDictionary.Keys).ToArray();
+        var keys = ((IEnumerable<char>)bidirectionalDictionary.Keys).ToArray();
 
         Assert.Equal(['a', 'b'], keys);
     }
 
     [Fact]
     [Trait("Method", "IEnumerable")]
-    public void IEnumerable_GetEnumerator_FilledBiDictionary_EnumeratesKeys()
+    public void IEnumerable_GetEnumerator_FilledBidirectionalDictionary_EnumeratesKeys()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
             { 'b', 1 },
         };
 
-        var keys = ((IEnumerable)biDictionary.Keys).Cast<char>().ToArray();
+        var keys = ((IEnumerable)bidirectionalDictionary.Keys).Cast<char>().ToArray();
 
         Assert.Equal(['a', 'b'], keys);
     }

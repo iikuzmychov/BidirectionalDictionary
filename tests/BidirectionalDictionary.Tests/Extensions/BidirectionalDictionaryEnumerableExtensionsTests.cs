@@ -4,7 +4,7 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
 {
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_KeyValuePairsEnumerable_CreatesBiDictionaryFromSource()
+    public void ToBidirectionalDictionary_KeyValuePairsEnumerable_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new List<KeyValuePair<char, int>>
         {
@@ -12,20 +12,20 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
             new('b', 2),
         };
 
-        var biDictionary = source.ToBidirectionalDictionary();
+        var bidirectionalDictionary = source.ToBidirectionalDictionary();
 
-        Assert.Equal(source, biDictionary);
-        Assert.Equal(source.Select(pair => pair.Key), biDictionary.Keys);
-        Assert.Equal(source.Select(pair => pair.Value), biDictionary.Values);
-        Assert.Equal(source.Select(pair => pair.Key), biDictionary.Inverse.Values);
-        Assert.Equal(source.Select(pair => pair.Value), biDictionary.Inverse.Keys);
-        Assert.Equal(EqualityComparer<char>.Default, biDictionary.KeyComparer);
-        Assert.Equal(EqualityComparer<int>.Default, biDictionary.ValueComparer);
+        Assert.Equal(source, bidirectionalDictionary);
+        Assert.Equal(source.Select(pair => pair.Key), bidirectionalDictionary.Keys);
+        Assert.Equal(source.Select(pair => pair.Value), bidirectionalDictionary.Values);
+        Assert.Equal(source.Select(pair => pair.Key), bidirectionalDictionary.Inverse.Values);
+        Assert.Equal(source.Select(pair => pair.Value), bidirectionalDictionary.Inverse.Keys);
+        Assert.Equal(EqualityComparer<char>.Default, bidirectionalDictionary.KeyComparer);
+        Assert.Equal(EqualityComparer<int>.Default, bidirectionalDictionary.ValueComparer);
     }
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndCustomComparers_CreatesBiDictionaryWithExpectedComparers()
+    public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndCustomComparers_CreatesBidirectionalDictionaryWithExpectedComparers()
     {
         var source = new List<KeyValuePair<string, string>>
         {
@@ -33,16 +33,16 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
             new("b", "y"),
         };
 
-        var keyComparer   = StringComparer.OrdinalIgnoreCase;
+        var keyComparer = StringComparer.OrdinalIgnoreCase;
         var valueComparer = StringComparer.Ordinal;
 
-        var biDictionary = source.ToBidirectionalDictionary(keyComparer, valueComparer);
+        var bidirectionalDictionary = source.ToBidirectionalDictionary(keyComparer, valueComparer);
 
-        Assert.Equal(source, biDictionary);
-        Assert.Equal(keyComparer, biDictionary.KeyComparer);
-        Assert.Equal(valueComparer, biDictionary.ValueComparer);
-        Assert.Equal(keyComparer, biDictionary.Inverse.ValueComparer);
-        Assert.Equal(valueComparer, biDictionary.Inverse.KeyComparer);
+        Assert.Equal(source, bidirectionalDictionary);
+        Assert.Equal(keyComparer, bidirectionalDictionary.KeyComparer);
+        Assert.Equal(valueComparer, bidirectionalDictionary.ValueComparer);
+        Assert.Equal(keyComparer, bidirectionalDictionary.Inverse.ValueComparer);
+        Assert.Equal(valueComparer, bidirectionalDictionary.Inverse.KeyComparer);
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_TupleEnumerable_CreatesBiDictionaryFromSource()
+    public void ToBidirectionalDictionary_TupleEnumerable_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new List<(char Key, int Value)>
         {
@@ -64,14 +64,14 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
             ('b', 2),
         };
 
-        var biDictionary = source.ToBidirectionalDictionary();
+        var bidirectionalDictionary = source.ToBidirectionalDictionary();
 
-        Assert.Equal(source.Select(pair => pair.Key), biDictionary.Keys);
-        Assert.Equal(source.Select(pair => pair.Value), biDictionary.Values);
-        Assert.Equal(source.Select(pair => pair.Key), biDictionary.Inverse.Values);
-        Assert.Equal(source.Select(pair => pair.Value), biDictionary.Inverse.Keys);
-        Assert.Equal(EqualityComparer<char>.Default, biDictionary.KeyComparer);
-        Assert.Equal(EqualityComparer<int>.Default, biDictionary.ValueComparer);
+        Assert.Equal(source.Select(pair => pair.Key), bidirectionalDictionary.Keys);
+        Assert.Equal(source.Select(pair => pair.Value), bidirectionalDictionary.Values);
+        Assert.Equal(source.Select(pair => pair.Key), bidirectionalDictionary.Inverse.Values);
+        Assert.Equal(source.Select(pair => pair.Value), bidirectionalDictionary.Inverse.Keys);
+        Assert.Equal(EqualityComparer<char>.Default, bidirectionalDictionary.KeyComparer);
+        Assert.Equal(EqualityComparer<int>.Default, bidirectionalDictionary.ValueComparer);
     }
 
     [Fact]
@@ -85,17 +85,17 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_SourceAndKeySelector_CreatesBiDictionaryFromSource()
+    public void ToBidirectionalDictionary_SourceAndKeySelector_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new[] { "a", "bb" };
 
-        var biDictionary = source.ToBidirectionalDictionary(value => value.Length);
+        var bidirectionalDictionary = source.ToBidirectionalDictionary(value => value.Length);
 
-        Assert.Equal(2, biDictionary.Count);
-        Assert.Contains(new KeyValuePair<int, string>(1, "a"), biDictionary);
-        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), biDictionary);
-        Assert.Contains(new KeyValuePair<string, int>("a", 1), biDictionary.Inverse);
-        Assert.Contains(new KeyValuePair<string, int>("bb", 2), biDictionary.Inverse);
+        Assert.Equal(2, bidirectionalDictionary.Count);
+        Assert.Contains(new KeyValuePair<int, string>(1, "a"), bidirectionalDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), bidirectionalDictionary);
+        Assert.Contains(new KeyValuePair<string, int>("a", 1), bidirectionalDictionary.Inverse);
+        Assert.Contains(new KeyValuePair<string, int>("bb", 2), bidirectionalDictionary.Inverse);
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndNullKeySelector_ThrowsArgumentNullException()
     {
-        var source      = new[] { "a" };
+        var source = new[] { "a" };
         var keySelector = (Func<string, int>?)null;
 
         Assert.Throws<ArgumentNullException>(() => source.ToBidirectionalDictionary(keySelector!));
@@ -119,66 +119,66 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_SourceAndKeySelectorAndCustomComparers_CreatesBiDictionaryWithExpectedComparers()
+    public void ToBidirectionalDictionary_SourceAndKeySelectorAndCustomComparers_CreatesBidirectionalDictionaryWithExpectedComparers()
     {
         var source = new[] { "a", "bb" };
 
-        var keyComparer   = EqualityComparer<int>.Default;
+        var keyComparer = EqualityComparer<int>.Default;
         var valueComparer = StringComparer.OrdinalIgnoreCase;
 
-        var biDictionary = source.ToBidirectionalDictionary(value => value.Length, keyComparer, valueComparer);
+        var bidirectionalDictionary = source.ToBidirectionalDictionary(value => value.Length, keyComparer, valueComparer);
 
-        Assert.Equal(keyComparer, biDictionary.KeyComparer);
-        Assert.Equal(valueComparer, biDictionary.ValueComparer);
-        Assert.Equal(keyComparer, biDictionary.Inverse.ValueComparer);
-        Assert.Equal(valueComparer, biDictionary.Inverse.KeyComparer);
+        Assert.Equal(keyComparer, bidirectionalDictionary.KeyComparer);
+        Assert.Equal(valueComparer, bidirectionalDictionary.ValueComparer);
+        Assert.Equal(keyComparer, bidirectionalDictionary.Inverse.ValueComparer);
+        Assert.Equal(valueComparer, bidirectionalDictionary.Inverse.KeyComparer);
     }
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_SourceListAndKeySelectorAndCustomComparers_CreatesBiDictionaryFromSource()
+    public void ToBidirectionalDictionary_SourceListAndKeySelectorAndCustomComparers_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new List<string> { "a", "bb" };
 
-        var biDictionary = source.ToBidirectionalDictionary(
+        var bidirectionalDictionary = source.ToBidirectionalDictionary(
             value => value.Length,
             EqualityComparer<int>.Default,
             StringComparer.Ordinal);
 
-        Assert.Contains(new KeyValuePair<int, string>(1, "a"), biDictionary);
-        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), biDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(1, "a"), bidirectionalDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), bidirectionalDictionary);
     }
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_SourceQueueAndKeySelectorAndCustomComparers_CreatesBiDictionaryFromSource()
+    public void ToBidirectionalDictionary_SourceQueueAndKeySelectorAndCustomComparers_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new Queue<string>(new[] { "a", "bb" });
 
-        var biDictionary = source.ToBidirectionalDictionary(
+        var bidirectionalDictionary = source.ToBidirectionalDictionary(
             value => value.Length,
             EqualityComparer<int>.Default,
             StringComparer.Ordinal);
 
-        Assert.Contains(new KeyValuePair<int, string>(1, "a"), biDictionary);
-        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), biDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(1, "a"), bidirectionalDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), bidirectionalDictionary);
     }
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_SourceAndSelectors_CreatesBiDictionaryFromSource()
+    public void ToBidirectionalDictionary_SourceAndSelectors_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new[] { "1:a", "2:bb" };
 
-        var biDictionary = source.ToBidirectionalDictionary(
+        var bidirectionalDictionary = source.ToBidirectionalDictionary(
             value => int.Parse(value[..1]),
             value => value[2..]);
 
-        Assert.Equal(2, biDictionary.Count);
-        Assert.Contains(new KeyValuePair<int, string>(1, "a"), biDictionary);
-        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), biDictionary);
-        Assert.Contains(new KeyValuePair<string, int>("a", 1), biDictionary.Inverse);
-        Assert.Contains(new KeyValuePair<string, int>("bb", 2), biDictionary.Inverse);
+        Assert.Equal(2, bidirectionalDictionary.Count);
+        Assert.Contains(new KeyValuePair<int, string>(1, "a"), bidirectionalDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), bidirectionalDictionary);
+        Assert.Contains(new KeyValuePair<string, int>("a", 1), bidirectionalDictionary.Inverse);
+        Assert.Contains(new KeyValuePair<string, int>("bb", 2), bidirectionalDictionary.Inverse);
     }
 
     [Fact]
@@ -197,8 +197,8 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndNullKeySelector_ThrowsArgumentNullException()
     {
-        var source          = new[] { "1:a" };
-        var keySelector     = (Func<string, int>?)null;
+        var source = new[] { "1:a" };
+        var keySelector = (Func<string, int>?)null;
         var elementSelector = (Func<string, string>)(value => value[2..]);
 
         Assert.Throws<ArgumentNullException>(() => source.ToBidirectionalDictionary(keySelector!, elementSelector));
@@ -208,8 +208,8 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndNullElementSelector_ThrowsArgumentNullException()
     {
-        var source          = new[] { "1:a" };
-        var keySelector     = (Func<string, int>)(value => int.Parse(value[..1]));
+        var source = new[] { "1:a" };
+        var keySelector = (Func<string, int>)(value => int.Parse(value[..1]));
         var elementSelector = (Func<string, string>?)null;
 
         Assert.Throws<ArgumentNullException>(() => source.ToBidirectionalDictionary(keySelector, elementSelector!));
@@ -217,51 +217,51 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_SourceAndSelectorsAndCustomComparers_CreatesBiDictionaryWithExpectedComparers()
+    public void ToBidirectionalDictionary_SourceAndSelectorsAndCustomComparers_CreatesBidirectionalDictionaryWithExpectedComparers()
     {
         var source = new[] { "1:a", "2:bb" };
 
-        var keyComparer   = EqualityComparer<int>.Default;
+        var keyComparer = EqualityComparer<int>.Default;
         var valueComparer = StringComparer.OrdinalIgnoreCase;
 
-        var biDictionary = source.ToBidirectionalDictionary(
+        var bidirectionalDictionary = source.ToBidirectionalDictionary(
             value => int.Parse(value[..1]),
             value => value[2..],
             keyComparer,
             valueComparer);
 
-        Assert.Equal(keyComparer, biDictionary.KeyComparer);
-        Assert.Equal(valueComparer, biDictionary.ValueComparer);
-        Assert.Equal(keyComparer, biDictionary.Inverse.ValueComparer);
-        Assert.Equal(valueComparer, biDictionary.Inverse.KeyComparer);
+        Assert.Equal(keyComparer, bidirectionalDictionary.KeyComparer);
+        Assert.Equal(valueComparer, bidirectionalDictionary.ValueComparer);
+        Assert.Equal(keyComparer, bidirectionalDictionary.Inverse.ValueComparer);
+        Assert.Equal(valueComparer, bidirectionalDictionary.Inverse.KeyComparer);
     }
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_SourceQueueAndSelectorsAndCustomComparers_CreatesBiDictionaryFromSource()
+    public void ToBidirectionalDictionary_SourceQueueAndSelectorsAndCustomComparers_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new Queue<string>(new[] { "1:a", "2:bb" });
 
-        var biDictionary = source.ToBidirectionalDictionary(
+        var bidirectionalDictionary = source.ToBidirectionalDictionary(
             value => int.Parse(value[..1]),
             value => value[2..],
             EqualityComparer<int>.Default,
             StringComparer.Ordinal);
 
-        Assert.Contains(new KeyValuePair<int, string>(1, "a"), biDictionary);
-        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), biDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(1, "a"), bidirectionalDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), bidirectionalDictionary);
     }
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndEmptySource_ReturnsEmptyBiDictionary()
+    public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndEmptySource_ReturnsEmptyBidirectionalDictionary()
     {
         var source = Array.Empty<KeyValuePair<char, int>>();
 
-        var biDictionary = source.ToBidirectionalDictionary();
+        var bidirectionalDictionary = source.ToBidirectionalDictionary();
 
-        Assert.Empty(biDictionary);
-        Assert.Empty(biDictionary.Inverse);
+        Assert.Empty(bidirectionalDictionary);
+        Assert.Empty(bidirectionalDictionary.Inverse);
     }
 
     [Fact]
@@ -330,14 +330,14 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_TupleEnumerableAndEmptySource_ReturnsEmptyBiDictionary()
+    public void ToBidirectionalDictionary_TupleEnumerableAndEmptySource_ReturnsEmptyBidirectionalDictionary()
     {
         var source = Array.Empty<(char Key, int Value)>();
 
-        var biDictionary = source.ToBidirectionalDictionary();
+        var bidirectionalDictionary = source.ToBidirectionalDictionary();
 
-        Assert.Empty(biDictionary);
-        Assert.Empty(biDictionary.Inverse);
+        Assert.Empty(bidirectionalDictionary);
+        Assert.Empty(bidirectionalDictionary.Inverse);
     }
 
     [Fact]
@@ -406,14 +406,14 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_SourceAndKeySelectorAndEmptySource_ReturnsEmptyBiDictionary()
+    public void ToBidirectionalDictionary_SourceAndKeySelectorAndEmptySource_ReturnsEmptyBidirectionalDictionary()
     {
         var source = Array.Empty<string>();
 
-        var biDictionary = source.ToBidirectionalDictionary(value => value.Length);
+        var bidirectionalDictionary = source.ToBidirectionalDictionary(value => value.Length);
 
-        Assert.Empty(biDictionary);
-        Assert.Empty(biDictionary.Inverse);
+        Assert.Empty(bidirectionalDictionary);
+        Assert.Empty(bidirectionalDictionary.Inverse);
     }
 
     [Fact]
@@ -439,7 +439,7 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndCustomComparersAndNullKeySelector_ThrowsArgumentNullException()
     {
-        var source      = new[] { "a" };
+        var source = new[] { "a" };
         var keySelector = (Func<string, int>?)null;
 
         Assert.Throws<ArgumentNullException>(
@@ -461,7 +461,7 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndCustomComparersAndDuplicateValueByComparer_ThrowsArgumentException()
     {
         var source = new[] { "a", "A" };
-        var key    = 0;
+        var key = 0;
 
         Assert.Throws<ArgumentException>(
             () => source.ToBidirectionalDictionary(_ => key++, EqualityComparer<int>.Default, StringComparer.OrdinalIgnoreCase));
@@ -469,14 +469,14 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
 
     [Fact]
     [Trait("Extension", null)]
-    public void ToBidirectionalDictionary_SourceAndSelectorsAndEmptySource_ReturnsEmptyBiDictionary()
+    public void ToBidirectionalDictionary_SourceAndSelectorsAndEmptySource_ReturnsEmptyBidirectionalDictionary()
     {
         var source = Array.Empty<string>();
 
-        var biDictionary = source.ToBidirectionalDictionary(value => value, value => value);
+        var bidirectionalDictionary = source.ToBidirectionalDictionary(value => value, value => value);
 
-        Assert.Empty(biDictionary);
-        Assert.Empty(biDictionary.Inverse);
+        Assert.Empty(bidirectionalDictionary);
+        Assert.Empty(bidirectionalDictionary.Inverse);
     }
 
     [Fact]
@@ -519,8 +519,8 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndCustomComparersAndNullKeySelector_ThrowsArgumentNullException()
     {
-        var source          = new[] { "a" };
-        var keySelector     = (Func<string, string>?)null;
+        var source = new[] { "a" };
+        var keySelector = (Func<string, string>?)null;
         var elementSelector = (Func<string, string>)(value => value);
 
         Assert.Throws<ArgumentNullException>(
@@ -535,8 +535,8 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndCustomComparersAndNullElementSelector_ThrowsArgumentNullException()
     {
-        var source          = new[] { "a" };
-        var keySelector     = (Func<string, string>)(value => value);
+        var source = new[] { "a" };
+        var keySelector = (Func<string, string>)(value => value);
         var elementSelector = (Func<string, string>?)null;
 
         Assert.Throws<ArgumentNullException>(() => source.ToBidirectionalDictionary(

@@ -89,13 +89,13 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     public ReadOnlyBidirectionalDictionary(IBidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
     {
         _baseDictionary = bidirectionalDictionary ?? throw new ArgumentNullException(nameof(bidirectionalDictionary));
-        Inverse         = new ReadOnlyBidirectionalDictionary<TValue, TKey>(this);
+        Inverse = new ReadOnlyBidirectionalDictionary<TValue, TKey>(this);
     }
 
     private ReadOnlyBidirectionalDictionary(ReadOnlyBidirectionalDictionary<TValue, TKey> inverse)
     {
         _baseDictionary = inverse._baseDictionary.Inverse;
-        Inverse         = inverse;
+        Inverse = inverse;
     }
 
     #endregion

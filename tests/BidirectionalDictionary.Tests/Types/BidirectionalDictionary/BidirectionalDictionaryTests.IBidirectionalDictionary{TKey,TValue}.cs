@@ -4,15 +4,15 @@ public partial class BidirectionalDictionaryTests
 {
     [Fact]
     [Trait("Method", "IBidirectionalDictionary<TKey, TValue>")]
-    public void IBidirectionalDictionary_Inverse_FilledBiDictionary_ReturnsInverse()
+    public void IBidirectionalDictionary_Inverse_FilledBidirectionalDictionary_ReturnsInverse()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var inverse = ((IBidirectionalDictionary<char, int>)biDictionary).Inverse;
+        var inverse = ((IBidirectionalDictionary<char, int>)bidirectionalDictionary).Inverse;
 
-        Assert.Same(biDictionary.Inverse, inverse);
+        Assert.Same(bidirectionalDictionary.Inverse, inverse);
     }
 }

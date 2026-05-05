@@ -8,45 +8,45 @@ public partial class ReadOnlyBidirectionalDictionaryTests
 
     [Fact]
     [Trait("Constructor", null)]
-    public void Constructor_FilledSourceBiDictionary_CreatesEmptyBiDictionary()
+    public void Constructor_FilledSourceBidirectionalDictionary_CreatesEmptyBidirectionalDictionary()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 }
         };
 
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
 
-        Assert.Equal(biDictionary, readOnlyBiDictionary);
-        Assert.Equal(biDictionary.Keys, readOnlyBiDictionary.Keys);
-        Assert.Equal(biDictionary.Values, readOnlyBiDictionary.Values);
-        Assert.Equal(biDictionary.Keys, readOnlyBiDictionary.Inverse.Values);
-        Assert.Equal(biDictionary.Values, readOnlyBiDictionary.Inverse.Keys);
+        Assert.Equal(bidirectionalDictionary, readOnlyBidirectionalDictionary);
+        Assert.Equal(bidirectionalDictionary.Keys, readOnlyBidirectionalDictionary.Keys);
+        Assert.Equal(bidirectionalDictionary.Values, readOnlyBidirectionalDictionary.Values);
+        Assert.Equal(bidirectionalDictionary.Keys, readOnlyBidirectionalDictionary.Inverse.Values);
+        Assert.Equal(bidirectionalDictionary.Values, readOnlyBidirectionalDictionary.Inverse.Keys);
     }
 
     [Fact]
     [Trait("Property", null)]
-    public void Count_FilledReadOnlyBiDictionary_ReturnsCount()
+    public void Count_FilledReadOnlyBidirectionalDictionary_ReturnsCount()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
 
-        var count = readOnlyBiDictionary.Count;
+        var count = readOnlyBidirectionalDictionary.Count;
 
         Assert.Equal(1, count);
     }
 
     [Fact]
     [Trait("Constructor", null)]
-    public void Constructor_NullSourceBiDictionary_ThrowsArgumentNullException()
+    public void Constructor_NullSourceBidirectionalDictionary_ThrowsArgumentNullException()
     {
-        var biDictionary = (BidirectionalDictionary<char, int>?)null;
+        var bidirectionalDictionary = (BidirectionalDictionary<char, int>?)null;
 
-        Assert.Throws<ArgumentNullException>(() => _ = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary!));
+        Assert.Throws<ArgumentNullException>(() => _ = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary!));
     }
 
     #endregion
@@ -58,36 +58,36 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [InlineData('a', true)]
     [InlineData('b', false)]
     [InlineData('c', false)]
-    public void ContainsKey_FilledReadOnlyBiDictionaryAndExistingKey_ReturnsExpectedResult(char key, bool expectedResult)
+    public void ContainsKey_FilledReadOnlyBidirectionalDictionaryAndExistingKey_ReturnsExpectedResult(char key, bool expectedResult)
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
 
-        var isExists = readOnlyBiDictionary.ContainsKey(key);
+        var isExists = readOnlyBidirectionalDictionary.ContainsKey(key);
 
         Assert.Equal(expectedResult, isExists);
     }
 
     [Fact]
     [Trait("Method", null)]
-    public void ContainsKey_FilledReadOnlyBiDictionaryAndNullKey_ThrowsArgumentNullException()
+    public void ContainsKey_FilledReadOnlyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
-        var biDictionary = new BidirectionalDictionary<char?, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char?, int>()
         {
             { 'a', 0 },
         };
         
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char?, int>(biDictionary);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char?, int>(bidirectionalDictionary);
 #pragma warning restore CS8714
 
         var key = (char?)null;
 
-        Assert.Throws<ArgumentNullException>(() => readOnlyBiDictionary.ContainsKey(key));
+        Assert.Throws<ArgumentNullException>(() => readOnlyBidirectionalDictionary.ContainsKey(key));
     }
 
     [Theory]
@@ -95,54 +95,54 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [InlineData(0, true)]
     [InlineData(1, false)]
     [InlineData(2, false)]
-    public void ContainsValue_FilledReadOnlyBiDictionaryAndExistingKey_ReturnsExpectedResult(int value, bool expectedResult)
+    public void ContainsValue_FilledReadOnlyBidirectionalDictionaryAndExistingKey_ReturnsExpectedResult(int value, bool expectedResult)
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
 
-        var isExists = readOnlyBiDictionary.ContainsValue(value);
+        var isExists = readOnlyBidirectionalDictionary.ContainsValue(value);
 
         Assert.Equal(expectedResult, isExists);
     }
 
     [Fact]
     [Trait("Method", null)]
-    public void ContainsValue_FilledReadOnlyBiDictionaryAndNullKey_ThrowsArgumentNullException()
+    public void ContainsValue_FilledReadOnlyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
-        var biDictionary = new BidirectionalDictionary<char, int?>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int?>()
         {
             { 'a', 0 },
         };
 
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int?>(biDictionary);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int?>(bidirectionalDictionary);
 #pragma warning restore CS8714
 
         var value = (char?)null;
 
-        Assert.Throws<ArgumentNullException>(() => readOnlyBiDictionary.ContainsValue(value));
+        Assert.Throws<ArgumentNullException>(() => readOnlyBidirectionalDictionary.ContainsValue(value));
     }
 
 
     [Fact]
     [Trait("Method", null)]
-    public void TryGetValue_FilledReadOnlyBiDictionaryAndExistingKey_ReturnsTrueAndReturnsOutExpectedValue()
+    public void TryGetValue_FilledReadOnlyBidirectionalDictionaryAndExistingKey_ReturnsTrueAndReturnsOutExpectedValue()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 }
         };
 
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
 
-        var key           = 'a';
+        var key = 'a';
         var expectedValue = 0;
 
-        var isExists = readOnlyBiDictionary.TryGetValue(key, out var value);
+        var isExists = readOnlyBidirectionalDictionary.TryGetValue(key, out var value);
 
         Assert.True(isExists);
         Assert.Equal(expectedValue, value);
@@ -153,42 +153,42 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [Trait("Method", null)]
     [InlineData('a')]
     [InlineData('b')]
-    public void TryGetValue_EmptyReadOnlyBiDictionaryAndMissingKey_ReturnsFalse(char key)
+    public void TryGetValue_EmptyReadOnlyBidirectionalDictionaryAndMissingKey_ReturnsFalse(char key)
     {
-        var biDictionary         = new BidirectionalDictionary<char, int>();
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>();
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
 
-        var isExists = readOnlyBiDictionary.TryGetValue(key, out _);
+        var isExists = readOnlyBidirectionalDictionary.TryGetValue(key, out _);
 
         Assert.False(isExists);
     }
 
     [Fact]
     [Trait("Method", null)]
-    public void TryGetValue_EmptyReadOnlyBiDictionaryAndNullKey_ThrowsArgumentNullException()
+    public void TryGetValue_EmptyReadOnlyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
-        var biDictionary         = new BidirectionalDictionary<char?, int?>();
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char?, int?>(biDictionary);
+        var bidirectionalDictionary = new BidirectionalDictionary<char?, int?>();
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char?, int?>(bidirectionalDictionary);
 #pragma warning restore CS8714
 
         var key = (char?)null;
 
-        Assert.Throws<ArgumentNullException>(() => _ = readOnlyBiDictionary.TryGetValue(key, out _));
+        Assert.Throws<ArgumentNullException>(() => _ = readOnlyBidirectionalDictionary.TryGetValue(key, out _));
     }
 
     [Fact]
     [Trait("Method", null)]
-    public void GetEnumerator_FilledReadOnlyBiDictionary_EnumeratesEntries()
+    public void GetEnumerator_FilledReadOnlyBidirectionalDictionary_EnumeratesEntries()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
 
-        var entries = readOnlyBiDictionary.Cast<KeyValuePair<char, int>>().ToArray();
+        var entries = readOnlyBidirectionalDictionary.Cast<KeyValuePair<char, int>>().ToArray();
 
         Assert.Single(entries, new KeyValuePair<char, int>('a', 0));
     }
@@ -199,47 +199,47 @@ public partial class ReadOnlyBidirectionalDictionaryTests
 
     [Fact]
     [Trait("Indexer", null)]
-    public void Indexer_Get_FilledReadOnlyBiDictionaryAndExistingKey_ReturnsExpectedValue()
+    public void Indexer_Get_FilledReadOnlyBidirectionalDictionaryAndExistingKey_ReturnsExpectedValue()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
 
-        var key           = 'a';
+        var key = 'a';
         var expectedValue = 0;
 
-        var value = readOnlyBiDictionary[key];
+        var value = readOnlyBidirectionalDictionary[key];
 
         Assert.Equal(expectedValue, value);
     }
 
     [Fact]
     [Trait("Indexer", null)]
-    public void Indexer_Get_EmptyReadOnlyBiDictionaryAndNullKey_ThrowsArgumentNullException()
+    public void Indexer_Get_EmptyReadOnlyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
-        var biDictionary         = new BidirectionalDictionary<char?, int>();
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char?, int>(biDictionary);
+        var bidirectionalDictionary = new BidirectionalDictionary<char?, int>();
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char?, int>(bidirectionalDictionary);
 #pragma warning restore CS8714
 
         var key = (char?)null;
 
-        Assert.Throws<ArgumentNullException>(() => _ = readOnlyBiDictionary[key]);
+        Assert.Throws<ArgumentNullException>(() => _ = readOnlyBidirectionalDictionary[key]);
     }
 
     [Theory]
     [Trait("Indexer", null)]
     [InlineData('a')]
     [InlineData('b')]
-    public void Indexer_Get_EmptyReadOnlyBiDictionaryAndMissingKey_ThrowsKeyNotFoundException(char key)
+    public void Indexer_Get_EmptyReadOnlyBidirectionalDictionaryAndMissingKey_ThrowsKeyNotFoundException(char key)
     {
-        var biDictionary         = new BidirectionalDictionary<char, int>();
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>();
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
 
-        Assert.Throws<KeyNotFoundException>(() => _ = readOnlyBiDictionary[key]);
+        Assert.Throws<KeyNotFoundException>(() => _ = readOnlyBidirectionalDictionary[key]);
     }
 
     #endregion

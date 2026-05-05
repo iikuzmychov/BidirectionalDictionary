@@ -8,12 +8,12 @@ public partial class BidirectionalDictionaryEnumeratorTests
     [Trait("Method", "IDictionaryEnumerator")]
     public void Entry_StartedEnumerator_ReturnsEntry()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)biDictionary.GetEnumerator();
+        var enumerator = (IDictionaryEnumerator)bidirectionalDictionary.GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.Equal(new DictionaryEntry('a', 0), enumerator.Entry);
@@ -23,12 +23,12 @@ public partial class BidirectionalDictionaryEnumeratorTests
     [Trait("Method", "IDictionaryEnumerator")]
     public void Entry_NotStartedEnumerator_ThrowsInvalidOperationException()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)biDictionary.GetEnumerator();
+        var enumerator = (IDictionaryEnumerator)bidirectionalDictionary.GetEnumerator();
 
         Assert.Throws<InvalidOperationException>(() => _ = enumerator.Entry);
     }
@@ -37,12 +37,12 @@ public partial class BidirectionalDictionaryEnumeratorTests
     [Trait("Method", "IDictionaryEnumerator")]
     public void Entry_FinishedEnumerator_ThrowsInvalidOperationException()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)biDictionary.GetEnumerator();
+        var enumerator = (IDictionaryEnumerator)bidirectionalDictionary.GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.False(enumerator.MoveNext());
@@ -54,12 +54,12 @@ public partial class BidirectionalDictionaryEnumeratorTests
     [Trait("Method", "IDictionaryEnumerator")]
     public void Key_StartedEnumerator_ReturnsKey()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)biDictionary.GetEnumerator();
+        var enumerator = (IDictionaryEnumerator)bidirectionalDictionary.GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.Equal('a', enumerator.Key);
@@ -69,12 +69,12 @@ public partial class BidirectionalDictionaryEnumeratorTests
     [Trait("Method", "IDictionaryEnumerator")]
     public void Key_NotStartedEnumerator_ThrowsInvalidOperationException()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)biDictionary.GetEnumerator();
+        var enumerator = (IDictionaryEnumerator)bidirectionalDictionary.GetEnumerator();
 
         Assert.Throws<InvalidOperationException>(() => _ = enumerator.Key);
     }
@@ -83,12 +83,12 @@ public partial class BidirectionalDictionaryEnumeratorTests
     [Trait("Method", "IDictionaryEnumerator")]
     public void Key_FinishedEnumerator_ThrowsInvalidOperationException()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)biDictionary.GetEnumerator();
+        var enumerator = (IDictionaryEnumerator)bidirectionalDictionary.GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.False(enumerator.MoveNext());
@@ -100,12 +100,12 @@ public partial class BidirectionalDictionaryEnumeratorTests
     [Trait("Method", "IDictionaryEnumerator")]
     public void Value_StartedEnumerator_ReturnsValue()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)biDictionary.GetEnumerator();
+        var enumerator = (IDictionaryEnumerator)bidirectionalDictionary.GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.Equal(0, enumerator.Value);
@@ -115,12 +115,12 @@ public partial class BidirectionalDictionaryEnumeratorTests
     [Trait("Method", "IDictionaryEnumerator")]
     public void Value_NotStartedEnumerator_ThrowsInvalidOperationException()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)biDictionary.GetEnumerator();
+        var enumerator = (IDictionaryEnumerator)bidirectionalDictionary.GetEnumerator();
 
         Assert.Throws<InvalidOperationException>(() => _ = enumerator.Value);
     }
@@ -129,12 +129,12 @@ public partial class BidirectionalDictionaryEnumeratorTests
     [Trait("Method", "IDictionaryEnumerator")]
     public void Value_FinishedEnumerator_ThrowsInvalidOperationException()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)biDictionary.GetEnumerator();
+        var enumerator = (IDictionaryEnumerator)bidirectionalDictionary.GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.False(enumerator.MoveNext());
