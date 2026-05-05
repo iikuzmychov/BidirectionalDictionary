@@ -145,14 +145,20 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
 
     void ICollection<KeyValuePair<TKey, TValue>>.Clear() => throw new NotSupportedException();
 
-    bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) =>
-        ((ICollection<KeyValuePair<TKey, TValue>>)_bidirectionalDictionary).Contains(item);
+    bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
+    {
+        return _bidirectionalDictionary.Contains(item);
+    }
 
-    void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) =>
-        ((ICollection<KeyValuePair<TKey, TValue>>)_bidirectionalDictionary).CopyTo(array, arrayIndex);
+    void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+    {
+        _bidirectionalDictionary.CopyTo(array, arrayIndex);
+    }
 
     IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
-        => ((IEnumerable<KeyValuePair<TKey, TValue>>)_bidirectionalDictionary).GetEnumerator();
+    {
+        return _bidirectionalDictionary.GetEnumerator();
+    }
 
     #endregion
 
