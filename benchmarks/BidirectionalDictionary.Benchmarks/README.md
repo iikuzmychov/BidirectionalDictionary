@@ -143,37 +143,37 @@ MinWarmupIterationCount=Default  RunStrategy=Default  UnrollFactor=16
 WarmupCount=Default  
 
 ```
-| Operation       | Type          | Mean          | Error         | StdDev        | Median        | Ratio | RatioSD | Gen0    | Allocated | Alloc Ratio |
-|---------------- |-------------- |--------------:|--------------:|--------------:|--------------:|------:|--------:|--------:|----------:|------------:|
-| ContainsKeyHit  | Default       |      4.290 ns |     0.0524 ns |     0.0490 ns |      4.267 ns |  1.00 |    0.02 |       - |         - |          NA |
-| ContainsKeyHit  | Bidirectional |      4.720 ns |     0.1281 ns |     0.1315 ns |      4.687 ns |  1.10 |    0.03 |       - |         - |          NA |
-|                 |               |               |               |               |               |       |         |         |           |             |
-| ContainsKeyMiss | Default       |      4.625 ns |     0.2235 ns |     0.6267 ns |      4.340 ns |  1.02 |    0.18 |       - |         - |          NA |
-| ContainsKeyMiss | Bidirectional |      4.491 ns |     0.1047 ns |     0.1501 ns |      4.437 ns |  0.99 |    0.12 |       - |         - |          NA |
-|                 |               |               |               |               |               |       |         |         |           |             |
-| ContainsValue   | Default       | 31,853.939 ns |   570.9007 ns |   657.4501 ns | 31,616.559 ns | 1.000 |    0.03 |       - |      48 B |        1.00 |
-| ContainsValue   | Bidirectional |      5.355 ns |     0.1263 ns |     0.1181 ns |      5.305 ns | 0.000 |    0.00 |       - |         - |        0.00 |
-|                 |               |               |               |               |               |       |         |         |           |             |
-| FindKeyByValue  | Default       | 31,582.183 ns |   160.8932 ns |   142.6277 ns | 31,561.374 ns | 1.000 |    0.01 |       - |      48 B |        1.00 |
-| FindKeyByValue  | Bidirectional |      5.019 ns |     0.1326 ns |     0.3563 ns |      4.850 ns | 0.000 |    0.00 |       - |         - |        0.00 |
-|                 |               |               |               |               |               |       |         |         |           |             |
-| IndexerHit      | Default       |      4.047 ns |     0.0417 ns |     0.0369 ns |      4.057 ns |  1.00 |    0.01 |       - |         - |          NA |
-| IndexerHit      | Bidirectional |      4.220 ns |     0.0535 ns |     0.0501 ns |      4.203 ns |  1.04 |    0.02 |       - |         - |          NA |
-|                 |               |               |               |               |               |       |         |         |           |             |
-| Keys            | Default       | 21,612.259 ns |   123.9897 ns |   115.9800 ns | 21,609.627 ns |  1.00 |    0.01 |       - |      40 B |        1.00 |
-| Keys            | Bidirectional | 22,255.263 ns |   136.7965 ns |   121.2665 ns | 22,262.592 ns |  1.03 |    0.01 |       - |         - |        0.00 |
-|                 |               |               |               |               |               |       |         |         |           |             |
-| Pairs           | Default       | 65,848.037 ns |   361.5204 ns |   320.4784 ns | 65,783.923 ns |  1.00 |    0.01 |       - |      48 B |        1.00 |
-| Pairs           | Bidirectional | 93,337.783 ns | 1,802.9743 ns | 1,686.5032 ns | 92,810.767 ns |  1.42 |    0.03 | 57.3730 |  240048 B |    5,001.00 |
-|                 |               |               |               |               |               |       |         |         |           |             |
-| TryGetValueHit  | Default       |      4.250 ns |     0.0471 ns |     0.0441 ns |      4.239 ns |  1.00 |    0.01 |       - |         - |          NA |
-| TryGetValueHit  | Bidirectional |      4.445 ns |     0.1003 ns |     0.0985 ns |      4.426 ns |  1.05 |    0.02 |       - |         - |          NA |
-|                 |               |               |               |               |               |       |         |         |           |             |
-| TryGetValueMiss | Default       |      4.086 ns |     0.0647 ns |     0.0540 ns |      4.094 ns |  1.00 |    0.02 |       - |         - |          NA |
-| TryGetValueMiss | Bidirectional |      4.225 ns |     0.0459 ns |     0.0383 ns |      4.224 ns |  1.03 |    0.02 |       - |         - |          NA |
-|                 |               |               |               |               |               |       |         |         |           |             |
-| Values          | Default       | 21,505.556 ns |   284.7703 ns |   237.7961 ns | 21,400.943 ns |  1.00 |    0.01 |       - |      40 B |        1.00 |
-| Values          | Bidirectional | 22,142.871 ns |   395.6256 ns |   330.3653 ns | 21,986.961 ns |  1.03 |    0.02 |       - |         - |        0.00 |
-|                 |               |               |               |               |               |       |         |         |           |             |
-| Wrap            | Default       |      7.010 ns |     0.1113 ns |     0.0987 ns |      7.006 ns |  1.00 |    0.02 |  0.0096 |      40 B |        1.00 |
-| Wrap            | Bidirectional |     14.314 ns |     0.2245 ns |     0.1753 ns |     14.263 ns |  2.04 |    0.04 |  0.0153 |      64 B |        1.60 |
+| Operation       | Type          | Mean          | Error       | StdDev      | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
+|---------------- |-------------- |--------------:|------------:|------------:|------:|--------:|-------:|----------:|------------:|
+| ContainsKeyHit  | Default       |      4.357 ns |   0.0192 ns |   0.0170 ns |  1.00 |    0.01 |      - |         - |          NA |
+| ContainsKeyHit  | Bidirectional |      4.615 ns |   0.0241 ns |   0.0214 ns |  1.06 |    0.01 |      - |         - |          NA |
+|                 |               |               |             |             |       |         |        |           |             |
+| ContainsKeyMiss | Default       |      4.086 ns |   0.0194 ns |   0.0181 ns |  1.00 |    0.01 |      - |         - |          NA |
+| ContainsKeyMiss | Bidirectional |      4.347 ns |   0.0217 ns |   0.0181 ns |  1.06 |    0.01 |      - |         - |          NA |
+|                 |               |               |             |             |       |         |        |           |             |
+| ContainsValue   | Default       | 31,035.340 ns | 118.3836 ns | 110.7361 ns | 1.000 |    0.00 |      - |      48 B |        1.00 |
+| ContainsValue   | Bidirectional |      5.059 ns |   0.0170 ns |   0.0159 ns | 0.000 |    0.00 |      - |         - |        0.00 |
+|                 |               |               |             |             |       |         |        |           |             |
+| FindKeyByValue  | Default       | 31,034.681 ns | 139.8725 ns | 130.8368 ns | 1.000 |    0.01 |      - |      48 B |        1.00 |
+| FindKeyByValue  | Bidirectional |      4.738 ns |   0.0256 ns |   0.0239 ns | 0.000 |    0.00 |      - |         - |        0.00 |
+|                 |               |               |             |             |       |         |        |           |             |
+| IndexerHit      | Default       |      4.387 ns |   0.0371 ns |   0.0290 ns |  1.00 |    0.01 |      - |         - |          NA |
+| IndexerHit      | Bidirectional |      4.269 ns |   0.1172 ns |   0.1825 ns |  0.97 |    0.04 |      - |         - |          NA |
+|                 |               |               |             |             |       |         |        |           |             |
+| Keys            | Default       | 21,022.387 ns | 318.6831 ns | 266.1148 ns |  1.00 |    0.02 |      - |      40 B |        1.00 |
+| Keys            | Bidirectional | 21,566.437 ns | 104.2090 ns |  87.0192 ns |  1.03 |    0.01 |      - |         - |        0.00 |
+|                 |               |               |             |             |       |         |        |           |             |
+| Pairs           | Default       | 64,811.726 ns | 383.6748 ns | 340.1177 ns |  1.00 |    0.01 |      - |      48 B |        1.00 |
+| Pairs           | Bidirectional | 64,345.147 ns | 298.7609 ns | 264.8437 ns |  0.99 |    0.01 |      - |      48 B |        1.00 |
+|                 |               |               |             |             |       |         |        |           |             |
+| TryGetValueHit  | Default       |      4.113 ns |   0.0202 ns |   0.0189 ns |  1.00 |    0.01 |      - |         - |          NA |
+| TryGetValueHit  | Bidirectional |      4.249 ns |   0.0298 ns |   0.0264 ns |  1.03 |    0.01 |      - |         - |          NA |
+|                 |               |               |             |             |       |         |        |           |             |
+| TryGetValueMiss | Default       |      3.917 ns |   0.0249 ns |   0.0221 ns |  1.00 |    0.01 |      - |         - |          NA |
+| TryGetValueMiss | Bidirectional |      4.075 ns |   0.0226 ns |   0.0201 ns |  1.04 |    0.01 |      - |         - |          NA |
+|                 |               |               |             |             |       |         |        |           |             |
+| Values          | Default       | 20,830.832 ns | 110.2745 ns |  92.0842 ns |  1.00 |    0.01 |      - |      40 B |        1.00 |
+| Values          | Bidirectional | 21,307.170 ns |  64.3607 ns |  57.0541 ns |  1.02 |    0.01 |      - |         - |        0.00 |
+|                 |               |               |             |             |       |         |        |           |             |
+| Wrap            | Default       |      5.830 ns |   0.0429 ns |   0.0358 ns |  1.00 |    0.01 | 0.0096 |      40 B |        1.00 |
+| Wrap            | Bidirectional |     13.765 ns |   0.3363 ns |   0.3598 ns |  2.36 |    0.06 | 0.0153 |      64 B |        1.60 |

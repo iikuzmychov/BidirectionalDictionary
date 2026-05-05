@@ -129,7 +129,9 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
     public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value!);
 
-    public IEnumerator GetEnumerator() => _baseDictionary.GetEnumerator();
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _baseDictionary.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     void IDictionary<TKey, TValue>.Add(TKey key, TValue value) => throw new NotSupportedException();
 
