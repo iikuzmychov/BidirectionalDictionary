@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace System.Collections.Generic;
 
+[ExcludeFromCodeCoverage]
 internal sealed class DictionaryDebugView<TKey, TValue>
     where TKey : notnull
 {

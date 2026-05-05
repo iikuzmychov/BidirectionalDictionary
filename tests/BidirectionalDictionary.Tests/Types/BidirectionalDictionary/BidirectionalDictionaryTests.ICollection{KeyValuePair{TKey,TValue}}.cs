@@ -1,7 +1,40 @@
-namespace BidirectionalDictionary.Tests;
+namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary;
 
 public partial class BidirectionalDictionaryTests
 {
+    [Fact]
+    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
+    public void ICollectionKeyValuePair_IsReadOnly_FilledBiDictionary_ReturnsFalse()
+    {
+        var biDictionary = new BidirectionalDictionary<char, int>()
+        {
+            { 'a', 0 },
+        };
+
+        var isReadOnly = ((ICollection<KeyValuePair<char, int>>)biDictionary).IsReadOnly;
+
+        Assert.False(isReadOnly);
+    }
+
+    [Fact]
+    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
+    public void ICollectionKeyValuePair_CopyTo_FilledBiDictionary_CopiesEntries()
+    {
+        var biDictionary = new BidirectionalDictionary<char, int>()
+        {
+            { 'a', 0 },
+            { 'b', 1 },
+        };
+
+        var entries = new KeyValuePair<char, int>[3];
+
+        ((ICollection<KeyValuePair<char, int>>)biDictionary).CopyTo(entries, 1);
+
+        Assert.Equal(default, entries[0]);
+        Assert.Equal(new KeyValuePair<char, int>('a', 0), entries[1]);
+        Assert.Equal(new KeyValuePair<char, int>('b', 1), entries[2]);
+    }
+
     [Theory]
     [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData('a', 0)]

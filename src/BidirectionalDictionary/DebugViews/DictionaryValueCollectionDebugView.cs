@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace System.Collections.Generic;
 
+[ExcludeFromCodeCoverage]
 internal sealed class DictionaryValueCollectionDebugView<TKey, TValue>
 {
     private readonly ICollection<TValue> _collection;

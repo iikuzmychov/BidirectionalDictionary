@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-namespace BidirectionalDictionary.Tests;
+namespace BidirectionalDictionary.Tests.Types.ReadOnlyBidirectionalDictionary;
 
 public partial class ReadOnlyBidirectionalDictionaryTests
 {
@@ -22,6 +22,22 @@ public partial class ReadOnlyBidirectionalDictionaryTests
         Assert.Equal(biDictionary.Values, readOnlyBiDictionary.Values);
         Assert.Equal(biDictionary.Keys, readOnlyBiDictionary.Inverse.Values);
         Assert.Equal(biDictionary.Values, readOnlyBiDictionary.Inverse.Keys);
+    }
+
+    [Fact]
+    [Trait("Property", null)]
+    public void Count_FilledReadOnlyBiDictionary_ReturnsCount()
+    {
+        var biDictionary = new BidirectionalDictionary<char, int>()
+        {
+            { 'a', 0 },
+        };
+
+        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+
+        var count = readOnlyBiDictionary.Count;
+
+        Assert.Equal(1, count);
     }
 
     [Fact]
@@ -159,6 +175,22 @@ public partial class ReadOnlyBidirectionalDictionaryTests
         var key = (char?)null;
 
         Assert.Throws<ArgumentNullException>(() => _ = readOnlyBiDictionary.TryGetValue(key, out _));
+    }
+
+    [Fact]
+    [Trait("Method", null)]
+    public void GetEnumerator_FilledReadOnlyBiDictionary_EnumeratesEntries()
+    {
+        var biDictionary = new BidirectionalDictionary<char, int>()
+        {
+            { 'a', 0 },
+        };
+
+        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+
+        var entries = readOnlyBiDictionary.Cast<KeyValuePair<char, int>>().ToArray();
+
+        Assert.Single(entries, new KeyValuePair<char, int>('a', 0));
     }
 
     #endregion

@@ -520,11 +520,11 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
         public Enumerator GetEnumerator() => new(_bidirectionalDictionary);
 
-        void ICollection<TKey>.Add(TKey item) => ((ICollection<TKey>)_bidirectionalDictionary._baseDictionary.Keys).Add(item);
+        void ICollection<TKey>.Add(TKey item) => throw new NotSupportedException();
 
-        void ICollection<TKey>.Clear() => ((ICollection<TKey>)_bidirectionalDictionary._baseDictionary.Keys).Clear();
+        void ICollection<TKey>.Clear() => throw new NotSupportedException();
 
-        bool ICollection<TKey>.Remove(TKey item) => ((ICollection<TKey>)_bidirectionalDictionary._baseDictionary.Keys).Remove(item);
+        bool ICollection<TKey>.Remove(TKey item) => throw new NotSupportedException();
 
         void ICollection.CopyTo(Array array, int index) => ((ICollection)_bidirectionalDictionary._baseDictionary.Keys).CopyTo(array, index);
 
@@ -584,11 +584,11 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
         public Enumerator GetEnumerator() => new(_bidirectionalDictionary);
 
-        void ICollection<TValue>.Add(TValue item) => ((ICollection<TValue>)_bidirectionalDictionary._baseDictionary.Values).Add(item);
+        void ICollection<TValue>.Add(TValue item) => throw new NotSupportedException();
 
-        void ICollection<TValue>.Clear() => ((ICollection<TValue>)_bidirectionalDictionary._baseDictionary.Values).Clear();
+        void ICollection<TValue>.Clear() => throw new NotSupportedException();
 
-        bool ICollection<TValue>.Remove(TValue item) => ((ICollection<TValue>)_bidirectionalDictionary._baseDictionary.Values).Remove(item);
+        bool ICollection<TValue>.Remove(TValue item) => throw new NotSupportedException();
 
         void ICollection.CopyTo(Array array, int index) => ((ICollection)_bidirectionalDictionary._baseDictionary.Values).CopyTo(array, index);
 

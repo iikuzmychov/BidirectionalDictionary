@@ -1,4 +1,4 @@
-namespace BidirectionalDictionary.Tests;
+namespace BidirectionalDictionary.Tests.Extensions;
 
 public class BidirectionalDictionaryEnumerableExtensionsTests
 {
@@ -136,6 +136,36 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
 
     [Fact]
     [Trait("Extension", null)]
+    public void ToBidirectionalDictionary_SourceListAndKeySelectorAndCustomComparers_CreatesBiDictionaryFromSource()
+    {
+        var source = new List<string> { "a", "bb" };
+
+        var biDictionary = source.ToBidirectionalDictionary(
+            value => value.Length,
+            EqualityComparer<int>.Default,
+            StringComparer.Ordinal);
+
+        Assert.Contains(new KeyValuePair<int, string>(1, "a"), biDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), biDictionary);
+    }
+
+    [Fact]
+    [Trait("Extension", null)]
+    public void ToBidirectionalDictionary_SourceQueueAndKeySelectorAndCustomComparers_CreatesBiDictionaryFromSource()
+    {
+        var source = new Queue<string>(new[] { "a", "bb" });
+
+        var biDictionary = source.ToBidirectionalDictionary(
+            value => value.Length,
+            EqualityComparer<int>.Default,
+            StringComparer.Ordinal);
+
+        Assert.Contains(new KeyValuePair<int, string>(1, "a"), biDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), biDictionary);
+    }
+
+    [Fact]
+    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectors_CreatesBiDictionaryFromSource()
     {
         var source = new[] { "1:a", "2:bb" };
@@ -204,6 +234,22 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
         Assert.Equal(valueComparer, biDictionary.ValueComparer);
         Assert.Equal(keyComparer, biDictionary.Inverse.ValueComparer);
         Assert.Equal(valueComparer, biDictionary.Inverse.KeyComparer);
+    }
+
+    [Fact]
+    [Trait("Extension", null)]
+    public void ToBidirectionalDictionary_SourceQueueAndSelectorsAndCustomComparers_CreatesBiDictionaryFromSource()
+    {
+        var source = new Queue<string>(new[] { "1:a", "2:bb" });
+
+        var biDictionary = source.ToBidirectionalDictionary(
+            value => int.Parse(value[..1]),
+            value => value[2..],
+            EqualityComparer<int>.Default,
+            StringComparer.Ordinal);
+
+        Assert.Contains(new KeyValuePair<int, string>(1, "a"), biDictionary);
+        Assert.Contains(new KeyValuePair<int, string>(2, "bb"), biDictionary);
     }
 
     [Fact]

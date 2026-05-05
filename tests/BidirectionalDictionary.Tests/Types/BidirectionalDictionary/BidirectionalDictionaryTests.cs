@@ -1,4 +1,4 @@
-namespace BidirectionalDictionary.Tests;
+namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary;
 
 public partial class BidirectionalDictionaryTests
 {
@@ -79,6 +79,28 @@ public partial class BidirectionalDictionaryTests
         var dictionary = (IDictionary<char, int>?)null;
 
         Assert.Throws<ArgumentNullException>(() => _ = new BidirectionalDictionary<char, int>(dictionary!));
+    }
+
+    [Fact]
+    [Trait("Constructor", null)]
+    public void Constructor_FilledSourceDictionaryAndComparers_CreatesBiDictionaryWithExpectedComparers()
+    {
+        var dictionary = new Dictionary<string, string>
+        {
+            { "a", "x" },
+            { "b", "y" },
+        };
+
+        var keyComparer   = StringComparer.OrdinalIgnoreCase;
+        var valueComparer = StringComparer.Ordinal;
+
+        var biDictionary = new BidirectionalDictionary<string, string>(dictionary, keyComparer, valueComparer);
+
+        Assert.Equal(dictionary, biDictionary);
+        Assert.Equal(keyComparer, biDictionary.KeyComparer);
+        Assert.Equal(valueComparer, biDictionary.ValueComparer);
+        Assert.Equal(keyComparer, biDictionary.Inverse.ValueComparer);
+        Assert.Equal(valueComparer, biDictionary.Inverse.KeyComparer);
     }
 
     [Fact]
@@ -557,6 +579,21 @@ public partial class BidirectionalDictionaryTests
         Assert.Contains(new KeyValuePair<char, int>('b', 1), biDictionary);
         Assert.Contains(new KeyValuePair<int, char>(0, 'a'), biDictionary.Inverse);
         Assert.Contains(new KeyValuePair<int, char>(1, 'b'), biDictionary.Inverse);
+    }
+
+    [Fact]
+    [Trait("Method", null)]
+    public void AsReadOnly_FilledBiDictionary_ReturnsReadOnlyWrapper()
+    {
+        var biDictionary = new BidirectionalDictionary<char, int>()
+        {
+            { 'a', 0 },
+        };
+
+        var readOnlyBiDictionary = biDictionary.AsReadOnly();
+
+        Assert.Equal(biDictionary, readOnlyBiDictionary);
+        Assert.Same(readOnlyBiDictionary, readOnlyBiDictionary.Inverse.Inverse);
     }
 
     #endregion
