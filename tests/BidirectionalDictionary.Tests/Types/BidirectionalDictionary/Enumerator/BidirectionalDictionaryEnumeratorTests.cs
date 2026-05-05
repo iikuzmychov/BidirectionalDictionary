@@ -4,26 +4,26 @@ public partial class BidirectionalDictionaryEnumeratorTests
 {
     [Fact]
     [Trait("Method", "Enumerator")]
-    public void Enumerator_EmptyBiDictionary_ReturnsFalse()
+    public void Enumerator_EmptyBidirectionalDictionary_ReturnsFalse()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>();
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>();
 
-        using var enumerator = biDictionary.GetEnumerator();
+        using var enumerator = bidirectionalDictionary.GetEnumerator();
 
         Assert.False(enumerator.MoveNext());
     }
 
     [Fact]
     [Trait("Method", "Enumerator")]
-    public void Enumerator_FilledBiDictionary_EnumeratesEntries()
+    public void Enumerator_FilledBidirectionalDictionary_EnumeratesEntries()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
             { 'b', 1 },
         };
 
-        using var enumerator = biDictionary.GetEnumerator();
+        using var enumerator = bidirectionalDictionary.GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.Equal(new KeyValuePair<char, int>('a', 0), enumerator.Current);
@@ -36,16 +36,16 @@ public partial class BidirectionalDictionaryEnumeratorTests
 
     [Fact]
     [Trait("Method", "Enumerator")]
-    public void Enumerator_ModifiedBiDictionary_ThrowsInvalidOperationException()
+    public void Enumerator_ModifiedBidirectionalDictionary_ThrowsInvalidOperationException()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        using var enumerator = biDictionary.GetEnumerator();
+        using var enumerator = bidirectionalDictionary.GetEnumerator();
 
-        biDictionary.Add('b', 1);
+        bidirectionalDictionary.Add('b', 1);
 
         Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
     }

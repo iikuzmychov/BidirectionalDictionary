@@ -6,22 +6,22 @@ public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Fact]
     [Trait("Method", "IBidirectionalDictionary<TKey, TValue>")]
-    public void IBidirectionalDictionary_Inverse_FilledReadOnlyBiDictionary_ReturnsInverse()
+    public void IBidirectionalDictionary_Inverse_FilledReadOnlyBidirectionalDictionary_ReturnsInverse()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionaryForBidirectionalDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForBidirectionalDictionary();
 
-        var inverse = ((IBidirectionalDictionary<char, int>)readOnlyBiDictionary).Inverse;
+        var inverse = ((IBidirectionalDictionary<char, int>)readOnlyBidirectionalDictionary).Inverse;
 
-        Assert.Same(readOnlyBiDictionary.Inverse, inverse);
+        Assert.Same(readOnlyBidirectionalDictionary.Inverse, inverse);
     }
 
-    private static ReadOnlyBidirectionalDictionary<char, int> CreateReadOnlyBiDictionaryForBidirectionalDictionary()
+    private static ReadOnlyBidirectionalDictionary<char, int> CreateReadOnlyBidirectionalDictionaryForBidirectionalDictionary()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        return new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        return new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
     }
 }

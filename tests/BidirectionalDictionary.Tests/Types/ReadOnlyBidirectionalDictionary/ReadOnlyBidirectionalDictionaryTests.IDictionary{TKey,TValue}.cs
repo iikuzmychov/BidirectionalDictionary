@@ -6,71 +6,71 @@ public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Fact]
     [Trait("Indexer", "IDictionary<TKey, TValue>")]
-    public void IDictionary_IndexerGet_FilledReadOnlyBiDictionary_ReturnsValue()
+    public void IDictionary_IndexerGet_FilledReadOnlyBidirectionalDictionary_ReturnsValue()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionaryForDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
 
-        var value = ((IDictionary<char, int>)readOnlyBiDictionary)['a'];
+        var value = ((IDictionary<char, int>)readOnlyBidirectionalDictionary)['a'];
 
         Assert.Equal(0, value);
     }
 
     [Fact]
     [Trait("Indexer", "IDictionary<TKey, TValue>")]
-    public void IDictionary_IndexerSet_FilledReadOnlyBiDictionary_ThrowsNotSupportedException()
+    public void IDictionary_IndexerSet_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionaryForDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
 
-        Assert.Throws<NotSupportedException>(() => ((IDictionary<char, int>)readOnlyBiDictionary)['a'] = 1);
+        Assert.Throws<NotSupportedException>(() => ((IDictionary<char, int>)readOnlyBidirectionalDictionary)['a'] = 1);
     }
 
     [Fact]
     [Trait("Method", "IDictionary<TKey, TValue>")]
-    public void IDictionary_Keys_FilledReadOnlyBiDictionary_ReturnsKeys()
+    public void IDictionary_Keys_FilledReadOnlyBidirectionalDictionary_ReturnsKeys()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionaryForDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
 
-        var keys = ((IDictionary<char, int>)readOnlyBiDictionary).Keys;
+        var keys = ((IDictionary<char, int>)readOnlyBidirectionalDictionary).Keys;
 
         Assert.Single(keys, 'a');
     }
 
     [Fact]
     [Trait("Method", "IDictionary<TKey, TValue>")]
-    public void IDictionary_Values_FilledReadOnlyBiDictionary_ReturnsValues()
+    public void IDictionary_Values_FilledReadOnlyBidirectionalDictionary_ReturnsValues()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionaryForDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
 
-        var values = ((IDictionary<char, int>)readOnlyBiDictionary).Values;
+        var values = ((IDictionary<char, int>)readOnlyBidirectionalDictionary).Values;
 
         Assert.Single(values, 0);
     }
 
     [Fact]
     [Trait("Method", "IDictionary<TKey, TValue>")]
-    public void IDictionary_Add_FilledReadOnlyBiDictionary_ThrowsNotSupportedException()
+    public void IDictionary_Add_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionaryForDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
 
-        Assert.Throws<NotSupportedException>(() => ((IDictionary<char, int>)readOnlyBiDictionary).Add('b', 1));
+        Assert.Throws<NotSupportedException>(() => ((IDictionary<char, int>)readOnlyBidirectionalDictionary).Add('b', 1));
     }
 
     [Fact]
     [Trait("Method", "IDictionary<TKey, TValue>")]
-    public void IDictionary_Remove_FilledReadOnlyBiDictionary_ThrowsNotSupportedException()
+    public void IDictionary_Remove_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionaryForDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
 
-        Assert.Throws<NotSupportedException>(() => ((IDictionary<char, int>)readOnlyBiDictionary).Remove('a'));
+        Assert.Throws<NotSupportedException>(() => ((IDictionary<char, int>)readOnlyBidirectionalDictionary).Remove('a'));
     }
 
-    private static ReadOnlyBidirectionalDictionary<char, int> CreateReadOnlyBiDictionaryForDictionary()
+    private static ReadOnlyBidirectionalDictionary<char, int> CreateReadOnlyBidirectionalDictionaryForDictionary()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        return new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        return new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
     }
 }

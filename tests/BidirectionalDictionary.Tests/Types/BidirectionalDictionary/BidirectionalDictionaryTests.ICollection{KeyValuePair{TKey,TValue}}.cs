@@ -4,23 +4,23 @@ public partial class BidirectionalDictionaryTests
 {
     [Fact]
     [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
-    public void ICollectionKeyValuePair_IsReadOnly_FilledBiDictionary_ReturnsFalse()
+    public void ICollectionKeyValuePair_IsReadOnly_FilledBidirectionalDictionary_ReturnsFalse()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var isReadOnly = ((ICollection<KeyValuePair<char, int>>)biDictionary).IsReadOnly;
+        var isReadOnly = ((ICollection<KeyValuePair<char, int>>)bidirectionalDictionary).IsReadOnly;
 
         Assert.False(isReadOnly);
     }
 
     [Fact]
     [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
-    public void ICollectionKeyValuePair_CopyTo_FilledBiDictionary_CopiesEntries()
+    public void ICollectionKeyValuePair_CopyTo_FilledBidirectionalDictionary_CopiesEntries()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
             { 'b', 1 },
@@ -28,7 +28,7 @@ public partial class BidirectionalDictionaryTests
 
         var entries = new KeyValuePair<char, int>[3];
 
-        ((ICollection<KeyValuePair<char, int>>)biDictionary).CopyTo(entries, 1);
+        ((ICollection<KeyValuePair<char, int>>)bidirectionalDictionary).CopyTo(entries, 1);
 
         Assert.Equal(default, entries[0]);
         Assert.Equal(new KeyValuePair<char, int>('a', 0), entries[1]);
@@ -39,19 +39,19 @@ public partial class BidirectionalDictionaryTests
     [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData('a', 0)]
     [InlineData('b', 1)]
-    public void ICollectionKeyValuePair_Add_EmptyBiDictionaryAndNonDuplicatePair_AddsEntrySuccessfully(char key, int value)
+    public void ICollectionKeyValuePair_Add_EmptyBidirectionalDictionaryAndNonDuplicatePair_AddsEntrySuccessfully(char key, int value)
     {
-        var biDictionary = new BidirectionalDictionary<char, int>();
-        var pair         = new KeyValuePair<char, int>(key, value);
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>();
+        var pair = new KeyValuePair<char, int>(key, value);
 
-        ((ICollection<KeyValuePair<char, int>>)biDictionary).Add(pair);
+        ((ICollection<KeyValuePair<char, int>>)bidirectionalDictionary).Add(pair);
 
-        Assert.Single(biDictionary, pair);
-        Assert.Single(biDictionary.Keys, key);
-        Assert.Single(biDictionary.Values, value);
-        Assert.Single(biDictionary.Inverse, new KeyValuePair<int, char>(value, key));
-        Assert.Single(biDictionary.Inverse.Keys, value);
-        Assert.Single(biDictionary.Inverse.Values, key);
+        Assert.Single(bidirectionalDictionary, pair);
+        Assert.Single(bidirectionalDictionary.Keys, key);
+        Assert.Single(bidirectionalDictionary.Values, value);
+        Assert.Single(bidirectionalDictionary.Inverse, new KeyValuePair<int, char>(value, key));
+        Assert.Single(bidirectionalDictionary.Inverse.Keys, value);
+        Assert.Single(bidirectionalDictionary.Inverse.Values, key);
     }
 
     [Theory]
@@ -59,22 +59,22 @@ public partial class BidirectionalDictionaryTests
     [InlineData(null, null)]
     [InlineData(null, 0)]
     [InlineData('a', null)]
-    public void ICollectionKeyValuePair_Add_EmptyBiDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentNullException(char? key, int? value)
+    public void ICollectionKeyValuePair_Add_EmptyBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentNullException(char? key, int? value)
     {
 #pragma warning disable CS8714
-        var biDictionary = new BidirectionalDictionary<char?, int?>();
+        var bidirectionalDictionary = new BidirectionalDictionary<char?, int?>();
 #pragma warning restore CS8714
 
         var pair = new KeyValuePair<char?, int?>(key, value);
         
-        Assert.Throws<ArgumentNullException>(() => ((ICollection<KeyValuePair<char?, int?>>)biDictionary).Add(pair));
+        Assert.Throws<ArgumentNullException>(() => ((ICollection<KeyValuePair<char?, int?>>)bidirectionalDictionary).Add(pair));
 
-        // checking that biDictionary has not changed
-        Assert.Empty(biDictionary);
-        Assert.Empty(biDictionary.Keys);
-        Assert.Empty(biDictionary.Values);
-        Assert.Empty(biDictionary.Inverse.Keys);
-        Assert.Empty(biDictionary.Inverse.Values);
+        // checking that bidirectionalDictionary has not changed
+        Assert.Empty(bidirectionalDictionary);
+        Assert.Empty(bidirectionalDictionary.Keys);
+        Assert.Empty(bidirectionalDictionary.Values);
+        Assert.Empty(bidirectionalDictionary.Inverse.Keys);
+        Assert.Empty(bidirectionalDictionary.Inverse.Values);
     }
 
     [Theory]
@@ -82,45 +82,45 @@ public partial class BidirectionalDictionaryTests
     [InlineData('a', 0)]
     [InlineData('a', 1)]
     [InlineData('b', 0)]
-    public void ICollectionKeyValuePair_Add_FilledBiDictionaryAndDuplicatePair_ThrowsArgumentException(char key, int value)
+    public void ICollectionKeyValuePair_Add_FilledBidirectionalDictionaryAndDuplicatePair_ThrowsArgumentException(char key, int value)
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
         
         var pair = new KeyValuePair<char, int>(key, value);
 
-        Assert.Throws<ArgumentException>(() => ((ICollection<KeyValuePair<char, int>>)biDictionary).Add(pair));
+        Assert.Throws<ArgumentException>(() => ((ICollection<KeyValuePair<char, int>>)bidirectionalDictionary).Add(pair));
 
-        // checking that biDictionary has not changed
-        Assert.Single(biDictionary, new KeyValuePair<char, int>('a', 0));
-        Assert.Single(biDictionary.Keys, 'a');
-        Assert.Single(biDictionary.Values, 0);
-        Assert.Single(biDictionary.Inverse, new KeyValuePair<int, char>(0, 'a'));
-        Assert.Single(biDictionary.Inverse.Keys, 0);
-        Assert.Single(biDictionary.Inverse.Values, 'a');
+        // checking that bidirectionalDictionary has not changed
+        Assert.Single(bidirectionalDictionary, new KeyValuePair<char, int>('a', 0));
+        Assert.Single(bidirectionalDictionary.Keys, 'a');
+        Assert.Single(bidirectionalDictionary.Values, 0);
+        Assert.Single(bidirectionalDictionary.Inverse, new KeyValuePair<int, char>(0, 'a'));
+        Assert.Single(bidirectionalDictionary.Inverse.Keys, 0);
+        Assert.Single(bidirectionalDictionary.Inverse.Values, 'a');
     }
 
     [Fact]
     [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
-    public void ICollectionKeyValuePair_Remove_FilledBiDictionaryAndExistingPair_RemovesEntrySuccessfullyAndReturnsTrue()
+    public void ICollectionKeyValuePair_Remove_FilledBidirectionalDictionaryAndExistingPair_RemovesEntrySuccessfullyAndReturnsTrue()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
         var pair = new KeyValuePair<char, int>('a', 0);
 
-        var isRemoved = ((ICollection<KeyValuePair<char, int>>)biDictionary).Remove(pair);
+        var isRemoved = ((ICollection<KeyValuePair<char, int>>)bidirectionalDictionary).Remove(pair);
 
         Assert.True(isRemoved);
-        Assert.Empty(biDictionary);
-        Assert.Empty(biDictionary.Keys);
-        Assert.Empty(biDictionary.Values);
-        Assert.Empty(biDictionary.Inverse.Keys);
-        Assert.Empty(biDictionary.Inverse.Values);
+        Assert.Empty(bidirectionalDictionary);
+        Assert.Empty(bidirectionalDictionary.Keys);
+        Assert.Empty(bidirectionalDictionary.Values);
+        Assert.Empty(bidirectionalDictionary.Inverse.Keys);
+        Assert.Empty(bidirectionalDictionary.Inverse.Values);
     }
 
     [Theory]
@@ -128,26 +128,26 @@ public partial class BidirectionalDictionaryTests
     [InlineData('a', 1)]
     [InlineData('b', 0)]
     [InlineData('c', 2)]
-    public void ICollectionKeyValuePair_Remove_FilledBiDictionaryAndMissingPair_ReturnsFalse(char key, int value)
+    public void ICollectionKeyValuePair_Remove_FilledBidirectionalDictionaryAndMissingPair_ReturnsFalse(char key, int value)
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
         
         var pair = new KeyValuePair<char, int>(key, value);
 
-        var isRemoved = ((ICollection<KeyValuePair<char, int>>)biDictionary).Remove(pair);
+        var isRemoved = ((ICollection<KeyValuePair<char, int>>)bidirectionalDictionary).Remove(pair);
 
         Assert.False(isRemoved);
 
-        // checking that biDictionary has not changed
-        Assert.Single(biDictionary, new KeyValuePair<char, int>('a', 0));
-        Assert.Single(biDictionary.Keys, 'a');
-        Assert.Single(biDictionary.Values, 0);
-        Assert.Single(biDictionary.Inverse, new KeyValuePair<int, char>(0, 'a'));
-        Assert.Single(biDictionary.Inverse.Keys, 0);
-        Assert.Single(biDictionary.Inverse.Values, 'a');
+        // checking that bidirectionalDictionary has not changed
+        Assert.Single(bidirectionalDictionary, new KeyValuePair<char, int>('a', 0));
+        Assert.Single(bidirectionalDictionary.Keys, 'a');
+        Assert.Single(bidirectionalDictionary.Values, 0);
+        Assert.Single(bidirectionalDictionary.Inverse, new KeyValuePair<int, char>(0, 'a'));
+        Assert.Single(bidirectionalDictionary.Inverse.Keys, 0);
+        Assert.Single(bidirectionalDictionary.Inverse.Values, 'a');
     }
 
     [Theory]
@@ -155,22 +155,22 @@ public partial class BidirectionalDictionaryTests
     [InlineData(null, 0)]
     [InlineData('a', null)]
     [InlineData(null, null)]
-    public void ICollectionKeyValuePair_Remove_EmptyBiDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentNullException(char? key, int? value)
+    public void ICollectionKeyValuePair_Remove_EmptyBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentNullException(char? key, int? value)
     {
 #pragma warning disable CS8714
-        var biDictionary = new BidirectionalDictionary<char?, int?>();
+        var bidirectionalDictionary = new BidirectionalDictionary<char?, int?>();
 #pragma warning restore CS8714
 
         var pair = new KeyValuePair<char?, int?>(key, value);
 
-        Assert.Throws<ArgumentNullException>(() => ((ICollection<KeyValuePair<char?, int?>>)biDictionary).Remove(pair));
+        Assert.Throws<ArgumentNullException>(() => ((ICollection<KeyValuePair<char?, int?>>)bidirectionalDictionary).Remove(pair));
 
-        // checking that biDictionary has not changed
-        Assert.Empty(biDictionary);
-        Assert.Empty(biDictionary.Keys);
-        Assert.Empty(biDictionary.Values);
-        Assert.Empty(biDictionary.Inverse.Keys);
-        Assert.Empty(biDictionary.Inverse.Values);
+        // checking that bidirectionalDictionary has not changed
+        Assert.Empty(bidirectionalDictionary);
+        Assert.Empty(bidirectionalDictionary.Keys);
+        Assert.Empty(bidirectionalDictionary.Values);
+        Assert.Empty(bidirectionalDictionary.Inverse.Keys);
+        Assert.Empty(bidirectionalDictionary.Inverse.Values);
     }
 
     [Theory]
@@ -179,17 +179,17 @@ public partial class BidirectionalDictionaryTests
     [InlineData('b', 0, false)]
     [InlineData('a', 1, false)]
     [InlineData('c', 2, false)]
-    public void ICollectionKeyValuePair_Contains_FilledBiDictionaryAndMissingPair_ReturnsExpectedResult(
+    public void ICollectionKeyValuePair_Contains_FilledBidirectionalDictionaryAndMissingPair_ReturnsExpectedResult(
         char key, int value, bool expectedResult)
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
         var pair = new KeyValuePair<char, int>(key, value);
 
-        var isExists = ((ICollection<KeyValuePair<char, int>>)biDictionary).Contains(pair);
+        var isExists = ((ICollection<KeyValuePair<char, int>>)bidirectionalDictionary).Contains(pair);
 
         Assert.Equal(expectedResult, isExists);
     }
@@ -199,10 +199,10 @@ public partial class BidirectionalDictionaryTests
     [InlineData(null, 0)]
     [InlineData('a', null)]
     [InlineData(null, null)]
-    public void ICollectionKeyValuePair_Contains_FilledBiDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentException(char? key, int? value)
+    public void ICollectionKeyValuePair_Contains_FilledBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentException(char? key, int? value)
     {
 #pragma warning disable CS8714
-        var biDictionary = new BidirectionalDictionary<char?, int?>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char?, int?>()
         {
             { 'a', 0 },
         };
@@ -210,6 +210,6 @@ public partial class BidirectionalDictionaryTests
 
         var pair = new KeyValuePair<char?, int?>(key, value);
 
-        Assert.Throws<ArgumentNullException>(() => ((ICollection<KeyValuePair<char?, int?>>)biDictionary).Contains(pair));
+        Assert.Throws<ArgumentNullException>(() => ((ICollection<KeyValuePair<char?, int?>>)bidirectionalDictionary).Contains(pair));
     }
 }

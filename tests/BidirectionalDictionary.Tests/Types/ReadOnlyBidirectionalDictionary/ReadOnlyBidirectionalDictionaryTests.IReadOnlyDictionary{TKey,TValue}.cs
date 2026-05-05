@@ -6,33 +6,33 @@ public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Fact]
     [Trait("Method", "IReadOnlyDictionary<TKey, TValue>")]
-    public void IReadOnlyDictionary_Keys_FilledReadOnlyBiDictionary_ReturnsKeys()
+    public void IReadOnlyDictionary_Keys_FilledReadOnlyBidirectionalDictionary_ReturnsKeys()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionaryForReadOnlyDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForReadOnlyDictionary();
 
-        var keys = ((IReadOnlyDictionary<char, int>)readOnlyBiDictionary).Keys;
+        var keys = ((IReadOnlyDictionary<char, int>)readOnlyBidirectionalDictionary).Keys;
 
         Assert.Single(keys, 'a');
     }
 
     [Fact]
     [Trait("Method", "IReadOnlyDictionary<TKey, TValue>")]
-    public void IReadOnlyDictionary_Values_FilledReadOnlyBiDictionary_ReturnsValues()
+    public void IReadOnlyDictionary_Values_FilledReadOnlyBidirectionalDictionary_ReturnsValues()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionaryForReadOnlyDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForReadOnlyDictionary();
 
-        var values = ((IReadOnlyDictionary<char, int>)readOnlyBiDictionary).Values;
+        var values = ((IReadOnlyDictionary<char, int>)readOnlyBidirectionalDictionary).Values;
 
         Assert.Single(values, 0);
     }
 
-    private static ReadOnlyBidirectionalDictionary<char, int> CreateReadOnlyBiDictionaryForReadOnlyDictionary()
+    private static ReadOnlyBidirectionalDictionary<char, int> CreateReadOnlyBidirectionalDictionaryForReadOnlyDictionary()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        return new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        return new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
     }
 }

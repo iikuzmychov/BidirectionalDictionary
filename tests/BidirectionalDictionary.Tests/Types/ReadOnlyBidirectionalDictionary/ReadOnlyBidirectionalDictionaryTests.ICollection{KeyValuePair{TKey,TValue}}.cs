@@ -6,52 +6,52 @@ public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Fact]
     [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
-    public void ICollectionKeyValuePair_IsReadOnly_FilledReadOnlyBiDictionary_ReturnsTrue()
+    public void ICollectionKeyValuePair_IsReadOnly_FilledReadOnlyBidirectionalDictionary_ReturnsTrue()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
 
-        var isReadOnly = ((ICollection<KeyValuePair<char, int>>)readOnlyBiDictionary).IsReadOnly;
+        var isReadOnly = ((ICollection<KeyValuePair<char, int>>)readOnlyBidirectionalDictionary).IsReadOnly;
 
         Assert.True(isReadOnly);
     }
 
     [Fact]
     [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
-    public void ICollectionKeyValuePair_Add_FilledReadOnlyBiDictionary_ThrowsNotSupportedException()
+    public void ICollectionKeyValuePair_Add_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
 
         Assert.Throws<NotSupportedException>(
-            () => ((ICollection<KeyValuePair<char, int>>)readOnlyBiDictionary).Add(new KeyValuePair<char, int>('b', 1)));
+            () => ((ICollection<KeyValuePair<char, int>>)readOnlyBidirectionalDictionary).Add(new KeyValuePair<char, int>('b', 1)));
     }
 
     [Fact]
     [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
-    public void ICollectionKeyValuePair_Remove_FilledReadOnlyBiDictionary_ThrowsNotSupportedException()
+    public void ICollectionKeyValuePair_Remove_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
 
         Assert.Throws<NotSupportedException>(
-            () => ((ICollection<KeyValuePair<char, int>>)readOnlyBiDictionary).Remove(new KeyValuePair<char, int>('a', 0)));
+            () => ((ICollection<KeyValuePair<char, int>>)readOnlyBidirectionalDictionary).Remove(new KeyValuePair<char, int>('a', 0)));
     }
 
     [Fact]
     [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
-    public void ICollectionKeyValuePair_Clear_FilledReadOnlyBiDictionary_ThrowsNotSupportedException()
+    public void ICollectionKeyValuePair_Clear_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionary();
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
 
-        Assert.Throws<NotSupportedException>(() => ((ICollection<KeyValuePair<char, int>>)readOnlyBiDictionary).Clear());
+        Assert.Throws<NotSupportedException>(() => ((ICollection<KeyValuePair<char, int>>)readOnlyBidirectionalDictionary).Clear());
     }
 
     [Fact]
     [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
-    public void ICollectionKeyValuePair_CopyTo_FilledReadOnlyBiDictionary_CopiesEntries()
+    public void ICollectionKeyValuePair_CopyTo_FilledReadOnlyBidirectionalDictionary_CopiesEntries()
     {
-        var readOnlyBiDictionary = CreateReadOnlyBiDictionary();
-        var entries              = new KeyValuePair<char, int>[2];
+        var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
+        var entries = new KeyValuePair<char, int>[2];
 
-        ((ICollection<KeyValuePair<char, int>>)readOnlyBiDictionary).CopyTo(entries, 1);
+        ((ICollection<KeyValuePair<char, int>>)readOnlyBidirectionalDictionary).CopyTo(entries, 1);
 
         Assert.Equal(default, entries[0]);
         Assert.Equal(new KeyValuePair<char, int>('a', 0), entries[1]);
@@ -63,20 +63,20 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [InlineData('b', 0, false)]
     [InlineData('a', 1, false)]
     [InlineData('c', 2, false)]
-    public void ICollectionKeyValuePair_Contains_FilledReadOnlyBiDictionaryAndMissingPair_ReturnsExpectedResult(
+    public void ICollectionKeyValuePair_Contains_FilledReadOnlyBidirectionalDictionaryAndMissingPair_ReturnsExpectedResult(
         char key,
         int value,
         bool expectedResult)
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
-        var pair                 = new KeyValuePair<char, int>(key, value);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
+        var pair = new KeyValuePair<char, int>(key, value);
 
-        var isExists = ((ICollection<KeyValuePair<char, int>>)readOnlyBiDictionary).Contains(pair);
+        var isExists = ((ICollection<KeyValuePair<char, int>>)readOnlyBidirectionalDictionary).Contains(pair);
 
         Assert.Equal(expectedResult, isExists);
     }
@@ -86,29 +86,29 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [InlineData(null, 0)]
     [InlineData('a', null)]
     [InlineData(null, null)]
-    public void ICollectionKeyValuePair_Contains_FilledBiDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentException(char? key, int? value)
+    public void ICollectionKeyValuePair_Contains_FilledBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentException(char? key, int? value)
     {
 #pragma warning disable CS8714
-        var biDictionary = new BidirectionalDictionary<char?, int?>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char?, int?>()
         {
             { 'a', 0 },
         };
 
-        var readOnlyBiDictionary = new ReadOnlyBidirectionalDictionary<char?, int?>(biDictionary);
+        var readOnlyBidirectionalDictionary = new ReadOnlyBidirectionalDictionary<char?, int?>(bidirectionalDictionary);
 #pragma warning restore CS8714
 
         var pair = new KeyValuePair<char?, int?>(key, value);
 
-        Assert.Throws<ArgumentNullException>(() => ((ICollection<KeyValuePair<char?, int?>>)readOnlyBiDictionary).Contains(pair));
+        Assert.Throws<ArgumentNullException>(() => ((ICollection<KeyValuePair<char?, int?>>)readOnlyBidirectionalDictionary).Contains(pair));
     }
 
-    private static ReadOnlyBidirectionalDictionary<char, int> CreateReadOnlyBiDictionary()
+    private static ReadOnlyBidirectionalDictionary<char, int> CreateReadOnlyBidirectionalDictionary()
     {
-        var biDictionary = new BidirectionalDictionary<char, int>()
+        var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        return new ReadOnlyBidirectionalDictionary<char, int>(biDictionary);
+        return new ReadOnlyBidirectionalDictionary<char, int>(bidirectionalDictionary);
     }
 }
