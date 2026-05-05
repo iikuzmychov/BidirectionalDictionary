@@ -14,7 +14,7 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     where TKey : notnull
     where TValue : notnull
 {
-    private readonly IBidirectionalDictionary<TKey, TValue> _baseDictionary;
+    private readonly IBidirectionalDictionary<TKey, TValue> _bidirectionalDictionary;
 
     #region Properties
 
@@ -26,17 +26,17 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     /// <summary>
     /// Gets the number of key/value pairs contained in the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/>.
     /// </summary>
-    public int Count => _baseDictionary.Count;
+    public int Count => _bidirectionalDictionary.Count;
 
     /// <summary>
     /// Gets a collection containing the keys in the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/>.
     /// </summary>
-    public ICollection<TKey> Keys => _baseDictionary.Keys;
+    public ICollection<TKey> Keys => _bidirectionalDictionary.Keys;
 
     /// <summary>
     /// Gets a collection containing the values in the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/>.
     /// </summary>
-    public ICollection<TValue> Values => _baseDictionary.Values;
+    public ICollection<TValue> Values => _bidirectionalDictionary.Values;
 
     /// <summary>
     /// Gets the value associated with the specified key.
@@ -46,7 +46,7 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     /// <see cref="KeyNotFoundException"/>.</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="KeyNotFoundException"></exception>
-    public TValue this[TKey key] => _baseDictionary[key];
+    public TValue this[TKey key] => _bidirectionalDictionary[key];
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IBidirectionalDictionary<TValue, TKey> IBidirectionalDictionary<TKey, TValue>.Inverse => Inverse;
@@ -88,13 +88,13 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     /// <exception cref="ArgumentNullException"></exception>
     public ReadOnlyBidirectionalDictionary(IBidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
     {
-        _baseDictionary = bidirectionalDictionary ?? throw new ArgumentNullException(nameof(bidirectionalDictionary));
+        _bidirectionalDictionary = bidirectionalDictionary ?? throw new ArgumentNullException(nameof(bidirectionalDictionary));
         Inverse = new ReadOnlyBidirectionalDictionary<TValue, TKey>(this);
     }
 
     private ReadOnlyBidirectionalDictionary(ReadOnlyBidirectionalDictionary<TValue, TKey> inverse)
     {
-        _baseDictionary = inverse._baseDictionary.Inverse;
+        _bidirectionalDictionary = inverse._bidirectionalDictionary.Inverse;
         Inverse = inverse;
     }
 
@@ -108,7 +108,7 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     /// <param name="key">The key to locate in the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/> contains
     /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
-    public bool ContainsKey(TKey key) => _baseDictionary.ContainsKey(key);
+    public bool ContainsKey(TKey key) => _bidirectionalDictionary.ContainsKey(key);
 
     /// <summary>
     /// Determines whether the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/> contains the specified value.
@@ -116,7 +116,7 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     /// <param name="value">The value to locate in the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/> contains
     /// an element with the specified value; otherwise, <see langword="false"/>.</returns>
-    public bool ContainsValue(TValue value) => _baseDictionary.ContainsValue(value);
+    public bool ContainsValue(TValue value) => _bidirectionalDictionary.ContainsValue(value);
 
     /// <summary>
     /// Gets the value associated with the specified key.
@@ -127,9 +127,9 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     /// This parameter is passed uninitialized.</param>
     /// <returns><see langword="true"/> if the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/> contains
     /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
-    public bool TryGetValue(TKey key, out TValue value) => _baseDictionary.TryGetValue(key, out value!);
+    public bool TryGetValue(TKey key, out TValue value) => _bidirectionalDictionary.TryGetValue(key, out value!);
 
-    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _baseDictionary.GetEnumerator();
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _bidirectionalDictionary.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -144,13 +144,13 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     void ICollection<KeyValuePair<TKey, TValue>>.Clear() => throw new NotSupportedException();
 
     bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) =>
-        ((ICollection<KeyValuePair<TKey, TValue>>)_baseDictionary).Contains(item);
+        ((ICollection<KeyValuePair<TKey, TValue>>)_bidirectionalDictionary).Contains(item);
 
     void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) =>
-        ((ICollection<KeyValuePair<TKey, TValue>>)_baseDictionary).CopyTo(array, arrayIndex);
+        ((ICollection<KeyValuePair<TKey, TValue>>)_bidirectionalDictionary).CopyTo(array, arrayIndex);
 
     IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
-        => ((IEnumerable<KeyValuePair<TKey, TValue>>)_baseDictionary).GetEnumerator();
+        => ((IEnumerable<KeyValuePair<TKey, TValue>>)_bidirectionalDictionary).GetEnumerator();
 
     #endregion
 }
