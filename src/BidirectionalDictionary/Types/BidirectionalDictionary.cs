@@ -16,6 +16,8 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     where TValue : notnull
 {
     private readonly Dictionary<TKey, TValue> _baseDictionary;
+    private KeyCollection? _keys;
+    private ValueCollection? _values;
 
     #region Properties
 
@@ -42,12 +44,12 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <summary>
     /// Gets a collection containing the keys in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
     /// </summary>
-    public Dictionary<TKey, TValue>.KeyCollection Keys => _baseDictionary.Keys;
+    public KeyCollection Keys => _keys ??= new KeyCollection(this);
 
     /// <summary>
     /// Gets a collection containing the values in the <see cref="BidirectionalDictionary{TKey, TValue}"/>.
     /// </summary>
-    public Dictionary<TKey, TValue>.ValueCollection Values => _baseDictionary.Values;
+    public ValueCollection Values => _values ??= new ValueCollection(this);
 
     /// <summary>
     /// Gets or sets the value associated with the specified key.
@@ -424,9 +426,9 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <returns>An object that acts as a read-only wrapper around the current <see cref="BidirectionalDictionary{TKey, TValue}"></see>.</returns>
     public ReadOnlyBidirectionalDictionary<TKey, TValue> AsReadOnly() => new(this);
 
-    public Dictionary<TKey, TValue>.Enumerator GetEnumerator() => _baseDictionary.GetEnumerator();
+    public Enumerator GetEnumerator() => new(_baseDictionary);
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_baseDictionary).GetEnumerator();
 
     void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
@@ -460,4 +462,164 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
         => _baseDictionary.GetEnumerator();
 
     #endregion
+
+    public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
+    {
+        private readonly Dictionary<TKey, TValue> _dictionary;
+        private Dictionary<TKey, TValue>.Enumerator _enumerator;
+
+        internal Enumerator(Dictionary<TKey, TValue> dictionary)
+        {
+            _dictionary = dictionary;
+            _enumerator = dictionary.GetEnumerator();
+        }
+
+        public KeyValuePair<TKey, TValue> Current => _enumerator.Current;
+
+        public readonly DictionaryEntry Entry => ((IDictionaryEnumerator)_enumerator).Entry;
+
+        public readonly object Key => ((IDictionaryEnumerator)_enumerator).Key;
+
+        public readonly object? Value => ((IDictionaryEnumerator)_enumerator).Value;
+
+        readonly object IEnumerator.Current => ((IEnumerator)_enumerator).Current;
+
+        public bool MoveNext() => _enumerator.MoveNext();
+
+        void IEnumerator.Reset()
+        {
+            ((IEnumerator)_enumerator).Reset(); // validates old version, but resets boxed copy
+            _enumerator = _dictionary.GetEnumerator();
+        }
+
+        public void Dispose() => _enumerator.Dispose();
+    }
+
+    [DebuggerTypeProxy(typeof(DictionaryKeyCollectionDebugView<,>))]
+    [DebuggerDisplay("Count = {Count}")]
+    public sealed class KeyCollection : ICollection<TKey>, ICollection, IReadOnlyCollection<TKey>
+    {
+        private readonly BidirectionalDictionary<TKey, TValue> _bidirectionalDictionary;
+
+        public KeyCollection(BidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
+        {
+            _bidirectionalDictionary = bidirectionalDictionary ?? throw new ArgumentNullException(nameof(bidirectionalDictionary));
+        }
+
+        public int Count => _bidirectionalDictionary.Count;
+
+        bool ICollection<TKey>.IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => ((ICollection)_bidirectionalDictionary._baseDictionary.Keys).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)_bidirectionalDictionary._baseDictionary.Keys).SyncRoot;
+
+        public bool Contains(TKey item) => _bidirectionalDictionary.ContainsKey(item);
+
+        public void CopyTo(TKey[] array, int arrayIndex) => _bidirectionalDictionary._baseDictionary.Keys.CopyTo(array, arrayIndex);
+
+        public Enumerator GetEnumerator() => new(_bidirectionalDictionary);
+
+        void ICollection<TKey>.Add(TKey item) => ((ICollection<TKey>)_bidirectionalDictionary._baseDictionary.Keys).Add(item);
+
+        void ICollection<TKey>.Clear() => ((ICollection<TKey>)_bidirectionalDictionary._baseDictionary.Keys).Clear();
+
+        bool ICollection<TKey>.Remove(TKey item) => ((ICollection<TKey>)_bidirectionalDictionary._baseDictionary.Keys).Remove(item);
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_bidirectionalDictionary._baseDictionary.Keys).CopyTo(array, index);
+
+        IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator() => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public struct Enumerator : IEnumerator<TKey>
+        {
+            private readonly BidirectionalDictionary<TKey, TValue> _bidirectionalDictionary;
+            private Dictionary<TKey, TValue>.KeyCollection.Enumerator _enumerator;
+
+            internal Enumerator(BidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
+            {
+                _bidirectionalDictionary = bidirectionalDictionary;
+                _enumerator = bidirectionalDictionary._baseDictionary.Keys.GetEnumerator();
+            }
+
+            public readonly TKey Current => _enumerator.Current;
+
+            readonly object IEnumerator.Current => ((IEnumerator)_enumerator).Current;
+
+            public bool MoveNext() => _enumerator.MoveNext();
+
+            void IEnumerator.Reset()
+            {
+                ((IEnumerator)_enumerator).Reset(); // validates old version, but resets boxed copy
+                _enumerator = _bidirectionalDictionary._baseDictionary.Keys.GetEnumerator();
+            }
+
+            public void Dispose() => _enumerator.Dispose();
+        }
+    }
+
+    [DebuggerTypeProxy(typeof(DictionaryValueCollectionDebugView<,>))]
+    [DebuggerDisplay("Count = {Count}")]
+    public sealed class ValueCollection : ICollection<TValue>, ICollection, IReadOnlyCollection<TValue>
+    {
+        private readonly BidirectionalDictionary<TKey, TValue> _bidirectionalDictionary;
+
+        public ValueCollection(BidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
+        {
+            _bidirectionalDictionary = bidirectionalDictionary ?? throw new ArgumentNullException(nameof(bidirectionalDictionary));
+        }
+
+        public int Count => _bidirectionalDictionary.Count;
+
+        bool ICollection<TValue>.IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => ((ICollection)_bidirectionalDictionary._baseDictionary.Values).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)_bidirectionalDictionary._baseDictionary.Values).SyncRoot;
+
+        public bool Contains(TValue item) => _bidirectionalDictionary.ContainsValue(item);
+
+        public void CopyTo(TValue[] array, int arrayIndex) => _bidirectionalDictionary._baseDictionary.Values.CopyTo(array, arrayIndex);
+
+        public Enumerator GetEnumerator() => new(_bidirectionalDictionary);
+
+        void ICollection<TValue>.Add(TValue item) => ((ICollection<TValue>)_bidirectionalDictionary._baseDictionary.Values).Add(item);
+
+        void ICollection<TValue>.Clear() => ((ICollection<TValue>)_bidirectionalDictionary._baseDictionary.Values).Clear();
+
+        bool ICollection<TValue>.Remove(TValue item) => ((ICollection<TValue>)_bidirectionalDictionary._baseDictionary.Values).Remove(item);
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_bidirectionalDictionary._baseDictionary.Values).CopyTo(array, index);
+
+        IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public struct Enumerator : IEnumerator<TValue>
+        {
+            private readonly BidirectionalDictionary<TKey, TValue> _bidirectionalDictionary;
+            private Dictionary<TKey, TValue>.ValueCollection.Enumerator _enumerator;
+
+            internal Enumerator(BidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
+            {
+                _bidirectionalDictionary = bidirectionalDictionary;
+                _enumerator = bidirectionalDictionary._baseDictionary.Values.GetEnumerator();
+            }
+
+            public TValue Current => _enumerator.Current;
+
+            readonly object IEnumerator.Current => ((IEnumerator)_enumerator).Current;
+
+            public bool MoveNext() => _enumerator.MoveNext();
+
+            void IEnumerator.Reset()
+            {
+                ((IEnumerator)_enumerator).Reset(); // validates old version, but resets boxed copy
+                _enumerator = _bidirectionalDictionary._baseDictionary.Values.GetEnumerator();
+            }
+
+            public void Dispose() => _enumerator.Dispose();
+        }
+    }
 }
