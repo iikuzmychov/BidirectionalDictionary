@@ -5,7 +5,6 @@ namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary.Enumerator
 public partial class BidirectionalDictionaryEnumeratorTests
 {
     [Fact]
-    [Trait("Method", "IDictionaryEnumerator")]
     public void Entry_StartedEnumerator_ReturnsEntry()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -20,7 +19,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionaryEnumerator")]
     public void Entry_NotStartedEnumerator_ThrowsInvalidOperationException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -34,7 +32,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionaryEnumerator")]
     public void Entry_FinishedEnumerator_ThrowsInvalidOperationException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -51,7 +48,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionaryEnumerator")]
     public void Key_StartedEnumerator_ReturnsKey()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -66,7 +62,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionaryEnumerator")]
     public void Key_NotStartedEnumerator_ThrowsInvalidOperationException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -80,7 +75,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionaryEnumerator")]
     public void Key_FinishedEnumerator_ThrowsInvalidOperationException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -97,7 +91,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionaryEnumerator")]
     public void Value_StartedEnumerator_ReturnsValue()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -112,7 +105,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionaryEnumerator")]
     public void Value_NotStartedEnumerator_ThrowsInvalidOperationException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -126,7 +118,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionaryEnumerator")]
     public void Value_FinishedEnumerator_ThrowsInvalidOperationException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()

@@ -5,7 +5,6 @@ namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary.KeyCollect
 public partial class BidirectionalDictionaryKeyCollectionTests
 {
     [Fact]
-    [Trait("Method", "ICollection<TKey>")]
     public void ICollectionT_IsReadOnly_FilledBidirectionalDictionary_ReturnsTrue()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -19,7 +18,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<TKey>")]
     public void ICollectionT_Add_FilledBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -31,7 +29,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<TKey>")]
     public void ICollectionT_Add_EmptyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>();
@@ -40,7 +37,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<TKey>")]
     public void ICollectionT_Clear_FilledBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -52,7 +48,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<TKey>")]
     public void ICollectionT_Clear_EmptyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>();
@@ -61,7 +56,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<TKey>")]
     public void ICollectionT_Remove_FilledBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -73,7 +67,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<TKey>")]
     public void ICollectionT_Remove_EmptyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>();
@@ -82,7 +75,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection")]
     public void ICollection_IsSynchronized_FilledBidirectionalDictionary_ReturnsFalse()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -96,7 +88,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection")]
     public void ICollection_SyncRoot_FilledBidirectionalDictionary_ReturnsSyncRoot()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -111,7 +102,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection")]
     public void ICollection_CopyTo_FilledBidirectionalDictionary_CopiesKeys()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()

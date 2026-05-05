@@ -7,7 +7,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     #region Constructor tests
 
     [Fact]
-    [Trait("Constructor", null)]
     public void Constructor_FilledSourceBidirectionalDictionary_CreatesEmptyBidirectionalDictionary()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -25,7 +24,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Property", null)]
     public void Count_FilledReadOnlyBidirectionalDictionary_ReturnsCount()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -41,7 +39,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Constructor", null)]
     public void Constructor_NullSourceBidirectionalDictionary_ThrowsArgumentNullException()
     {
         var bidirectionalDictionary = (BidirectionalDictionary<char, int>?)null;
@@ -54,7 +51,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     #region Method tests
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData('a', true)]
     [InlineData('b', false)]
     [InlineData('c', false)]
@@ -73,7 +69,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void ContainsKey_FilledReadOnlyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -91,7 +86,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData(0, true)]
     [InlineData(1, false)]
     [InlineData(2, false)]
@@ -110,7 +104,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void ContainsValue_FilledReadOnlyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -129,7 +122,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
 
 
     [Fact]
-    [Trait("Method", null)]
     public void TryGetValue_FilledReadOnlyBidirectionalDictionaryAndExistingKey_ReturnsTrueAndReturnsOutExpectedValue()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -150,7 +142,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData('a')]
     [InlineData('b')]
     public void TryGetValue_EmptyReadOnlyBidirectionalDictionaryAndMissingKey_ReturnsFalse(char key)
@@ -164,7 +155,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void TryGetValue_EmptyReadOnlyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -178,7 +168,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void GetEnumerator_FilledReadOnlyBidirectionalDictionary_EnumeratesEntries()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -198,7 +187,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     #region Indexer tests
 
     [Fact]
-    [Trait("Indexer", null)]
     public void Indexer_Get_FilledReadOnlyBidirectionalDictionaryAndExistingKey_ReturnsExpectedValue()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -217,7 +205,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Indexer", null)]
     public void Indexer_Get_EmptyReadOnlyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -231,7 +218,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Indexer", null)]
     [InlineData('a')]
     [InlineData('b')]
     public void Indexer_Get_EmptyReadOnlyBidirectionalDictionaryAndMissingKey_ThrowsKeyNotFoundException(char key)

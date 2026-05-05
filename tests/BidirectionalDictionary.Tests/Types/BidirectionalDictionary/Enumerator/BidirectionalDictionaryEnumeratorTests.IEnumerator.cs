@@ -5,7 +5,6 @@ namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary.Enumerator
 public partial class BidirectionalDictionaryEnumeratorTests
 {
     [Fact]
-    [Trait("Method", "IEnumerator")]
     public void Current_StartedEnumerator_ReturnsCurrent()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -20,7 +19,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IEnumerator")]
     public void Current_NotStartedEnumerator_ThrowsInvalidOperationException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -34,7 +32,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IEnumerator")]
     public void Current_FinishedEnumerator_ThrowsInvalidOperationException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -51,7 +48,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IEnumerator")]
     public void Reset_StartedEnumerator_ResetsEnumerator()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -70,7 +66,6 @@ public partial class BidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    [Trait("Method", "IEnumerator")]
     public void Reset_ModifiedBidirectionalDictionary_ThrowsInvalidOperationException()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()

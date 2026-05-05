@@ -3,7 +3,6 @@ namespace BidirectionalDictionary.Tests.Extensions;
 public class BidirectionalDictionaryEnumerableExtensionsTests
 {
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_KeyValuePairsEnumerable_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new List<KeyValuePair<char, int>>
@@ -24,7 +23,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndCustomComparers_CreatesBidirectionalDictionaryWithExpectedComparers()
     {
         var source = new List<KeyValuePair<string, string>>
@@ -46,7 +44,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndNullSource_ThrowsArgumentNullException()
     {
         var source = (IEnumerable<KeyValuePair<char, int>>?)null;
@@ -55,7 +52,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_TupleEnumerable_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new List<(char Key, int Value)>
@@ -75,7 +71,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_TupleEnumerableAndNullSource_ThrowsArgumentNullException()
     {
         var source = (IEnumerable<(char Key, int Value)>?)null;
@@ -84,7 +79,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelector_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new[] { "a", "bb" };
@@ -99,7 +93,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndNullSource_ThrowsArgumentNullException()
     {
         var source = (IEnumerable<string>?)null;
@@ -108,7 +101,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndNullKeySelector_ThrowsArgumentNullException()
     {
         var source = new[] { "a" };
@@ -118,7 +110,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndCustomComparers_CreatesBidirectionalDictionaryWithExpectedComparers()
     {
         var source = new[] { "a", "bb" };
@@ -135,7 +126,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceListAndKeySelectorAndCustomComparers_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new List<string> { "a", "bb" };
@@ -150,7 +140,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceQueueAndKeySelectorAndCustomComparers_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new Queue<string>(new[] { "a", "bb" });
@@ -165,7 +154,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectors_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new[] { "1:a", "2:bb" };
@@ -182,7 +170,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndNullSource_ThrowsArgumentNullException()
     {
         var source = (IEnumerable<string>?)null;
@@ -194,7 +181,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndNullKeySelector_ThrowsArgumentNullException()
     {
         var source = new[] { "1:a" };
@@ -205,7 +191,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndNullElementSelector_ThrowsArgumentNullException()
     {
         var source = new[] { "1:a" };
@@ -216,7 +201,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndCustomComparers_CreatesBidirectionalDictionaryWithExpectedComparers()
     {
         var source = new[] { "1:a", "2:bb" };
@@ -237,7 +221,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceQueueAndSelectorsAndCustomComparers_CreatesBidirectionalDictionaryFromSource()
     {
         var source = new Queue<string>(new[] { "1:a", "2:bb" });
@@ -253,7 +236,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndEmptySource_ReturnsEmptyBidirectionalDictionary()
     {
         var source = Array.Empty<KeyValuePair<char, int>>();
@@ -265,7 +247,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndDuplicateKey_ThrowsArgumentException()
     {
         var source = new List<KeyValuePair<char, int>>
@@ -278,7 +259,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndDuplicateValue_ThrowsArgumentException()
     {
         var source = new List<KeyValuePair<char, int>>
@@ -291,7 +271,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndCustomComparersAndNullSource_ThrowsArgumentNullException()
     {
         var source = (IEnumerable<KeyValuePair<char, int>>?)null;
@@ -301,7 +280,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndCustomComparersAndDuplicateKeyByComparer_ThrowsArgumentException()
     {
         var source = new List<KeyValuePair<string, int>>
@@ -315,7 +293,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_KeyValuePairsEnumerableAndCustomComparersAndDuplicateValueByComparer_ThrowsArgumentException()
     {
         var source = new List<KeyValuePair<int, string>>
@@ -329,7 +306,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_TupleEnumerableAndEmptySource_ReturnsEmptyBidirectionalDictionary()
     {
         var source = Array.Empty<(char Key, int Value)>();
@@ -341,7 +317,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_TupleEnumerableAndDuplicateKey_ThrowsArgumentException()
     {
         var source = new List<(char Key, int Value)>
@@ -354,7 +329,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_TupleEnumerableAndDuplicateValue_ThrowsArgumentException()
     {
         var source = new List<(char Key, int Value)>
@@ -367,7 +341,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_TupleEnumerableAndCustomComparersAndNullSource_ThrowsArgumentNullException()
     {
         var source = (IEnumerable<(char Key, int Value)>?)null;
@@ -377,7 +350,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_TupleEnumerableAndCustomComparersAndDuplicateKeyByComparer_ThrowsArgumentException()
     {
         var source = new List<(string Key, int Value)>
@@ -391,7 +363,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_TupleEnumerableAndCustomComparersAndDuplicateValueByComparer_ThrowsArgumentException()
     {
         var source = new List<(int Key, string Value)>
@@ -405,7 +376,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndEmptySource_ReturnsEmptyBidirectionalDictionary()
     {
         var source = Array.Empty<string>();
@@ -417,7 +387,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndDuplicateKey_ThrowsArgumentException()
     {
         var source = new[] { "aa", "ab" };
@@ -426,7 +395,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndCustomComparersAndNullSource_ThrowsArgumentNullException()
     {
         var source = (IEnumerable<string>?)null;
@@ -436,7 +404,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndCustomComparersAndNullKeySelector_ThrowsArgumentNullException()
     {
         var source = new[] { "a" };
@@ -447,7 +414,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndCustomComparersAndDuplicateKeyByComparer_ThrowsArgumentException()
     {
         var source = new[] { "a", "A" };
@@ -457,7 +423,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndKeySelectorAndCustomComparersAndDuplicateValueByComparer_ThrowsArgumentException()
     {
         var source = new[] { "a", "A" };
@@ -468,7 +433,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndEmptySource_ReturnsEmptyBidirectionalDictionary()
     {
         var source = Array.Empty<string>();
@@ -480,7 +444,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndDuplicateKey_ThrowsArgumentException()
     {
         var source = new[] { "a", "A" };
@@ -492,7 +455,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndDuplicateValue_ThrowsArgumentException()
     {
         var source = new[] { "a1", "b1" };
@@ -502,7 +464,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndCustomComparersAndNullSource_ThrowsArgumentNullException()
     {
         var source = (IEnumerable<string>?)null;
@@ -516,7 +477,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndCustomComparersAndNullKeySelector_ThrowsArgumentNullException()
     {
         var source = new[] { "a" };
@@ -532,7 +492,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndCustomComparersAndNullElementSelector_ThrowsArgumentNullException()
     {
         var source = new[] { "a" };
@@ -547,7 +506,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndCustomComparersAndDuplicateKeyByComparer_ThrowsArgumentException()
     {
         var source = new[] { "a", "A" };
@@ -561,7 +519,6 @@ public class BidirectionalDictionaryEnumerableExtensionsTests
     }
 
     [Fact]
-    [Trait("Extension", null)]
     public void ToBidirectionalDictionary_SourceAndSelectorsAndCustomComparersAndDuplicateValueByComparer_ThrowsArgumentException()
     {
         var source = new[] { "1:a", "2:A" };

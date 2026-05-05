@@ -3,7 +3,6 @@ namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary;
 public partial class BidirectionalDictionaryTests
 {
     [Fact]
-    [Trait("Method", "IReadOnlyDictionary<TKey, TValue>")]
     public void IReadOnlyDictionary_Keys_FilledBidirectionalDictionary_ReturnsKeys()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -18,7 +17,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "IReadOnlyDictionary<TKey, TValue>")]
     public void IReadOnlyDictionary_Values_FilledBidirectionalDictionary_ReturnsValues()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()

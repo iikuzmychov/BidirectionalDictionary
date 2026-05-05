@@ -5,7 +5,6 @@ namespace BidirectionalDictionary.Tests.Types.ReadOnlyBidirectionalDictionary;
 public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Fact]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     public void ICollectionKeyValuePair_IsReadOnly_FilledReadOnlyBidirectionalDictionary_ReturnsTrue()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
@@ -16,7 +15,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     public void ICollectionKeyValuePair_Add_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
@@ -26,7 +24,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     public void ICollectionKeyValuePair_Remove_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
@@ -36,7 +33,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     public void ICollectionKeyValuePair_Clear_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
@@ -45,7 +41,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     public void ICollectionKeyValuePair_CopyTo_FilledReadOnlyBidirectionalDictionary_CopiesEntries()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
@@ -58,7 +53,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData('a', 0, true)]
     [InlineData('b', 0, false)]
     [InlineData('a', 1, false)]
@@ -82,7 +76,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData(null, 0)]
     [InlineData('a', null)]
     [InlineData(null, null)]
