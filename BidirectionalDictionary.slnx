@@ -2,6 +2,7 @@
   <Folder Name="/items/">
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
+    <File Path="global.json" />
     <File Path="LICENSE.md" />
     <File Path="README.md" />
   </Folder>
@@ -10,6 +11,11 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/BidirectionalDictionary.Tests/BidirectionalDictionary.Tests.csproj" />
+  </Folder>
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
+    <File Path=".github/workflows/ci.yml" />
+    <File Path=".github/workflows/publish.yml" />
   </Folder>
   <Folder Name="/benchmarks/">
     <Project Path="benchmarks/BidirectionalDictionary.Benchmarks/BidirectionalDictionary.Benchmarks.csproj" />
