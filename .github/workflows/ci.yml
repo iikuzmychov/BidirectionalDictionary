@@ -28,4 +28,17 @@ jobs:
         run: dotnet build BidirectionalDictionary.slnx --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test BidirectionalDictionary.slnx --configuration Release --no-build
+        run: >
+          dotnet test
+          --solution BidirectionalDictionary.slnx
+          --configuration Release
+          --no-build
+          --
+          --coverage
+          --coverage-output-format cobertura
+          --coverage-output coverage.cobertura.xml
+          
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          files: '**/TestResults/coverage.cobertura.xml'
