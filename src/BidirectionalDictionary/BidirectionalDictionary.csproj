@@ -21,5 +21,9 @@
   <ItemGroup>
     <None Include="..\..\README.md" Pack="True" PackagePath="\" Visible="False" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="BidirectionalDictionary.Tests" />
+  </ItemGroup>
   
 </Project>

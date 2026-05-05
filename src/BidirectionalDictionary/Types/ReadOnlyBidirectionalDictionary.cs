@@ -15,6 +15,8 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     where TValue : notnull
 {
     private readonly IBidirectionalDictionary<TKey, TValue> _bidirectionalDictionary;
+    private KeyCollection? _keys;
+    private ValueCollection? _values;
 
     #region Properties
 
@@ -31,12 +33,12 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     /// <summary>
     /// Gets a collection containing the keys in the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/>.
     /// </summary>
-    public ICollection<TKey> Keys => _bidirectionalDictionary.Keys;
+    public KeyCollection Keys => _keys ??= new KeyCollection(_bidirectionalDictionary.Keys);
 
     /// <summary>
     /// Gets a collection containing the values in the <see cref="ReadOnlyBidirectionalDictionary{TKey, TValue}"/>.
     /// </summary>
-    public ICollection<TValue> Values => _bidirectionalDictionary.Values;
+    public ValueCollection Values => _values ??= new ValueCollection(_bidirectionalDictionary.Values);
 
     /// <summary>
     /// Gets the value associated with the specified key.
@@ -153,4 +155,76 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
         => ((IEnumerable<KeyValuePair<TKey, TValue>>)_bidirectionalDictionary).GetEnumerator();
 
     #endregion
+
+    [DebuggerTypeProxy(typeof(DictionaryKeyCollectionDebugView<,>))]
+    [DebuggerDisplay("Count = {Count}")]
+    public sealed class KeyCollection : ICollection<TKey>, ICollection, IReadOnlyCollection<TKey>
+    {
+        private readonly ICollection<TKey> _collection;
+
+        internal KeyCollection(ICollection<TKey> collection)
+        {
+            _collection = collection ?? throw new ArgumentNullException(nameof(collection));
+        }
+
+        public int Count => _collection.Count;
+
+        bool ICollection<TKey>.IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => false;
+
+        object ICollection.SyncRoot => _collection is ICollection collection ? collection.SyncRoot : this;
+
+        public bool Contains(TKey item) => _collection.Contains(item);
+
+        public void CopyTo(TKey[] array, int arrayIndex) => _collection.CopyTo(array, arrayIndex);
+
+        public IEnumerator<TKey> GetEnumerator() => _collection.GetEnumerator();
+
+        void ICollection<TKey>.Add(TKey item) => throw new NotSupportedException();
+
+        void ICollection<TKey>.Clear() => throw new NotSupportedException();
+
+        bool ICollection<TKey>.Remove(TKey item) => throw new NotSupportedException();
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_collection).CopyTo(array, index);
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_collection).GetEnumerator();
+    }
+
+    [DebuggerTypeProxy(typeof(DictionaryValueCollectionDebugView<,>))]
+    [DebuggerDisplay("Count = {Count}")]
+    public sealed class ValueCollection : ICollection<TValue>, ICollection, IReadOnlyCollection<TValue>
+    {
+        private readonly ICollection<TValue> _collection;
+
+        internal ValueCollection(ICollection<TValue> collection)
+        {
+            _collection = collection ?? throw new ArgumentNullException(nameof(collection));
+        }
+
+        public int Count => _collection.Count;
+
+        bool ICollection<TValue>.IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => false;
+
+        object ICollection.SyncRoot => _collection is ICollection collection ? collection.SyncRoot : this;
+
+        public bool Contains(TValue item) => _collection.Contains(item);
+
+        public void CopyTo(TValue[] array, int arrayIndex) => _collection.CopyTo(array, arrayIndex);
+
+        public IEnumerator<TValue> GetEnumerator() => _collection.GetEnumerator();
+
+        void ICollection<TValue>.Add(TValue item) => throw new NotSupportedException();
+
+        void ICollection<TValue>.Clear() => throw new NotSupportedException();
+
+        bool ICollection<TValue>.Remove(TValue item) => throw new NotSupportedException();
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_collection).CopyTo(array, index);
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_collection).GetEnumerator();
+    }
 }
