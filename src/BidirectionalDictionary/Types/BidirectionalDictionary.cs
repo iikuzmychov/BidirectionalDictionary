@@ -178,7 +178,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// comparing values, or null to use the default <see cref="IEqualityComparer{T}"/> for the type of the value.</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public BidirectionalDictionary(int capacity, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
-        : this(new Dictionary<TKey, TValue>(capacity, keyComparer), valueComparer) { }
+        : this(new Dictionary<TKey, TValue>(capacity, keyComparer), valueComparer, capacity) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BidirectionalDictionary{TKey, TValue}"/> class that
@@ -212,18 +212,42 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
         : this(new Dictionary<TKey, TValue>(collection?.ToDictionary(pair => pair.Key, pair => pair.Value, keyComparer)), valueComparer) { }
 #endif
 
-    private BidirectionalDictionary(BidirectionalDictionary<TValue, TKey> inverse)
-    {
-        _baseDictionary = inverse._baseDictionary.ToDictionary(pair => pair.Value, pair => pair.Key, inverse.ValueComparer);
-        ValueComparer   = inverse.KeyComparer;
-        Inverse         = inverse;
-    }
-
-    private BidirectionalDictionary(Dictionary<TKey, TValue> dictionary, IEqualityComparer<TValue>? valueComparer = null)
+    private BidirectionalDictionary(
+        Dictionary<TKey, TValue> dictionary,
+        IEqualityComparer<TValue>? valueComparer = null,
+        int? inverseCapacity = null)
     {
         _baseDictionary = dictionary;
         ValueComparer   = valueComparer ?? EqualityComparer<TValue>.Default;
-        Inverse         = new BidirectionalDictionary<TValue, TKey>(this);
+        Inverse         = new BidirectionalDictionary<TValue, TKey>(
+            CreateInverseDictionary(dictionary, ValueComparer, inverseCapacity ?? dictionary.Count),
+            KeyComparer,
+            this);
+    }
+
+    private BidirectionalDictionary(
+        Dictionary<TKey, TValue> dictionary,
+        IEqualityComparer<TValue> valueComparer,
+        BidirectionalDictionary<TValue, TKey> inverse)
+    {
+        _baseDictionary = dictionary;
+        ValueComparer   = valueComparer;
+        Inverse         = inverse;
+    }
+
+    private static Dictionary<TValue, TKey> CreateInverseDictionary(
+        Dictionary<TKey, TValue> dictionary,
+        IEqualityComparer<TValue> valueComparer,
+        int capacity)
+    {
+        var inverseDictionary = new Dictionary<TValue, TKey>(capacity, valueComparer);
+
+        foreach (var pair in dictionary)
+        {
+            inverseDictionary.Add(pair.Value, pair.Key);
+        }
+
+        return inverseDictionary;
     }
 
     #endregion
@@ -400,7 +424,9 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <returns>An object that acts as a read-only wrapper around the current <see cref="BidirectionalDictionary{TKey, TValue}"></see>.</returns>
     public ReadOnlyBidirectionalDictionary<TKey, TValue> AsReadOnly() => new(this);
 
-    public IEnumerator GetEnumerator() => _baseDictionary.GetEnumerator();
+    public Dictionary<TKey, TValue>.Enumerator GetEnumerator() => _baseDictionary.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
