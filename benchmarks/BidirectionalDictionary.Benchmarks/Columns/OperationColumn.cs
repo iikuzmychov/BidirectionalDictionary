@@ -1,7 +1,7 @@
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 
-namespace Benchmarks.Columns;
+namespace BidirectionalDictionary.Benchmarks.Columns;
 
 internal sealed class OperationColumn : MethodNamePartColumn
 {

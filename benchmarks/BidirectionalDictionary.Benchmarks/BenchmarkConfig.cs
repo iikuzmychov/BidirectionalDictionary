@@ -1,8 +1,8 @@
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
-using Benchmarks.Columns;
+using BidirectionalDictionary.Benchmarks.Columns;
 
-namespace Benchmarks;
+namespace BidirectionalDictionary.Benchmarks;
 
 public sealed class BenchmarkConfig : ManualConfig
 {

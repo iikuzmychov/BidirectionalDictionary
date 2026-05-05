@@ -1,4 +1,4 @@
-namespace Benchmarks.Columns;
+namespace BidirectionalDictionary.Benchmarks.Columns;
 
 internal static class MethodNameParser
 {

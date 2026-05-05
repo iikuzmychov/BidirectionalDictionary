@@ -1,6 +1,6 @@
 using BenchmarkDotNet.Columns;
 
-namespace Benchmarks.Columns;
+namespace BidirectionalDictionary.Benchmarks.Columns;
 
 internal sealed class HideBuiltInColumnsRule : IColumnHidingRule
 {
