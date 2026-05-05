@@ -5,7 +5,6 @@ namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary.KeyCollect
 public partial class BidirectionalDictionaryKeyCollectionTests
 {
     [Fact]
-    [Trait("Method", "IEnumerable<TKey>")]
     public void IEnumerableT_GetEnumerator_FilledBidirectionalDictionary_EnumeratesKeys()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -20,7 +19,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "IEnumerable")]
     public void IEnumerable_GetEnumerator_FilledBidirectionalDictionary_EnumeratesKeys()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()

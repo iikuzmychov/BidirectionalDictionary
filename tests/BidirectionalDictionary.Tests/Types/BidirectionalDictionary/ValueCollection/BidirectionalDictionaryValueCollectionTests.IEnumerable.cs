@@ -5,7 +5,6 @@ namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary.ValueColle
 public partial class BidirectionalDictionaryValueCollectionTests
 {
     [Fact]
-    [Trait("Method", "IEnumerable<TValue>")]
     public void IEnumerableT_GetEnumerator_FilledBidirectionalDictionary_EnumeratesValues()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -20,7 +19,6 @@ public partial class BidirectionalDictionaryValueCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "IEnumerable")]
     public void IEnumerable_GetEnumerator_FilledBidirectionalDictionary_EnumeratesValues()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()

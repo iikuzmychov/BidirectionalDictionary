@@ -5,7 +5,6 @@ public partial class BidirectionalDictionaryTests
     #region Constructor tests
 
     [Fact]
-    [Trait("Constructor", null)]
     public void Constructor_NoArguments_CreatesEmptyBidirectionalDictionary()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>();
@@ -22,7 +21,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Constructor", null)]
     [InlineData(0)]
     [InlineData(1)]
     public void Constructor_ValidCapacity_CreatesEmptyBidirectionalDictionary(int capacity)
@@ -41,7 +39,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Constructor", null)]
     [InlineData(-1)]
     [InlineData(int.MinValue)]
     public void Constructor_InvalidCapacity_ThrowsArgumentOutOfRangeException(int capacity)
@@ -50,7 +47,6 @@ public partial class BidirectionalDictionaryTests
     }
     
     [Fact]
-    [Trait("Constructor", null)]
     public void Constructor_FilledSourceDictionary_CreatesBidirectionalDictionaryFromSourceDictionary()
     {
         var dictionary = new Dictionary<char, int>
@@ -73,7 +69,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Constructor", null)]
     public void Constructor_NullSourceIDictionary_ThrowsArgumentNullException()
     {
         var dictionary = (IDictionary<char, int>?)null;
@@ -82,7 +77,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Constructor", null)]
     public void Constructor_FilledSourceDictionaryAndComparers_CreatesBidirectionalDictionaryWithExpectedComparers()
     {
         var dictionary = new Dictionary<string, string>
@@ -104,7 +98,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Constructor", null)]
     public void Constructor_FilledKeyValuePairsList_CreatesBidirectionalDictionaryFromSourceDictionary()
     {
         var list = new List<KeyValuePair<char, int>>
@@ -127,7 +120,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Constructor", null)]
     public void Constructor_NullKeyValuePairsEnumerable_ThrowsArgumentNullException()
     {
         var collection = (ICollection<KeyValuePair<char, int>>?)null;
@@ -156,7 +148,6 @@ public partial class BidirectionalDictionaryTests
     #region Method tests
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData('a', 0)]
     [InlineData('b', 1)]
     public void Add_EmptyBidirectionalDictionaryAndNonDuplicateKeyValue_AddsEntrySuccessfully(char key, int value)
@@ -174,7 +165,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData(null, null)]
     [InlineData(null, 0)]
     [InlineData('a', null)]
@@ -195,7 +185,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData('a', 0)]
     [InlineData('a', 1)]
     [InlineData('b', 0)]
@@ -218,7 +207,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void Remove_FilledBidirectionalDictionaryAndExistingKey_RemovesEntrySuccessfullyAndReturnsTrueAndReturnsOutRemovedValue()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -240,7 +228,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData('b')]
     [InlineData('c')]
     public void Remove_FilledBidirectionalDictionaryAndMissingKey_ReturnsFalse(char key)
@@ -264,7 +251,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void Remove_EmptyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -284,7 +270,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void Clear_FilledBidirectionalDictionary_RemovesAllEntriesSuccessfully()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -303,7 +288,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData('a', true)]
     [InlineData('b', false)]
     [InlineData('c', false)]
@@ -320,7 +304,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void ContainsKey_FilledBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -336,7 +319,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData(0, true)]
     [InlineData(1, false)]
     [InlineData(2, false)]
@@ -353,7 +335,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void ContainsValue_FilledBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -369,7 +350,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData('a', 0)]
     [InlineData('b', 1)]
     public void TryAdd_EmptyBidirectionalDictionaryAndExistingKey_AddsEntrySuccessfullyAndReturnsTrue(char key, int value)
@@ -389,7 +369,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData('a', 0)]
     [InlineData('a', 1)]
     [InlineData('b', 0)]
@@ -414,7 +393,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData(null, null)]
     [InlineData(null, 0)]
     [InlineData('a', null)]
@@ -435,7 +413,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void TryGetValue_FilledBidirectionalDictionaryAndExistingKey_ReturnsTrueAndReturnsOutExpectedValue()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -454,7 +431,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData('a')]
     [InlineData('b')]
     public void TryGetValue_EmptyBidirectionalDictionaryAndMissingKey_ReturnsFalse(char key)
@@ -467,7 +443,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void TryGetValue_EmptyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -480,7 +455,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData(0)]
     [InlineData(1)]
     [InlineData(10)]
@@ -498,7 +472,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData(-1)]
     [InlineData(int.MinValue)]
     public void EnsureCapacity_EmptyBidirectionalDictionaryAndInvalidCapacity_ThrowsArgumentOutOfRangeException(int capacity)
@@ -516,7 +489,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void TrimExcess_FilledBidirectionalDictionary_TrimmedSuccessfullyAndDoesNotChangeState()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -536,7 +508,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData(2)]
     [InlineData(3)]
     [InlineData(10)]
@@ -559,7 +530,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", null)]
     [InlineData(-1)]
     [InlineData(1)]
     public void TrimExcess_FilledBidirectionalDictionaryAndInvalidCapacity_ThrowsArgumentOutOfRangeException(int capacity)
@@ -582,7 +552,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", null)]
     public void AsReadOnly_FilledBidirectionalDictionary_ReturnsReadOnlyWrapper()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -601,7 +570,6 @@ public partial class BidirectionalDictionaryTests
     #region Indexer tests
 
     [Fact]
-    [Trait("Indexer", null)]
     public void Indexer_Get_FilledBidirectionalDictionaryAndExistingKey_ReturnsExpectedValue()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -618,7 +586,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Indexer", null)]
     public void Indexer_Get_EmptyBidirectionalDictionaryAndNullKey_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -631,7 +598,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Indexer", null)]
     [InlineData('a')]
     [InlineData('b')]
     public void Indexer_Get_EmptyBidirectionalDictionaryAndMissingKey_ThrowsKeyNotFoundException(char key)
@@ -642,7 +608,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Indexer", null)]
     [InlineData('a', 0)]
     [InlineData('a', 1)]
     public void Indexer_Set_FilledBidirectionalDictionaryAndExistingKeyAndNonDuplicateValue_UpdateValueSuccessfully(char key, int value)
@@ -663,7 +628,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Indexer", null)]
     public void Indexer_Set_EmptyBidirectionalDictionaryAndNullKeyAndNonDuplicateValue_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -677,7 +641,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Indexer", null)]
     public void Indexer_Set_FilledBidirectionalDictionaryAndExistingKeyAndNullValue_ThrowsArgumentNullException()
     {
 #pragma warning disable CS8714
@@ -694,7 +657,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Indexer", null)]
     [InlineData('a', 1)]
     [InlineData('b', 0)]
     [InlineData('c', 0)]
@@ -719,7 +681,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Indexer", null)]
     public void Indexer_Set_EmptyBidirectionalDictionaryAndMissingKeyAndNonDuplicateValue_CreatesNewEntry()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>();

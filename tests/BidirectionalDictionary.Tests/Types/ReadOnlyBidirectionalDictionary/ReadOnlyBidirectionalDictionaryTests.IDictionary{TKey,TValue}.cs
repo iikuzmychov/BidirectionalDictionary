@@ -5,7 +5,6 @@ namespace BidirectionalDictionary.Tests.Types.ReadOnlyBidirectionalDictionary;
 public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Fact]
-    [Trait("Indexer", "IDictionary<TKey, TValue>")]
     public void IDictionary_IndexerGet_FilledReadOnlyBidirectionalDictionary_ReturnsValue()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
@@ -16,7 +15,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Indexer", "IDictionary<TKey, TValue>")]
     public void IDictionary_IndexerSet_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
@@ -25,7 +23,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionary<TKey, TValue>")]
     public void IDictionary_Keys_FilledReadOnlyBidirectionalDictionary_ReturnsKeys()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
@@ -36,7 +33,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionary<TKey, TValue>")]
     public void IDictionary_Values_FilledReadOnlyBidirectionalDictionary_ReturnsValues()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
@@ -47,7 +43,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionary<TKey, TValue>")]
     public void IDictionary_Add_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();
@@ -56,7 +51,6 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "IDictionary<TKey, TValue>")]
     public void IDictionary_Remove_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForDictionary();

@@ -5,7 +5,6 @@ namespace BidirectionalDictionary.Tests.Types.ReadOnlyBidirectionalDictionary;
 public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Fact]
-    [Trait("Method", "IBidirectionalDictionary<TKey, TValue>")]
     public void IBidirectionalDictionary_Inverse_FilledReadOnlyBidirectionalDictionary_ReturnsInverse()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForBidirectionalDictionary();

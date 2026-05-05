@@ -3,7 +3,6 @@ namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary;
 public partial class BidirectionalDictionaryTests
 {
     [Fact]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     public void ICollectionKeyValuePair_IsReadOnly_FilledBidirectionalDictionary_ReturnsFalse()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -17,7 +16,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     public void ICollectionKeyValuePair_CopyTo_FilledBidirectionalDictionary_CopiesEntries()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -36,7 +34,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData('a', 0)]
     [InlineData('b', 1)]
     public void ICollectionKeyValuePair_Add_EmptyBidirectionalDictionaryAndNonDuplicatePair_AddsEntrySuccessfully(char key, int value)
@@ -55,7 +52,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData(null, null)]
     [InlineData(null, 0)]
     [InlineData('a', null)]
@@ -78,7 +74,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData('a', 0)]
     [InlineData('a', 1)]
     [InlineData('b', 0)]
@@ -103,7 +98,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     public void ICollectionKeyValuePair_Remove_FilledBidirectionalDictionaryAndExistingPair_RemovesEntrySuccessfullyAndReturnsTrue()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -124,7 +118,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData('a', 1)]
     [InlineData('b', 0)]
     [InlineData('c', 2)]
@@ -151,7 +144,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData(null, 0)]
     [InlineData('a', null)]
     [InlineData(null, null)]
@@ -174,7 +166,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData('a', 0, true)]
     [InlineData('b', 0, false)]
     [InlineData('a', 1, false)]
@@ -195,7 +186,6 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Theory]
-    [Trait("Method", "ICollection<KeyValuePair<TKey, TValue>>")]
     [InlineData(null, 0)]
     [InlineData('a', null)]
     [InlineData(null, null)]

@@ -3,7 +3,6 @@ namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary.KeyCollect
 public partial class BidirectionalDictionaryKeyCollectionTests
 {
     [Fact]
-    [Trait("Property", "Keys")]
     public void Keys_FilledBidirectionalDictionary_ReturnsKeys()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -16,14 +15,12 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Constructor", "KeyCollection")]
     public void Constructor_NullBidirectionalDictionary_ThrowsArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => _ = new BidirectionalDictionary<char, int>.KeyCollection(null!));
     }
 
     [Fact]
-    [Trait("Method", "KeyCollection")]
     public void Count_FilledBidirectionalDictionary_ReturnsCount()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -35,7 +32,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Theory]
-    [Trait("Method", "KeyCollection")]
     [InlineData('a', true)]
     [InlineData('b', false)]
     public void Contains_FilledBidirectionalDictionary_ReturnsExpectedResult(char key, bool expectedResult)
@@ -51,7 +47,6 @@ public partial class BidirectionalDictionaryKeyCollectionTests
     }
 
     [Fact]
-    [Trait("Method", "KeyCollection")]
     public void CopyTo_FilledBidirectionalDictionary_CopiesKeys()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
