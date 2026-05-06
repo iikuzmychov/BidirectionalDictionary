@@ -106,8 +106,7 @@ You can also pass custom comparers via overloads with `keyComparer` and `valueCo
 
 ## Benchmarks
 
-Benchmark details and generated GitHub reports are available in
-[`benchmarks/BidirectionalDictionary.Benchmarks`](https://github.com/iiKuzmychov/BidirectionalDictionary/tree/master/benchmarks/BidirectionalDictionary.Benchmarks).
+Benchmark details available in [`benchmarks/BidirectionalDictionary.Benchmarks`](https://github.com/iiKuzmychov/BidirectionalDictionary/tree/master/benchmarks/BidirectionalDictionary.Benchmarks).
 
 ## License
 
