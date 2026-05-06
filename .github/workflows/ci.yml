@@ -11,6 +11,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        library-target-framework: [netstandard2.0, netstandard2.1, net6.0]
 
     steps:
       - name: Check out repository
@@ -25,18 +28,19 @@ jobs:
         run: dotnet restore BidirectionalDictionary.slnx
 
       - name: Build solution
-        run: dotnet build BidirectionalDictionary.slnx --configuration Release --no-restore
+        run: dotnet build BidirectionalDictionary.slnx --configuration Release -p:LibraryTargetFramework=${{ matrix.library-target-framework }} --no-restore
 
       - name: Run tests
         run: >
           dotnet test
           --solution BidirectionalDictionary.slnx
           --configuration Release
+          -p:LibraryTargetFramework=${{ matrix.library-target-framework }}
           --no-build
           --
           --coverage
           --coverage-output-format cobertura
-          --coverage-output coverage.cobertura.xml
+          --coverage-output coverage.${{ matrix.library-target-framework }}.cobertura.xml
           
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v6
