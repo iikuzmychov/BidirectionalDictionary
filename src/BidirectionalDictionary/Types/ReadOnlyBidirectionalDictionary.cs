@@ -10,7 +10,7 @@ namespace System.Collections.ObjectModel;
 /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
 [DebuggerTypeProxy(typeof(DictionaryDebugView<,>))]
 [DebuggerDisplay("Count = {Count}")]
-public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>
+public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>, IDictionary
     where TKey : notnull
     where TValue : notnull
 {
@@ -78,6 +78,52 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => true;
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    bool ICollection.IsSynchronized => false;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    object ICollection.SyncRoot => _bidirectionalDictionary is ICollection collection ? collection.SyncRoot : this;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    bool IDictionary.IsFixedSize => true;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    bool IDictionary.IsReadOnly => true;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    ICollection IDictionary.Keys => Keys;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    ICollection IDictionary.Values => Values;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    object? IDictionary.this[object key]
+    {
+        get
+        {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (key is not TKey typedKey)
+            {
+                return null;
+            }
+
+            if (TryGetValue(typedKey, out var value))
+            {
+                return value;
+            }
+
+            return null;
+        }
+        set
+        {
+            throw new NotSupportedException();
+        }
+    }
+
     #endregion
 
     #region Constructors
@@ -135,6 +181,32 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+    void IDictionary.Add(object key, object? value) => throw new NotSupportedException();
+
+    void IDictionary.Clear() => throw new NotSupportedException();
+
+    bool IDictionary.Contains(object key)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        return key is TKey typedKey && ContainsKey(typedKey);
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator()
+    {
+        if (_bidirectionalDictionary is IDictionary dictionary)
+        {
+            return dictionary.GetEnumerator();
+        }
+
+        return new DictionaryEnumerator(_bidirectionalDictionary);
+    }
+
+    void IDictionary.Remove(object key) => throw new NotSupportedException();
+
     void IDictionary<TKey, TValue>.Add(TKey key, TValue value) => throw new NotSupportedException();
 
     bool IDictionary<TKey, TValue>.Remove(TKey key) => throw new NotSupportedException();
@@ -155,12 +227,96 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
         _bidirectionalDictionary.CopyTo(array, arrayIndex);
     }
 
-    IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
+    void ICollection.CopyTo(Array array, int index)
     {
-        return _bidirectionalDictionary.GetEnumerator();
+        if (_bidirectionalDictionary is ICollection collection)
+        {
+            collection.CopyTo(array, index);
+            return;
+        }
+
+        CopyToArray(array, index);
+    }
+
+    private void CopyToArray(Array array, int index)
+    {
+        if (array == null)
+        {
+            throw new ArgumentNullException(nameof(array));
+        }
+
+        if (array.Rank != 1)
+        {
+            throw new ArgumentException("Only single dimensional arrays are supported.", nameof(array));
+        }
+
+        if (array.GetLowerBound(0) != 0)
+        {
+            throw new ArgumentException("Arrays with non-zero lower bounds are not supported.", nameof(array));
+        }
+
+        if ((uint)index > (uint)array.Length)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index));
+        }
+
+        if (array.Length - index < Count)
+        {
+            throw new ArgumentException("The destination array has insufficient space.", nameof(array));
+        }
+
+        if (array is KeyValuePair<TKey, TValue>[] pairs)
+        {
+            _bidirectionalDictionary.CopyTo(pairs, index);
+        }
+        else if (array is DictionaryEntry[] entries)
+        {
+            foreach (var pair in _bidirectionalDictionary)
+            {
+                entries[index++] = new DictionaryEntry(pair.Key, pair.Value);
+            }
+        }
+        else
+        {
+            var objects = array as object[] ?? throw new ArgumentException("The array type is not compatible.", nameof(array));
+
+            try
+            {
+                foreach (var pair in _bidirectionalDictionary)
+                {
+                    objects[index++] = pair;
+                }
+            }
+            catch (ArrayTypeMismatchException)
+            {
+                throw new ArgumentException("The array type is not compatible.", nameof(array));
+            }
+        }
     }
 
     #endregion
+
+    private readonly struct DictionaryEnumerator : IDictionaryEnumerator
+    {
+        private readonly IEnumerator<KeyValuePair<TKey, TValue>> _enumerator;
+
+        public DictionaryEnumerator(IEnumerable<KeyValuePair<TKey, TValue>> dictionary)
+        {
+            _enumerator = dictionary.GetEnumerator();
+        }
+
+        public DictionaryEntry Entry => new(_enumerator.Current.Key, _enumerator.Current.Value);
+
+        public object Key => _enumerator.Current.Key;
+
+        public object? Value => _enumerator.Current.Value;
+
+        public object Current => Entry;
+
+        public bool MoveNext() => _enumerator.MoveNext();
+
+        public void Reset() => _enumerator.Reset();
+    }
 
     [DebuggerTypeProxy(typeof(DictionaryKeyCollectionDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
