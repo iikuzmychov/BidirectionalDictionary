@@ -176,7 +176,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
             if (key is not TKey typedKey)
             {
-                throw new ArgumentException($"The value is not of type {typeof(TKey)}.", nameof(key));
+                throw new ArgumentException($"The key is not of type {typeof(TKey)}.", nameof(key));
             }
 
             if (value is not TValue typedValue)
