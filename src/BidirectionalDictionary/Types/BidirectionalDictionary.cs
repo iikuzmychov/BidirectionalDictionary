@@ -66,15 +66,21 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
         set
         {
             if (key == null)
+            {
                 throw new ArgumentNullException(nameof(key));
+            }
 
             if (value == null)
+            {
                 throw new ArgumentNullException(nameof(value));
+            }
 
             if (TryGetValue(key, out var oldValue))
             {
                 if (ValueComparer.Equals(oldValue, value))
+                {
                     return;
+                }
 
                 if (ContainsValue(value))
                 {
@@ -266,16 +272,24 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     public void Add(TKey key, TValue value)
     {
         if (key == null)
+        {
             throw new ArgumentNullException(nameof(key));
+        }
 
         if (value == null)
+        {
             throw new ArgumentNullException(nameof(value));
+        }
 
         if (ContainsKey(key))
+        {
             throw new ArgumentException("The same key already exists.", nameof(key));
+        }
 
         if (ContainsValue(value))
+        {
             throw new ArgumentException("The same value already exists.", nameof(value));
+        }
 
         _dictionary.Add(key, value);
         Inverse._dictionary.Add(value, key);
@@ -303,7 +317,9 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     public bool Remove(TKey key, out TValue value)
     {
         if (key == null)
+        {
             throw new ArgumentNullException(nameof(key));
+        }
 
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
         return _dictionary.Remove(key, out value!) &&
@@ -351,13 +367,19 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     public bool TryAdd(TKey key, TValue value)
     {
         if (key == null)
+        {
             throw new ArgumentNullException(nameof(key));
+        }
 
         if (value == null)
+        {
             throw new ArgumentNullException(nameof(value));
+        }
 
         if (ContainsKey(key) || ContainsValue(value))
+        {
             return false;
+        }
 
         _dictionary.Add(key, value);
         Inverse._dictionary.Add(value, key);
@@ -435,10 +457,14 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
     {
         if (item.Key == null)
+        {
             throw new ArgumentNullException("The item key == null.", nameof(item));
+        }
 
         if (item.Value == null)
+        {
             throw new ArgumentNullException("The item value == null.", nameof(item));
+        }
 
         return ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Remove(item) &&
             Inverse._dictionary.Remove(item.Value);
@@ -447,10 +473,14 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
     {
         if (item.Key == null)
+        {
             throw new ArgumentNullException("The item key == null.", nameof(item));
+        }
 
         if (item.Value == null)
+        {
             throw new ArgumentNullException("The item value == null.", nameof(item));
+        }
 
         return ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Contains(item);
     }
