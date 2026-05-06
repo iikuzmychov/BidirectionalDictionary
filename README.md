@@ -106,7 +106,13 @@ You can also pass custom comparers via overloads with `keyComparer` and `valueCo
 
 ## Benchmarks
 
-Benchmark details available in [`benchmarks/BidirectionalDictionary.Benchmarks`](https://github.com/iiKuzmychov/BidirectionalDictionary/tree/master/benchmarks/BidirectionalDictionary.Benchmarks).
+Benchmark highlights:
+
+- Key lookups stay close to `Dictionary<TKey, TValue>`.
+- Value and reverse lookups are `O(1)`.
+- Mutation cost is the tradeoff for keeping both indexes synced.
+
+More details can be found in [`benchmarks/BidirectionalDictionary.Benchmarks`](https://github.com/iiKuzmychov/BidirectionalDictionary/tree/master/benchmarks/BidirectionalDictionary.Benchmarks).
 
 ## License
 
