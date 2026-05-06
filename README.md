@@ -4,7 +4,7 @@
 
 # BidirectionalDictionary
 
-Proper implementation of a bidirectional dictionary, also known as "BiMap" or "two-way dictionary", for [.NET Standard 2.0](https://learn.microsoft.com/dotnet/standard/net-standard?tabs=net-standard-2-0#select-net-standard-version) and higher.
+Proper implementation of a bidirectional dictionary, also known as "bidirectional map" or "two-way dictionary", for [.NET Standard 2.0](https://learn.microsoft.com/dotnet/standard/net-standard?tabs=net-standard-2-0#select-net-standard-version) and higher.
 
 ## Quick sample
 
