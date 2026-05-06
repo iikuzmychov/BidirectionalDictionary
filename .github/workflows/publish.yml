@@ -46,4 +46,4 @@ jobs:
       - name: Create GitHub release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: gh release create "v${{ steps.version.outputs.value }}" "${{ github.workspace }}/artifacts/*.nupkg" --title "v${{ steps.version.outputs.value }}"
+        run: gh release create "v${{ steps.version.outputs.value }}" "${{ github.workspace }}/artifacts/*.nupkg" --title "v${{ steps.version.outputs.value }}" --target "${{ github.sha }}"
