@@ -293,10 +293,11 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     {
         _dictionary = dictionary;
         ValueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
+
         Inverse = new BidirectionalDictionary<TValue, TKey>(
-            CreateInverseDictionary(dictionary, ValueComparer, inverseCapacity ?? dictionary.Count),
-            KeyComparer,
-            this);
+            dictionary: CreateInverseDictionary(dictionary, ValueComparer, inverseCapacity ?? dictionary.Count),
+            valueComparer: KeyComparer,
+            inverse: this);
     }
 
     private BidirectionalDictionary(
