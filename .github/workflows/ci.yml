@@ -45,4 +45,6 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v6
         with:
-          files: '**/TestResults/coverage.cobertura.xml'
+          files: '**/TestResults/coverage.${{ matrix.library-target-framework }}.cobertura.xml'
+          flags: ${{ matrix.library-target-framework }}
+          name: ${{ matrix.library-target-framework }}

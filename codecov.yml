@@ -1,0 +1,13 @@
+comment:
+  after_n_builds: 3
+
+flags:
+  netstandard2.0:
+    paths:
+      - src/BidirectionalDictionary/
+  netstandard2.1:
+    paths:
+      - src/BidirectionalDictionary/
+  net6.0:
+    paths:
+      - src/BidirectionalDictionary/
