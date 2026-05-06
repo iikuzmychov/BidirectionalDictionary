@@ -13,8 +13,8 @@ and `1_000_000` items for mutation benchmarks.
 Run benchmarks in Release mode:
 
 ```bash
-dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter '*Mutable*'
-dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter '*ReadOnly*'
+dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter '*BidirectionalDictionary*'
+dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter '*ReadOnlyBidirectionalDictionary*'
 dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter '*'
 ```
 
@@ -31,7 +31,7 @@ Each benchmark class emits:
 
 ## Latest Results
 
-### Mutable
+### BidirectionalDictionary
 
 ```
 
@@ -114,7 +114,7 @@ WarmupCount=Default
 | Values          | Default       |   9,738.040 ns |     32.4359 ns |     28.7536 ns |   9,732.645 ns |  1.00 |    0.00 |       - |       - |       - |         - |          NA |
 | Values          | Bidirectional |  12,908.630 ns |     34.0487 ns |     31.8492 ns |  12,918.018 ns |  1.33 |    0.00 |       - |       - |       - |         - |          NA |
 
-### ReadOnly
+### ReadOnlyBidirectionalDictionary
 
 ```
 
