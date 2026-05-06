@@ -454,6 +454,7 @@ public partial class BidirectionalDictionaryTests
         Assert.Throws<ArgumentNullException>(() => _ = bidirectionalDictionary.TryGetValue(key, out _));
     }
 
+#if BIDIRECTIONALDICTIONARY_LIBRARY_HAS_CAPACITY_APIS
     [Theory]
     [InlineData(0)]
     [InlineData(1)]
@@ -550,6 +551,7 @@ public partial class BidirectionalDictionaryTests
         Assert.Contains(new KeyValuePair<int, char>(0, 'a'), bidirectionalDictionary.Inverse);
         Assert.Contains(new KeyValuePair<int, char>(1, 'b'), bidirectionalDictionary.Inverse);
     }
+#endif
 
     [Fact]
     public void AsReadOnly_FilledBidirectionalDictionary_ReturnsReadOnlyWrapper()

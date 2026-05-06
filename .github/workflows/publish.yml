@@ -25,7 +25,10 @@ jobs:
         run: dotnet build BidirectionalDictionary.slnx --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test BidirectionalDictionary.slnx --configuration Release --no-build
+        run: |
+          dotnet test BidirectionalDictionary.slnx --configuration Release -p:LibraryTargetFramework=netstandard2.0 --no-restore
+          dotnet test BidirectionalDictionary.slnx --configuration Release -p:LibraryTargetFramework=netstandard2.1 --no-restore
+          dotnet test BidirectionalDictionary.slnx --configuration Release -p:LibraryTargetFramework=net6.0 --no-restore
 
       - name: Read package version
         id: version

@@ -1,12 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<OutputType>Exe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
+    <LibraryTargetFramework Condition="'$(LibraryTargetFramework)' == ''">net6.0</LibraryTargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
 	<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(LibraryTargetFramework)' == 'netstandard2.1' Or '$(LibraryTargetFramework)' == 'net6.0'">
+    <DefineConstants>$(DefineConstants);BIDIRECTIONALDICTIONARY_LIBRARY_HAS_CAPACITY_APIS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\BidirectionalDictionary\BidirectionalDictionary.csproj" />
+    <ProjectReference Include="..\..\src\BidirectionalDictionary\BidirectionalDictionary.csproj" SetTargetFramework="TargetFramework=$(LibraryTargetFramework)" />
   </ItemGroup>
 
 </Project>
