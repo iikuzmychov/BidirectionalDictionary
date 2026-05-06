@@ -1,0 +1,46 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Restore dependencies
+        run: dotnet restore BidirectionalDictionary.slnx
+
+      - name: Build solution
+        run: dotnet build BidirectionalDictionary.slnx --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test BidirectionalDictionary.slnx --configuration Release --no-build
+
+      - name: Read package version
+        id: version
+        run: |
+          $version = dotnet msbuild src/BidirectionalDictionary/BidirectionalDictionary.csproj -getProperty:Version
+          "value=$version" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+
+      - name: Pack NuGet package
+        run: dotnet pack src/BidirectionalDictionary/BidirectionalDictionary.csproj --configuration Release --no-build --output ${{ github.workspace }}/artifacts
+
+      - name: Publish package to NuGet
+        run: dotnet nuget push "${{ github.workspace }}/artifacts/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+
+      - name: Create GitHub release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: gh release create "v${{ steps.version.outputs.value }}" "${{ github.workspace }}/artifacts/*.nupkg" --title "v${{ steps.version.outputs.value }}"
