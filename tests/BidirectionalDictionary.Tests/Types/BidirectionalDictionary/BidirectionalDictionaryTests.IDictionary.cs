@@ -13,7 +13,8 @@ public partial class BidirectionalDictionaryTests
         Assert.False(dictionary.IsFixedSize);
         Assert.False(dictionary.IsReadOnly);
         Assert.False(((ICollection)dictionary).IsSynchronized);
-        Assert.Same(dictionary, ((ICollection)dictionary).SyncRoot);
+        Assert.Same(((ICollection)dictionary.Keys).SyncRoot, ((ICollection)dictionary).SyncRoot);
+        Assert.Same(((ICollection)dictionary.Values).SyncRoot, ((ICollection)dictionary).SyncRoot);
         Assert.Equal(['a'], dictionary.Keys.Cast<char>());
         Assert.Equal([0], dictionary.Values.Cast<int>());
     }

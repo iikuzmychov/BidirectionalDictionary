@@ -126,7 +126,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     bool ICollection.IsSynchronized => false;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    object ICollection.SyncRoot => this;
+    object ICollection.SyncRoot => ((ICollection)_dictionary).SyncRoot;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool IDictionary.IsFixedSize => false;
