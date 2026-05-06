@@ -6,18 +6,18 @@ namespace BidirectionalDictionary.Benchmarks.Benchmarks;
 
 [Config(typeof(BenchmarkConfig))]
 [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
-public class MutableBenchmarks
+public class BidirectionalDictionaryBenchmarks
 {
     private readonly Consumer _consumer = new();
 
     private KeyValuePair<int, int>[] _pairsForRead = null!;
     private KeyValuePair<int, int>[] _pairsForMutation = null!;
 
-    private Dictionary<int, int> _defaultForRead = null!;
-    private BidirectionalDictionary<int, int> _bidirectionalForRead = null!;
+    private Dictionary<int, int> _dictionaryForRead = null!;
+    private BidirectionalDictionary<int, int> _bidirectionalDictionaryForRead = null!;
 
-    private Dictionary<int, int> _defaultForMutation = null!;
-    private BidirectionalDictionary<int, int> _bidirectionalForMutation = null!;
+    private Dictionary<int, int> _dictionaryForMutation = null!;
+    private BidirectionalDictionary<int, int> _bidirectionalDictionaryForMutation = null!;
 
     private int _hitKey;
     private int _hitValue;
@@ -28,8 +28,8 @@ public class MutableBenchmarks
         _pairsForRead = BenchmarkData.GenerateSource(BenchmarkConstants.ReadPairCount);
         _pairsForMutation = BenchmarkData.GenerateSource(BenchmarkConstants.MutationPairCount);
 
-        _defaultForRead = BenchmarkData.CreateDictionary(_pairsForRead);
-        _bidirectionalForRead = new BidirectionalDictionary<int, int>(_defaultForRead);
+        _dictionaryForRead = BenchmarkData.CreateDictionary(_pairsForRead);
+        _bidirectionalDictionaryForRead = new BidirectionalDictionary<int, int>(_dictionaryForRead);
 
         var hitIndex = BenchmarkConstants.ReadPairCount / 2;
         _hitKey = _pairsForRead[hitIndex].Key;
@@ -45,8 +45,8 @@ public class MutableBenchmarks
     })]
     public void SetupEmpty()
     {
-        _defaultForMutation = new Dictionary<int, int>(BenchmarkConstants.MutationPairCount);
-        _bidirectionalForMutation = new BidirectionalDictionary<int, int>(BenchmarkConstants.MutationPairCount);
+        _dictionaryForMutation = new Dictionary<int, int>(BenchmarkConstants.MutationPairCount);
+        _bidirectionalDictionaryForMutation = new BidirectionalDictionary<int, int>(BenchmarkConstants.MutationPairCount);
     }
 
     [IterationSetup(Targets = new[]
@@ -58,56 +58,56 @@ public class MutableBenchmarks
     })]
     public void SetupPopulated()
     {
-        _defaultForMutation = new Dictionary<int, int>(_pairsForMutation);
-        _bidirectionalForMutation = new BidirectionalDictionary<int, int>(_pairsForMutation);
+        _dictionaryForMutation = new Dictionary<int, int>(_pairsForMutation);
+        _bidirectionalDictionaryForMutation = new BidirectionalDictionary<int, int>(_pairsForMutation);
     }
 
     // --- Lookup ---
 
     [BenchmarkCategory("IndexerHit"), Benchmark(Baseline = true)]
-    public int IndexerHit_Default() => _defaultForRead[_hitKey];
+    public int IndexerHit_Default() => _dictionaryForRead[_hitKey];
 
     [BenchmarkCategory("IndexerHit"), Benchmark]
-    public int IndexerHit_Bidirectional() => _bidirectionalForRead[_hitKey];
+    public int IndexerHit_Bidirectional() => _bidirectionalDictionaryForRead[_hitKey];
 
     [BenchmarkCategory("TryGetValueHit"), Benchmark(Baseline = true)]
-    public bool TryGetValueHit_Default() => _defaultForRead.TryGetValue(_hitKey, out _);
+    public bool TryGetValueHit_Default() => _dictionaryForRead.TryGetValue(_hitKey, out _);
 
     [BenchmarkCategory("TryGetValueHit"), Benchmark]
-    public bool TryGetValueHit_Bidirectional() => _bidirectionalForRead.TryGetValue(_hitKey, out _);
+    public bool TryGetValueHit_Bidirectional() => _bidirectionalDictionaryForRead.TryGetValue(_hitKey, out _);
 
     [BenchmarkCategory("TryGetValueMiss"), Benchmark(Baseline = true)]
-    public bool TryGetValueMiss_Default() => _defaultForRead.TryGetValue(BenchmarkConstants.MissingKey, out _);
+    public bool TryGetValueMiss_Default() => _dictionaryForRead.TryGetValue(BenchmarkConstants.MissingKey, out _);
 
     [BenchmarkCategory("TryGetValueMiss"), Benchmark]
-    public bool TryGetValueMiss_Bidirectional() => _bidirectionalForRead.TryGetValue(BenchmarkConstants.MissingKey, out _);
+    public bool TryGetValueMiss_Bidirectional() => _bidirectionalDictionaryForRead.TryGetValue(BenchmarkConstants.MissingKey, out _);
 
     [BenchmarkCategory("ContainsKeyHit"), Benchmark(Baseline = true)]
-    public bool ContainsKeyHit_Default() => _defaultForRead.ContainsKey(_hitKey);
+    public bool ContainsKeyHit_Default() => _dictionaryForRead.ContainsKey(_hitKey);
 
     [BenchmarkCategory("ContainsKeyHit"), Benchmark]
-    public bool ContainsKeyHit_Bidirectional() => _bidirectionalForRead.ContainsKey(_hitKey);
+    public bool ContainsKeyHit_Bidirectional() => _bidirectionalDictionaryForRead.ContainsKey(_hitKey);
 
     [BenchmarkCategory("ContainsKeyMiss"), Benchmark(Baseline = true)]
-    public bool ContainsKeyMiss_Default() => _defaultForRead.ContainsKey(BenchmarkConstants.MissingKey);
+    public bool ContainsKeyMiss_Default() => _dictionaryForRead.ContainsKey(BenchmarkConstants.MissingKey);
 
     [BenchmarkCategory("ContainsKeyMiss"), Benchmark]
-    public bool ContainsKeyMiss_Bidirectional() => _bidirectionalForRead.ContainsKey(BenchmarkConstants.MissingKey);
+    public bool ContainsKeyMiss_Bidirectional() => _bidirectionalDictionaryForRead.ContainsKey(BenchmarkConstants.MissingKey);
 
     // --- Reverse lookup ---
 
     [BenchmarkCategory("ContainsValue"), Benchmark(Baseline = true)]
-    public bool ContainsValue_Default() => _defaultForRead.ContainsValue(_hitValue);
+    public bool ContainsValue_Default() => _dictionaryForRead.ContainsValue(_hitValue);
 
     [BenchmarkCategory("ContainsValue"), Benchmark]
-    public bool ContainsValue_Bidirectional() => _bidirectionalForRead.ContainsValue(_hitValue);
+    public bool ContainsValue_Bidirectional() => _bidirectionalDictionaryForRead.ContainsValue(_hitValue);
 
     [BenchmarkCategory("FindKeyByValue"), Benchmark(Baseline = true)]
     public int FindKeyByValue_Default()
     {
         var target = _hitValue;
 
-        foreach (var pair in _defaultForRead)
+        foreach (var pair in _dictionaryForRead)
         {
             if (pair.Value == target)
             {
@@ -119,14 +119,14 @@ public class MutableBenchmarks
     }
 
     [BenchmarkCategory("FindKeyByValue"), Benchmark]
-    public int FindKeyByValue_Bidirectional() => _bidirectionalForRead.Inverse[_hitValue];
+    public int FindKeyByValue_Bidirectional() => _bidirectionalDictionaryForRead.Inverse[_hitValue];
 
     // --- Enumeration ---
 
     [BenchmarkCategory("Pairs"), Benchmark(Baseline = true)]
     public void Pairs_Default()
     {
-        foreach (var pair in _defaultForRead)
+        foreach (var pair in _dictionaryForRead)
         {
             _consumer.Consume(pair);
         }
@@ -135,7 +135,7 @@ public class MutableBenchmarks
     [BenchmarkCategory("Pairs"), Benchmark]
     public void Pairs_Bidirectional()
     {
-        foreach (var pair in _bidirectionalForRead)
+        foreach (var pair in _bidirectionalDictionaryForRead)
         {
             _consumer.Consume(pair);
         }
@@ -144,7 +144,7 @@ public class MutableBenchmarks
     [BenchmarkCategory("Keys"), Benchmark(Baseline = true)]
     public void Keys_Default()
     {
-        foreach (var key in _defaultForRead.Keys)
+        foreach (var key in _dictionaryForRead.Keys)
         {
             _consumer.Consume(key);
         }
@@ -153,7 +153,7 @@ public class MutableBenchmarks
     [BenchmarkCategory("Keys"), Benchmark]
     public void Keys_Bidirectional()
     {
-        foreach (var key in _bidirectionalForRead.Keys)
+        foreach (var key in _bidirectionalDictionaryForRead.Keys)
         {
             _consumer.Consume(key);
         }
@@ -162,7 +162,7 @@ public class MutableBenchmarks
     [BenchmarkCategory("Values"), Benchmark(Baseline = true)]
     public void Values_Default()
     {
-        foreach (var value in _defaultForRead.Values)
+        foreach (var value in _dictionaryForRead.Values)
         {
             _consumer.Consume(value);
         }
@@ -171,7 +171,7 @@ public class MutableBenchmarks
     [BenchmarkCategory("Values"), Benchmark]
     public void Values_Bidirectional()
     {
-        foreach (var value in _bidirectionalForRead.Values)
+        foreach (var value in _bidirectionalDictionaryForRead.Values)
         {
             _consumer.Consume(value);
         }
@@ -210,7 +210,7 @@ public class MutableBenchmarks
     {
         foreach (var pair in _pairsForMutation)
         {
-            _defaultForMutation.Add(pair.Key, pair.Value);
+            _dictionaryForMutation.Add(pair.Key, pair.Value);
         }
     }
 
@@ -219,7 +219,7 @@ public class MutableBenchmarks
     {
         foreach (var pair in _pairsForMutation)
         {
-            _bidirectionalForMutation.Add(pair.Key, pair.Value);
+            _bidirectionalDictionaryForMutation.Add(pair.Key, pair.Value);
         }
     }
 
@@ -230,7 +230,7 @@ public class MutableBenchmarks
 
         foreach (var pair in _pairsForMutation)
         {
-            if (_defaultForMutation.TryAdd(pair.Key, pair.Value))
+            if (_dictionaryForMutation.TryAdd(pair.Key, pair.Value))
             {
                 added++;
             }
@@ -246,7 +246,7 @@ public class MutableBenchmarks
 
         foreach (var pair in _pairsForMutation)
         {
-            if (_bidirectionalForMutation.TryAdd(pair.Key, pair.Value))
+            if (_bidirectionalDictionaryForMutation.TryAdd(pair.Key, pair.Value))
             {
                 added++;
             }
@@ -260,7 +260,7 @@ public class MutableBenchmarks
     {
         foreach (var pair in _pairsForMutation)
         {
-            _defaultForMutation[pair.Key] = UniqueReplacementValue(pair.Key);
+            _dictionaryForMutation[pair.Key] = UniqueReplacementValue(pair.Key);
         }
     }
 
@@ -269,7 +269,7 @@ public class MutableBenchmarks
     {
         foreach (var pair in _pairsForMutation)
         {
-            _bidirectionalForMutation[pair.Key] = UniqueReplacementValue(pair.Key);
+            _bidirectionalDictionaryForMutation[pair.Key] = UniqueReplacementValue(pair.Key);
         }
     }
 
@@ -280,7 +280,7 @@ public class MutableBenchmarks
 
         foreach (var pair in _pairsForMutation)
         {
-            if (_defaultForMutation.Remove(pair.Key))
+            if (_dictionaryForMutation.Remove(pair.Key))
             {
                 removed++;
             }
@@ -296,7 +296,7 @@ public class MutableBenchmarks
 
         foreach (var pair in _pairsForMutation)
         {
-            if (_bidirectionalForMutation.Remove(pair.Key))
+            if (_bidirectionalDictionaryForMutation.Remove(pair.Key))
             {
                 removed++;
             }
