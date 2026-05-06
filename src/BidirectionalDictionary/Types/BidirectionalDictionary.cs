@@ -11,7 +11,7 @@ namespace System.Collections.Generic;
 /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
 [DebuggerTypeProxy(typeof(DictionaryDebugView<,>))]
 [DebuggerDisplay("Count = {Count}")]
-public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>
+public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>, IDictionary
     where TKey : notnull
     where TValue : notnull
 {
@@ -121,6 +121,72 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    bool ICollection.IsSynchronized => false;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    object ICollection.SyncRoot => this;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    bool IDictionary.IsFixedSize => false;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    bool IDictionary.IsReadOnly => false;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    ICollection IDictionary.Keys => Keys;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    ICollection IDictionary.Values => Values;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    object? IDictionary.this[object key]
+    {
+        get
+        {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (key is not TKey typedKey)
+            {
+                return null;
+            }
+
+            if (TryGetValue(typedKey, out var value))
+            {
+                return value;
+            }
+
+            return null;
+        }
+        set
+        {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (key is not TKey typedKey)
+            {
+                throw new ArgumentException($"The value is not of type {typeof(TKey)}.", nameof(key));
+            }
+
+            if (value is not TValue typedValue)
+            {
+                throw new ArgumentException($"The value is not of type {typeof(TValue)}.", nameof(value));
+            }
+
+            this[typedKey] = typedValue;
+        }
+    }
 
     #endregion
 
@@ -398,6 +464,56 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
     public bool TryGetValue(TKey key, out TValue value) => _dictionary.TryGetValue(key, out value!);
 
+    void IDictionary.Add(object key, object? value)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
+        if (key is not TKey typedKey)
+        {
+            throw new ArgumentException($"The value is not of type {typeof(TKey)}.", nameof(key));
+        }
+
+        if (value is not TValue typedValue)
+        {
+            throw new ArgumentException($"The value is not of type {typeof(TValue)}.", nameof(value));
+        }
+
+        Add(typedKey, typedValue);
+    }
+
+    bool IDictionary.Contains(object key)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        return key is TKey typedKey && ContainsKey(typedKey);
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator() => ((IDictionary)_dictionary).GetEnumerator();
+
+    void IDictionary.Remove(object key)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        if (key is TKey typedKey)
+        {
+            Remove(typedKey);
+        }
+    }
+
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
     /// <summary>
     /// Ensures that the bidirectional dictionary can hold up to 'capacity' entries without any further expansion of its backing storage.
@@ -458,15 +574,16 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     {
         if (item.Key == null)
         {
-            throw new ArgumentNullException("The item key == null.", nameof(item));
+            throw new ArgumentNullException(nameof(item));
         }
 
         if (item.Value == null)
         {
-            throw new ArgumentNullException("The item value == null.", nameof(item));
+            throw new ArgumentNullException(nameof(item));
         }
 
-        return ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Remove(item) &&
+        return
+            ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Remove(item) &&
             Inverse._dictionary.Remove(item.Value);
     }
 
@@ -474,12 +591,12 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     {
         if (item.Key == null)
         {
-            throw new ArgumentNullException("The item key == null.", nameof(item));
+            throw new ArgumentNullException(nameof(item));
         }
 
         if (item.Value == null)
         {
-            throw new ArgumentNullException("The item value == null.", nameof(item));
+            throw new ArgumentNullException(nameof(item));
         }
 
         return ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Contains(item);
@@ -487,6 +604,11 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
     void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) =>
         ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).CopyTo(array, arrayIndex);
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+        ((ICollection)_dictionary).CopyTo(array, index);
+    }
 
     IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
         => _dictionary.GetEnumerator();
