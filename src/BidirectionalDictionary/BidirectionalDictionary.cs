@@ -209,7 +209,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
         : this(new Dictionary<TKey, TValue>(collection, keyComparer), valueComparer) { }
 #elif NETSTANDARD2_0
-        : this(new Dictionary<TKey, TValue>(collection?.ToDictionary(pair => pair.Key, pair => pair.Value, keyComparer)), valueComparer) { }
+        : this(new Dictionary<TKey, TValue>(collection?.ToDictionary(pair => pair.Key, pair => pair.Value, keyComparer), keyComparer), valueComparer) { }
 #endif
 
     private BidirectionalDictionary(BidirectionalDictionary<TValue, TKey> inverse)
