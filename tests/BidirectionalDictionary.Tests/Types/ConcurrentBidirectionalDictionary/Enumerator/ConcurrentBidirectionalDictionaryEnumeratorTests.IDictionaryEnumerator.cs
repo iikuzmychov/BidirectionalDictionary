@@ -8,10 +8,10 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     [Fact]
     public void Entry_StartedEnumerator_ReturnsEntry()
     {
-        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
-        {
-            { 'a', 0 },
-        };
+        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 
         var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
@@ -22,10 +22,10 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     [Fact]
     public void Entry_NotStartedEnumerator_ReturnsDefaultEntry()
     {
-        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
-        {
-            { 'a', 0 },
-        };
+        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 
         var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
@@ -35,10 +35,10 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     [Fact]
     public void Entry_FinishedEnumerator_ReturnsLastEntry()
     {
-        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
-        {
-            { 'a', 0 },
-        };
+        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 
         var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
@@ -51,10 +51,10 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     [Fact]
     public void Key_StartedEnumerator_ReturnsKey()
     {
-        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
-        {
-            { 'a', 0 },
-        };
+        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 
         var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
@@ -65,10 +65,10 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     [Fact]
     public void Key_NotStartedEnumerator_ReturnsDefaultKey()
     {
-        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
-        {
-            { 'a', 0 },
-        };
+        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 
         var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
@@ -78,10 +78,10 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     [Fact]
     public void Key_FinishedEnumerator_ReturnsLastKey()
     {
-        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
-        {
-            { 'a', 0 },
-        };
+        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 
         var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
@@ -94,10 +94,10 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     [Fact]
     public void Value_StartedEnumerator_ReturnsValue()
     {
-        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
-        {
-            { 'a', 0 },
-        };
+        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 
         var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
@@ -108,10 +108,10 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     [Fact]
     public void Value_NotStartedEnumerator_ReturnsDefaultValue()
     {
-        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
-        {
-            { 'a', 0 },
-        };
+        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 
         var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
@@ -121,10 +121,10 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     [Fact]
     public void Value_FinishedEnumerator_ReturnsLastValue()
     {
-        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
-        {
-            { 'a', 0 },
-        };
+        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 
         var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 

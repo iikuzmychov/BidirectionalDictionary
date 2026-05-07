@@ -221,19 +221,6 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void Remove_ExistingKey_RemovesForwardAndInverseEntry()
-    {
-        var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
-        dictionary.TryAdd('a', 1);
-
-        var removed = dictionary.Remove('a');
-
-        Assert.True(removed);
-        Assert.Empty(dictionary);
-        Assert.Empty(dictionary.Inverse);
-    }
-
-    [Fact]
     public void TryRemove_MissingKey_ReturnsFalseAndDefaultValue()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
@@ -360,13 +347,13 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void ContainsValue_FilledConcurrentBidirectionalDictionary_ReturnsExpectedResult()
+    public void InverseContainsKey_FilledConcurrentBidirectionalDictionary_ReturnsExpectedResult()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
         dictionary.TryAdd('a', 1);
 
-        Assert.True(dictionary.ContainsValue(1));
-        Assert.False(dictionary.ContainsValue(2));
+        Assert.True(dictionary.Inverse.ContainsKey(1));
+        Assert.False(dictionary.Inverse.ContainsKey(2));
     }
 
     [Fact]

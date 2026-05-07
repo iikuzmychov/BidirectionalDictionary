@@ -277,8 +277,8 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     private static ConcurrentBidirectionalDictionary<char, int> CreateConcurrentBidirectionalDictionaryForDictionary() =>
-        new()
-        {
-            { 'a', 0 },
-        };
+        new(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 }

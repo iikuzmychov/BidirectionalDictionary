@@ -32,10 +32,10 @@ public partial class ConcurrentBidirectionalDictionaryTests
     [Fact]
     public void ICollectionKeyValuePairTKeyTValue_Properties_FilledConcurrentBidirectionalDictionary_ReturnsExpectedValues()
     {
-        var collection = (ICollection<KeyValuePair<char, int>>)new ConcurrentBidirectionalDictionary<char, int>
-        {
-            { 'a', 0 },
-        };
+        var collection = (ICollection<KeyValuePair<char, int>>)new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
 
         Assert.False(collection.IsReadOnly);
         Assert.True(collection.Contains(new KeyValuePair<char, int>('a', 0)));
@@ -46,10 +46,10 @@ public partial class ConcurrentBidirectionalDictionaryTests
     [Fact]
     public void ICollectionKeyValuePairTKeyTValue_CopyTo_FilledConcurrentBidirectionalDictionary_CopiesPairs()
     {
-        var collection = (ICollection<KeyValuePair<char, int>>)new ConcurrentBidirectionalDictionary<char, int>
-        {
-            { 'a', 0 },
-        };
+        var collection = (ICollection<KeyValuePair<char, int>>)new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
         var entries = new KeyValuePair<char, int>[2];
 
         collection.CopyTo(entries, 1);
@@ -69,10 +69,10 @@ public partial class ConcurrentBidirectionalDictionaryTests
     [Fact]
     public void ICollectionKeyValuePairTKeyTValue_Remove_FilledConcurrentBidirectionalDictionaryAndMismatchedPair_ReturnsFalseAndDoesNotChangeDictionary()
     {
-        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>
-        {
-            { 'a', 0 },
-        };
+        var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 0),
+        ]);
         var collection = (ICollection<KeyValuePair<char, int>>)concurrentBidirectionalDictionary;
 
         var removed = collection.Remove(new KeyValuePair<char, int>('a', 1));
