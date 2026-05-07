@@ -1,0 +1,97 @@
+#nullable enable
+static System.Linq.BidirectionalDictionaryEnumerableExtensions.ToBidirectionalDictionary<TKey, TValue>(this System.Collections.Generic.IEnumerable<(TKey Key, TValue Value)>! source) -> System.Collections.Generic.BidirectionalDictionary<TKey, TValue>!
+static System.Linq.BidirectionalDictionaryEnumerableExtensions.ToBidirectionalDictionary<TKey, TValue>(this System.Collections.Generic.IEnumerable<(TKey Key, TValue Value)>! source, System.Collections.Generic.IEqualityComparer<TKey>? keyComparer, System.Collections.Generic.IEqualityComparer<TValue>? valueComparer) -> System.Collections.Generic.BidirectionalDictionary<TKey, TValue>!
+static System.Linq.BidirectionalDictionaryEnumerableExtensions.ToBidirectionalDictionary<TKey, TValue>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! source) -> System.Collections.Generic.BidirectionalDictionary<TKey, TValue>!
+static System.Linq.BidirectionalDictionaryEnumerableExtensions.ToBidirectionalDictionary<TKey, TValue>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! source, System.Collections.Generic.IEqualityComparer<TKey>? keyComparer, System.Collections.Generic.IEqualityComparer<TValue>? valueComparer) -> System.Collections.Generic.BidirectionalDictionary<TKey, TValue>!
+static System.Linq.BidirectionalDictionaryEnumerableExtensions.ToBidirectionalDictionary<TSource, TKey, TElement>(this System.Collections.Generic.IEnumerable<TSource>! source, System.Func<TSource, TKey>! keySelector, System.Func<TSource, TElement>! elementSelector) -> System.Collections.Generic.BidirectionalDictionary<TKey, TElement>!
+static System.Linq.BidirectionalDictionaryEnumerableExtensions.ToBidirectionalDictionary<TSource, TKey, TElement>(this System.Collections.Generic.IEnumerable<TSource>! source, System.Func<TSource, TKey>! keySelector, System.Func<TSource, TElement>! elementSelector, System.Collections.Generic.IEqualityComparer<TKey>? keyComparer, System.Collections.Generic.IEqualityComparer<TElement>? valueComparer) -> System.Collections.Generic.BidirectionalDictionary<TKey, TElement>!
+static System.Linq.BidirectionalDictionaryEnumerableExtensions.ToBidirectionalDictionary<TSource, TKey>(this System.Collections.Generic.IEnumerable<TSource>! source, System.Func<TSource, TKey>! keySelector) -> System.Collections.Generic.BidirectionalDictionary<TKey, TSource>!
+static System.Linq.BidirectionalDictionaryEnumerableExtensions.ToBidirectionalDictionary<TSource, TKey>(this System.Collections.Generic.IEnumerable<TSource>! source, System.Func<TSource, TKey>! keySelector, System.Collections.Generic.IEqualityComparer<TKey>? keyComparer, System.Collections.Generic.IEqualityComparer<TSource>? valueComparer) -> System.Collections.Generic.BidirectionalDictionary<TKey, TSource>!
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Add(TKey key, TValue value) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.AsReadOnly() -> System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>!
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.BidirectionalDictionary() -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.BidirectionalDictionary(int capacity) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.BidirectionalDictionary(int capacity, System.Collections.Generic.IEqualityComparer<TKey>? keyComparer, System.Collections.Generic.IEqualityComparer<TValue>? valueComparer) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.BidirectionalDictionary(System.Collections.Generic.IDictionary<TKey, TValue>! dictionary) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.BidirectionalDictionary(System.Collections.Generic.IDictionary<TKey, TValue>! dictionary, System.Collections.Generic.IEqualityComparer<TKey>? keyComparer, System.Collections.Generic.IEqualityComparer<TValue>? valueComparer) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.BidirectionalDictionary(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! collection) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.BidirectionalDictionary(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! collection, System.Collections.Generic.IEqualityComparer<TKey>? keyComparer, System.Collections.Generic.IEqualityComparer<TValue>? valueComparer) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.BidirectionalDictionary(System.Collections.Generic.IEqualityComparer<TKey>? keyComparer, System.Collections.Generic.IEqualityComparer<TValue>? valueComparer) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Clear() -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ContainsKey(TKey key) -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ContainsValue(TValue value) -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Count.get -> int
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.EnsureCapacity(int capacity) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Enumerator
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Enumerator.Current.get -> System.Collections.Generic.KeyValuePair<TKey, TValue>
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Enumerator.Dispose() -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Enumerator.Entry.get -> System.Collections.DictionaryEntry
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Enumerator.Enumerator() -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Enumerator.Key.get -> object!
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Enumerator.MoveNext() -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Enumerator.Value.get -> object?
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.GetEnumerator() -> System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Enumerator
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Inverse.get -> System.Collections.Generic.BidirectionalDictionary<TValue, TKey>!
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.Contains(TKey item) -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.CopyTo(TKey[]! array, int arrayIndex) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.Count.get -> int
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.Enumerator
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.Enumerator.Current.get -> TKey
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.Enumerator.Dispose() -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.Enumerator.Enumerator() -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.Enumerator.MoveNext() -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.GetEnumerator() -> System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.Enumerator
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection.KeyCollection(System.Collections.Generic.BidirectionalDictionary<TKey, TValue>! bidirectionalDictionary) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyComparer.get -> System.Collections.Generic.IEqualityComparer<TKey>!
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Keys.get -> System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.KeyCollection!
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Remove(TKey key) -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Remove(TKey key, out TValue value) -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.this[TKey key].get -> TValue
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.this[TKey key].set -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.TrimExcess() -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.TrimExcess(int capacity) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.TryAdd(TKey key, TValue value) -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value) -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.Contains(TValue item) -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.CopyTo(TValue[]! array, int arrayIndex) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.Count.get -> int
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.Enumerator
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.Enumerator.Current.get -> TValue
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.Enumerator.Dispose() -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.Enumerator.Enumerator() -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.Enumerator.MoveNext() -> bool
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.GetEnumerator() -> System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.Enumerator
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection.ValueCollection(System.Collections.Generic.BidirectionalDictionary<TKey, TValue>! bidirectionalDictionary) -> void
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueComparer.get -> System.Collections.Generic.IEqualityComparer<TValue>!
+System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.Values.get -> System.Collections.Generic.BidirectionalDictionary<TKey, TValue>.ValueCollection!
+System.Collections.Generic.IBidirectionalDictionary<TKey, TValue>
+System.Collections.Generic.IBidirectionalDictionary<TKey, TValue>.ContainsValue(TValue value) -> bool
+System.Collections.Generic.IBidirectionalDictionary<TKey, TValue>.Inverse.get -> System.Collections.Generic.IBidirectionalDictionary<TValue, TKey>!
+System.Collections.Generic.IReadOnlyBidirectionalDictionary<TKey, TValue>
+System.Collections.Generic.IReadOnlyBidirectionalDictionary<TKey, TValue>.ContainsValue(TValue value) -> bool
+System.Collections.Generic.IReadOnlyBidirectionalDictionary<TKey, TValue>.Inverse.get -> System.Collections.Generic.IReadOnlyBidirectionalDictionary<TValue, TKey>!
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.ContainsKey(TKey key) -> bool
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.ContainsValue(TValue value) -> bool
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.Count.get -> int
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.GetEnumerator() -> System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<TKey, TValue>>!
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.Inverse.get -> System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TValue, TKey>!
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.KeyCollection
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.KeyCollection.Contains(TKey item) -> bool
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.KeyCollection.CopyTo(TKey[]! array, int arrayIndex) -> void
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.KeyCollection.Count.get -> int
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.KeyCollection.GetEnumerator() -> System.Collections.Generic.IEnumerator<TKey>!
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.Keys.get -> System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.KeyCollection!
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.ReadOnlyBidirectionalDictionary(System.Collections.Generic.IBidirectionalDictionary<TKey, TValue>! bidirectionalDictionary) -> void
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.this[TKey key].get -> TValue
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value) -> bool
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.ValueCollection
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.ValueCollection.Contains(TValue item) -> bool
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.ValueCollection.CopyTo(TValue[]! array, int arrayIndex) -> void
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.ValueCollection.Count.get -> int
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.ValueCollection.GetEnumerator() -> System.Collections.Generic.IEnumerator<TValue>!
+System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.Values.get -> System.Collections.ObjectModel.ReadOnlyBidirectionalDictionary<TKey, TValue>.ValueCollection!
+System.Linq.BidirectionalDictionaryEnumerableExtensions
