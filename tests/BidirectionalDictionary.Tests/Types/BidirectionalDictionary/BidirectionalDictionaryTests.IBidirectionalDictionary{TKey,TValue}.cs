@@ -3,7 +3,7 @@ namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary;
 public partial class BidirectionalDictionaryTests
 {
     [Fact]
-    public void IBidirectionalDictionary_Inverse_FilledBidirectionalDictionary_ReturnsInverse()
+    public void IBidirectionalDictionaryTKeyTValue_Inverse_FilledBidirectionalDictionary_ReturnsInverse()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {

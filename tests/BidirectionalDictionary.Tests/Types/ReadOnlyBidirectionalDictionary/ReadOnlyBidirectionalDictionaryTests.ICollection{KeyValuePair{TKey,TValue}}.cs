@@ -5,7 +5,7 @@ namespace BidirectionalDictionary.Tests.Types.ReadOnlyBidirectionalDictionary;
 public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Fact]
-    public void ICollectionKeyValuePair_IsReadOnly_FilledReadOnlyBidirectionalDictionary_ReturnsTrue()
+    public void ICollectionKeyValuePairTKeyTValue_IsReadOnly_FilledReadOnlyBidirectionalDictionary_ReturnsTrue()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
 
@@ -15,7 +15,7 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void ICollectionKeyValuePair_Add_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
+    public void ICollectionKeyValuePairTKeyTValue_Add_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
 
@@ -24,7 +24,7 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void ICollectionKeyValuePair_Remove_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
+    public void ICollectionKeyValuePairTKeyTValue_Remove_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
 
@@ -33,7 +33,7 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void ICollectionKeyValuePair_Clear_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
+    public void ICollectionKeyValuePairTKeyTValue_Clear_FilledReadOnlyBidirectionalDictionary_ThrowsNotSupportedException()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
 
@@ -41,7 +41,7 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void ICollectionKeyValuePair_CopyTo_FilledReadOnlyBidirectionalDictionary_CopiesEntries()
+    public void ICollectionKeyValuePairTKeyTValue_CopyTo_FilledReadOnlyBidirectionalDictionary_CopiesEntries()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionary();
         var entries = new KeyValuePair<char, int>[2];
@@ -57,7 +57,7 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [InlineData('b', 0, false)]
     [InlineData('a', 1, false)]
     [InlineData('c', 2, false)]
-    public void ICollectionKeyValuePair_Contains_FilledReadOnlyBidirectionalDictionaryAndMissingPair_ReturnsExpectedResult(
+    public void ICollectionKeyValuePairTKeyTValue_Contains_FilledReadOnlyBidirectionalDictionaryAndMissingPair_ReturnsExpectedResult(
         char key,
         int value,
         bool expectedResult)
@@ -79,7 +79,7 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     [InlineData(null, 0)]
     [InlineData('a', null)]
     [InlineData(null, null)]
-    public void ICollectionKeyValuePair_Contains_FilledBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentException(char? key, int? value)
+    public void ICollectionKeyValuePairTKeyTValue_Contains_FilledBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentException(char? key, int? value)
     {
 #pragma warning disable CS8714
         var bidirectionalDictionary = new BidirectionalDictionary<char?, int?>()

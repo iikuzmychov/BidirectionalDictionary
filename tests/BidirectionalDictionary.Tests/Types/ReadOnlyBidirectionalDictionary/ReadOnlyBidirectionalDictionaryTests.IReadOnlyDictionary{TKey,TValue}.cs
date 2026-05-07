@@ -5,7 +5,7 @@ namespace BidirectionalDictionary.Tests.Types.ReadOnlyBidirectionalDictionary;
 public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Fact]
-    public void IReadOnlyDictionary_Keys_FilledReadOnlyBidirectionalDictionary_ReturnsKeys()
+    public void IReadOnlyDictionaryTKeyTValue_Keys_FilledReadOnlyBidirectionalDictionary_ReturnsKeys()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForReadOnlyDictionary();
 
@@ -15,7 +15,7 @@ public partial class ReadOnlyBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void IReadOnlyDictionary_Values_FilledReadOnlyBidirectionalDictionary_ReturnsValues()
+    public void IReadOnlyDictionaryTKeyTValue_Values_FilledReadOnlyBidirectionalDictionary_ReturnsValues()
     {
         var readOnlyBidirectionalDictionary = CreateReadOnlyBidirectionalDictionaryForReadOnlyDictionary();
 
