@@ -936,21 +936,11 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
         {
             _snapshot = snapshot;
             _index = -1;
+            Current = default;
         }
 
         /// <summary>Gets the element at the current position of the enumerator.</summary>
-        public readonly KeyValuePair<TKey, TValue> Current
-        {
-            get
-            {
-                if ((uint)_index >= (uint)_snapshot.Length)
-                {
-                    throw new InvalidOperationException("Enumeration has either not started or has already finished.");
-                }
-
-                return _snapshot[_index];
-            }
-        }
+        public KeyValuePair<TKey, TValue> Current { get; private set; }
 
         readonly object IEnumerator.Current => Current;
 
@@ -967,17 +957,22 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
         public bool MoveNext()
         {
             int next = _index + 1;
-            if (next >= _snapshot.Length)
+            if ((uint)next >= (uint)_snapshot.Length)
             {
                 _index = _snapshot.Length;
                 return false;
             }
 
             _index = next;
+            Current = _snapshot[next];
             return true;
         }
 
-        void IEnumerator.Reset() => _index = -1;
+        void IEnumerator.Reset()
+        {
+            _index = -1;
+            Current = default;
+        }
 
         /// <summary>Releases all resources used by the enumerator.</summary>
         public readonly void Dispose()
@@ -987,10 +982,10 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
 
     private sealed class DictionaryEnumerator : IDictionaryEnumerator
     {
-        private readonly IEnumerator<KeyValuePair<TKey, TValue>> _enumerator;
+        private IEnumerator<KeyValuePair<TKey, TValue>> _enumerator;
 
         internal DictionaryEnumerator(KeyValuePair<TKey, TValue>[] snapshot) =>
-            _enumerator = ((IEnumerable<KeyValuePair<TKey, TValue>>)snapshot).GetEnumerator();
+            _enumerator = new Enumerator(snapshot);
 
         public DictionaryEntry Entry => new(_enumerator.Current.Key, _enumerator.Current.Value);
 
