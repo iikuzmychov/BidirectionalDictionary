@@ -303,21 +303,6 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
         }
     }
 
-    private bool ContainsValueCore(TValue value)
-    {
-        ThrowIfNull(value, nameof(value));
-
-        EnterReadLock();
-        try
-        {
-            return _reverse.ContainsKey(value);
-        }
-        finally
-        {
-            ExitReadLock();
-        }
-    }
-
     /// <summary>Attempts to remove and return the value with the specified key from the dictionary.</summary>
     public bool TryRemove(TKey key, out TValue value)
     {
@@ -927,7 +912,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
     private void ExitWriteLock() => _lock.ExitWriteLock();
 
     /// <summary>Provides an enumerator implementation for the dictionary.</summary>
-    public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
+    public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
     {
         private readonly KeyValuePair<TKey, TValue>[] _snapshot;
         private int _index;
@@ -943,15 +928,6 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
         public KeyValuePair<TKey, TValue> Current { get; private set; }
 
         readonly object IEnumerator.Current => Current;
-
-        /// <summary>Gets both the key and the value of the current dictionary entry.</summary>
-        public readonly DictionaryEntry Entry => new(Current.Key, Current.Value);
-
-        /// <summary>Gets the key of the current dictionary entry.</summary>
-        public readonly object Key => Current.Key;
-
-        /// <summary>Gets the value of the current dictionary entry.</summary>
-        public readonly object? Value => Current.Value;
 
         /// <summary>Advances the enumerator to the next element of the dictionary.</summary>
         public bool MoveNext()

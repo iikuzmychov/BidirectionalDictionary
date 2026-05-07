@@ -28,4 +28,18 @@ public partial class ConcurrentBidirectionalDictionaryTests
         Assert.Single(keys, 'a');
         Assert.Single(values, 1);
     }
+
+    [Fact]
+    public void IDictionaryTKeyTValue_Remove_FilledConcurrentBidirectionalDictionaryAndExistingKey_RemovesBothDirections()
+    {
+        var concrete = new ConcurrentBidirectionalDictionary<char, int>();
+        Assert.True(concrete.TryAdd('a', 1));
+        IDictionary<char, int> dictionary = concrete;
+
+        var removed = dictionary.Remove('a');
+
+        Assert.True(removed);
+        Assert.Empty(concrete);
+        Assert.Empty(concrete.Inverse);
+    }
 }

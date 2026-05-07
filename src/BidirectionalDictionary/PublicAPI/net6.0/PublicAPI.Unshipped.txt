@@ -16,11 +16,8 @@ System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Co
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator.Current.get -> System.Collections.Generic.KeyValuePair<TKey, TValue>
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator.Dispose() -> void
-System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator.Entry.get -> System.Collections.DictionaryEntry
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator.Enumerator() -> void
-System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator.Key.get -> object!
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator.MoveNext() -> bool
-System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator.Value.get -> object?
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.GetEnumerator() -> System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.GetOrAdd<TArg>(TKey key, System.Func<TKey, TArg, TValue>! valueFactory, TArg factoryArgument) -> TValue
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.GetOrAdd(TKey key, System.Func<TKey, TValue>! valueFactory) -> TValue
