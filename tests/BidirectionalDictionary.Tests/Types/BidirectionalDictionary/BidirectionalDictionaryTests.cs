@@ -127,10 +127,24 @@ public partial class BidirectionalDictionaryTests
         Assert.Throws<ArgumentNullException>(() => _ = new BidirectionalDictionary<char, int>(collection!));
     }
 
-    /*[Fact]
-    public void Constructor_Comaparers_CreatesEmptyBidirectionalDictionaryFromSourceDictionary()
+    [Fact]
+    public void Constructor_NullKeyValuePairsEnumerableAndComparers_ThrowsArgumentNullException()
     {
-        var bidirectionalDictionary = new BidirectionalDictionary<char, int>(keyComparer, valueComparer);
+        var collection = (IEnumerable<KeyValuePair<string, string>>?)null;
+
+        Assert.Throws<ArgumentNullException>(() => _ = new BidirectionalDictionary<string, string>(
+            collection!,
+            StringComparer.OrdinalIgnoreCase,
+            StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void Constructor_Comparers_CreatesEmptyBidirectionalDictionaryWithExpectedComparers()
+    {
+        var keyComparer = StringComparer.OrdinalIgnoreCase;
+        var valueComparer = StringComparer.Ordinal;
+
+        var bidirectionalDictionary = new BidirectionalDictionary<string, string>(keyComparer, valueComparer);
 
         Assert.Empty(bidirectionalDictionary);
         Assert.Empty(bidirectionalDictionary.Keys);
@@ -141,7 +155,7 @@ public partial class BidirectionalDictionaryTests
         Assert.Empty(bidirectionalDictionary.Inverse.Values);
         Assert.Equal(keyComparer, bidirectionalDictionary.Inverse.ValueComparer);
         Assert.Equal(valueComparer, bidirectionalDictionary.Inverse.KeyComparer);
-    }*/
+    }
 
     #endregion
 
