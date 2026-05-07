@@ -303,8 +303,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
         }
     }
 
-    /// <summary>Determines whether the dictionary contains the specified value.</summary>
-    public bool ContainsValue(TValue value)
+    private bool ContainsValueCore(TValue value)
     {
         ThrowIfNull(value, nameof(value));
 
@@ -560,17 +559,13 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
             (k, oldValue) => updateValueFactory(k, oldValue, factoryArgument));
     }
 
-    /// <summary>Adds the specified key and value to the dictionary.</summary>
-    public void Add(TKey key, TValue value)
+    private void AddCore(TKey key, TValue value)
     {
         if (!TryAdd(key, value))
         {
             throw new ArgumentException("The same key or value already exists.");
         }
     }
-
-    /// <summary>Removes the value with the specified key from the dictionary.</summary>
-    public bool Remove(TKey key) => TryRemove(key, out _);
 
     /// <summary>Returns an enumerator that iterates through the dictionary.</summary>
     public Enumerator GetEnumerator() => new(ToArray());
@@ -579,7 +574,11 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
+    void IDictionary<TKey, TValue>.Add(TKey key, TValue value) => AddCore(key, value);
+
+    bool IDictionary<TKey, TValue>.Remove(TKey key) => TryRemove(key, out _);
+
+    void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => AddCore(item.Key, item.Value);
 
     bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
     {
@@ -622,7 +621,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
         }
 
         ThrowIfInvalidObjectValue(value);
-        Add(typedKey, (TValue)value!);
+        AddCore(typedKey, (TValue)value!);
     }
 
     bool IDictionary.Contains(object key)

@@ -27,10 +27,10 @@ public partial class ConcurrentBidirectionalDictionaryTests
     [Fact]
     public void IDictionaryEnumerator_Properties_StartedConcurrentBidirectionalDictionaryEnumerator_ReturnExpectedValues()
     {
-        var dictionary = new ConcurrentBidirectionalDictionary<char, int>
-        {
-            { 'a', 1 },
-        };
+        var dictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 1),
+        ]);
         var enumerator = ((IDictionary)dictionary).GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
@@ -43,10 +43,10 @@ public partial class ConcurrentBidirectionalDictionaryTests
     [Fact]
     public void IEnumerator_Reset_StartedConcurrentBidirectionalDictionaryEnumerator_RestartsEnumeration()
     {
-        var dictionary = new ConcurrentBidirectionalDictionary<char, int>
-        {
-            { 'a', 1 },
-        };
+        var dictionary = new ConcurrentBidirectionalDictionary<char, int>(
+        [
+            new KeyValuePair<char, int>('a', 1),
+        ]);
         var enumerator = (IEnumerator)dictionary.GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
