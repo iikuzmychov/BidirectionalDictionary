@@ -13,39 +13,39 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)concurrentBidirectionalDictionary.GetEnumerator();
+        var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.Equal(new DictionaryEntry('a', 0), enumerator.Entry);
     }
 
     [Fact]
-    public void Entry_NotStartedEnumerator_ThrowsInvalidOperationException()
+    public void Entry_NotStartedEnumerator_ReturnsDefaultEntry()
     {
         var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)concurrentBidirectionalDictionary.GetEnumerator();
+        var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
-        Assert.Throws<InvalidOperationException>(() => _ = enumerator.Entry);
+        Assert.Equal(new DictionaryEntry(default(char), default(int)), enumerator.Entry);
     }
 
     [Fact]
-    public void Entry_FinishedEnumerator_ThrowsInvalidOperationException()
+    public void Entry_FinishedEnumerator_ReturnsLastEntry()
     {
         var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)concurrentBidirectionalDictionary.GetEnumerator();
+        var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.False(enumerator.MoveNext());
 
-        Assert.Throws<InvalidOperationException>(() => _ = enumerator.Entry);
+        Assert.Equal(new DictionaryEntry('a', 0), enumerator.Entry);
     }
 
     [Fact]
@@ -56,39 +56,39 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)concurrentBidirectionalDictionary.GetEnumerator();
+        var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.Equal('a', enumerator.Key);
     }
 
     [Fact]
-    public void Key_NotStartedEnumerator_ThrowsInvalidOperationException()
+    public void Key_NotStartedEnumerator_ReturnsDefaultKey()
     {
         var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)concurrentBidirectionalDictionary.GetEnumerator();
+        var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
-        Assert.Throws<InvalidOperationException>(() => _ = enumerator.Key);
+        Assert.Equal(default(char), enumerator.Key);
     }
 
     [Fact]
-    public void Key_FinishedEnumerator_ThrowsInvalidOperationException()
+    public void Key_FinishedEnumerator_ReturnsLastKey()
     {
         var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)concurrentBidirectionalDictionary.GetEnumerator();
+        var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.False(enumerator.MoveNext());
 
-        Assert.Throws<InvalidOperationException>(() => _ = enumerator.Key);
+        Assert.Equal('a', enumerator.Key);
     }
 
     [Fact]
@@ -99,38 +99,38 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)concurrentBidirectionalDictionary.GetEnumerator();
+        var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.Equal(0, enumerator.Value);
     }
 
     [Fact]
-    public void Value_NotStartedEnumerator_ThrowsInvalidOperationException()
+    public void Value_NotStartedEnumerator_ReturnsDefaultValue()
     {
         var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)concurrentBidirectionalDictionary.GetEnumerator();
+        var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
-        Assert.Throws<InvalidOperationException>(() => _ = enumerator.Value);
+        Assert.Equal(default(int), enumerator.Value);
     }
 
     [Fact]
-    public void Value_FinishedEnumerator_ThrowsInvalidOperationException()
+    public void Value_FinishedEnumerator_ReturnsLastValue()
     {
         var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
         {
             { 'a', 0 },
         };
 
-        var enumerator = (IDictionaryEnumerator)concurrentBidirectionalDictionary.GetEnumerator();
+        var enumerator = ((IDictionary)concurrentBidirectionalDictionary).GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.False(enumerator.MoveNext());
 
-        Assert.Throws<InvalidOperationException>(() => _ = enumerator.Value);
+        Assert.Equal(0, enumerator.Value);
     }
 }

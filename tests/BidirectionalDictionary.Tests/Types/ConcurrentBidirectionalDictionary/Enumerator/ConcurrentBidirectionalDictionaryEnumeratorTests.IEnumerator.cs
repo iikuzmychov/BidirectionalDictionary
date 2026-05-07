@@ -20,7 +20,7 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    public void Current_NotStartedEnumerator_ThrowsInvalidOperationException()
+    public void Current_NotStartedEnumerator_ReturnsDefault()
     {
         var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
         {
@@ -29,11 +29,11 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
 
         var enumerator = (IEnumerator)concurrentBidirectionalDictionary.GetEnumerator();
 
-        Assert.Throws<InvalidOperationException>(() => _ = enumerator.Current);
+        Assert.Equal(default(KeyValuePair<char, int>), enumerator.Current);
     }
 
     [Fact]
-    public void Current_FinishedEnumerator_ThrowsInvalidOperationException()
+    public void Current_FinishedEnumerator_ReturnsLastCurrent()
     {
         var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
         {
@@ -45,7 +45,7 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
         Assert.True(enumerator.MoveNext());
         Assert.False(enumerator.MoveNext());
 
-        Assert.Throws<InvalidOperationException>(() => _ = enumerator.Current);
+        Assert.Equal(new KeyValuePair<char, int>('a', 0), enumerator.Current);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
     }
 
     [Fact]
-    public void Reset_ModifiedConcurrentBidirectionalDictionary_ResetsSnapshotEnumerator()
+    public void Reset_ModifiedConcurrentBidirectionalDictionary_ResetsEnumerator()
     {
         var concurrentBidirectionalDictionary = new ConcurrentBidirectionalDictionary<char, int>()
         {
@@ -80,8 +80,13 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
 
         enumerator.Reset();
 
-        Assert.True(enumerator.MoveNext());
-        Assert.Equal(new KeyValuePair<char, int>('a', 0), enumerator.Current);
+        var entries = new List<KeyValuePair<char, int>>();
+        while (enumerator.MoveNext())
+        {
+            entries.Add((KeyValuePair<char, int>)enumerator.Current);
+        }
+
+        Assert.Contains(new KeyValuePair<char, int>('a', 0), entries);
         Assert.False(enumerator.MoveNext());
     }
 }

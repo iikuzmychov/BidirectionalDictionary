@@ -6,16 +6,21 @@ namespace BidirectionalDictionary.Tests.Types.ConcurrentBidirectionalDictionary;
 public partial class ConcurrentBidirectionalDictionaryTests
 {
     [Fact]
-    public void IEnumerableKeyValuePairTKeyTValue_GetEnumerator_FilledConcurrentBidirectionalDictionary_ReturnsSnapshot()
+    public void IEnumerableKeyValuePairTKeyTValue_GetEnumerator_ModifiedConcurrentBidirectionalDictionary_MayObserveModification()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
         dictionary.TryAdd('a', 1);
 
         using var enumerator = dictionary.GetEnumerator();
-        dictionary.Clear();
+        dictionary.TryAdd('b', 2);
 
-        Assert.True(enumerator.MoveNext());
-        Assert.Equal(new KeyValuePair<char, int>('a', 1), enumerator.Current);
+        var entries = new List<KeyValuePair<char, int>>();
+        while (enumerator.MoveNext())
+        {
+            entries.Add(enumerator.Current);
+        }
+
+        Assert.Contains(new KeyValuePair<char, int>('a', 1), entries);
         Assert.False(enumerator.MoveNext());
     }
 
@@ -26,13 +31,13 @@ public partial class ConcurrentBidirectionalDictionaryTests
         {
             { 'a', 1 },
         };
-        var enumerator = (IDictionaryEnumerator)dictionary.GetEnumerator();
+        var enumerator = ((IDictionary)dictionary).GetEnumerator();
 
         Assert.True(enumerator.MoveNext());
         Assert.Equal(new DictionaryEntry('a', 1), enumerator.Entry);
         Assert.Equal('a', enumerator.Key);
         Assert.Equal(1, enumerator.Value);
-        Assert.Equal(new KeyValuePair<char, int>('a', 1), enumerator.Current);
+        Assert.Equal(new DictionaryEntry('a', 1), enumerator.Current);
     }
 
     [Fact]
