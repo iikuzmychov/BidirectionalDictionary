@@ -3,7 +3,7 @@ namespace BidirectionalDictionary.Tests.Types.BidirectionalDictionary;
 public partial class BidirectionalDictionaryTests
 {
     [Fact]
-    public void ICollectionKeyValuePair_IsReadOnly_FilledBidirectionalDictionary_ReturnsFalse()
+    public void ICollectionKeyValuePairTKeyTValue_IsReadOnly_FilledBidirectionalDictionary_ReturnsFalse()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
@@ -16,7 +16,7 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    public void ICollectionKeyValuePair_CopyTo_FilledBidirectionalDictionary_CopiesEntries()
+    public void ICollectionKeyValuePairTKeyTValue_CopyTo_FilledBidirectionalDictionary_CopiesEntries()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
@@ -36,7 +36,7 @@ public partial class BidirectionalDictionaryTests
     [Theory]
     [InlineData('a', 0)]
     [InlineData('b', 1)]
-    public void ICollectionKeyValuePair_Add_EmptyBidirectionalDictionaryAndNonDuplicatePair_AddsEntrySuccessfully(char key, int value)
+    public void ICollectionKeyValuePairTKeyTValue_Add_EmptyBidirectionalDictionaryAndNonDuplicatePair_AddsEntrySuccessfully(char key, int value)
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>();
         var pair = new KeyValuePair<char, int>(key, value);
@@ -55,7 +55,7 @@ public partial class BidirectionalDictionaryTests
     [InlineData(null, null)]
     [InlineData(null, 0)]
     [InlineData('a', null)]
-    public void ICollectionKeyValuePair_Add_EmptyBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentNullException(char? key, int? value)
+    public void ICollectionKeyValuePairTKeyTValue_Add_EmptyBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentNullException(char? key, int? value)
     {
 #pragma warning disable CS8714
         var bidirectionalDictionary = new BidirectionalDictionary<char?, int?>();
@@ -77,7 +77,7 @@ public partial class BidirectionalDictionaryTests
     [InlineData('a', 0)]
     [InlineData('a', 1)]
     [InlineData('b', 0)]
-    public void ICollectionKeyValuePair_Add_FilledBidirectionalDictionaryAndDuplicatePair_ThrowsArgumentException(char key, int value)
+    public void ICollectionKeyValuePairTKeyTValue_Add_FilledBidirectionalDictionaryAndDuplicatePair_ThrowsArgumentException(char key, int value)
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
@@ -98,7 +98,7 @@ public partial class BidirectionalDictionaryTests
     }
 
     [Fact]
-    public void ICollectionKeyValuePair_Remove_FilledBidirectionalDictionaryAndExistingPair_RemovesEntrySuccessfullyAndReturnsTrue()
+    public void ICollectionKeyValuePairTKeyTValue_Remove_FilledBidirectionalDictionaryAndExistingPair_RemovesEntrySuccessfullyAndReturnsTrue()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
@@ -121,7 +121,7 @@ public partial class BidirectionalDictionaryTests
     [InlineData('a', 1)]
     [InlineData('b', 0)]
     [InlineData('c', 2)]
-    public void ICollectionKeyValuePair_Remove_FilledBidirectionalDictionaryAndMissingPair_ReturnsFalse(char key, int value)
+    public void ICollectionKeyValuePairTKeyTValue_Remove_FilledBidirectionalDictionaryAndMissingPair_ReturnsFalse(char key, int value)
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
@@ -147,7 +147,7 @@ public partial class BidirectionalDictionaryTests
     [InlineData(null, 0)]
     [InlineData('a', null)]
     [InlineData(null, null)]
-    public void ICollectionKeyValuePair_Remove_EmptyBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentNullException(char? key, int? value)
+    public void ICollectionKeyValuePairTKeyTValue_Remove_EmptyBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentNullException(char? key, int? value)
     {
 #pragma warning disable CS8714
         var bidirectionalDictionary = new BidirectionalDictionary<char?, int?>();
@@ -170,7 +170,7 @@ public partial class BidirectionalDictionaryTests
     [InlineData('b', 0, false)]
     [InlineData('a', 1, false)]
     [InlineData('c', 2, false)]
-    public void ICollectionKeyValuePair_Contains_FilledBidirectionalDictionaryAndMissingPair_ReturnsExpectedResult(
+    public void ICollectionKeyValuePairTKeyTValue_Contains_FilledBidirectionalDictionaryAndMissingPair_ReturnsExpectedResult(
         char key, int value, bool expectedResult)
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
@@ -189,7 +189,7 @@ public partial class BidirectionalDictionaryTests
     [InlineData(null, 0)]
     [InlineData('a', null)]
     [InlineData(null, null)]
-    public void ICollectionKeyValuePair_Contains_FilledBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentException(char? key, int? value)
+    public void ICollectionKeyValuePairTKeyTValue_Contains_FilledBidirectionalDictionaryAndPairWithNullKeyOrValue_ThrowsArgumentException(char? key, int? value)
     {
 #pragma warning disable CS8714
         var bidirectionalDictionary = new BidirectionalDictionary<char?, int?>()

@@ -5,7 +5,7 @@ namespace BidirectionalDictionary.Tests.Types.ReadOnlyBidirectionalDictionary;
 public partial class ReadOnlyBidirectionalDictionaryTests
 {
     [Fact]
-    public void IEnumerableKeyValuePair_GetEnumerator_FilledReadOnlyBidirectionalDictionary_EnumeratesEntries()
+    public void IEnumerableKeyValuePairTKeyTValue_GetEnumerator_FilledReadOnlyBidirectionalDictionary_EnumeratesEntries()
     {
         var bidirectionalDictionary = new BidirectionalDictionary<char, int>()
         {
