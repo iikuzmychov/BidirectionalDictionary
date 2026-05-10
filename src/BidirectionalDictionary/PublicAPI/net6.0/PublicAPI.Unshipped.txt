@@ -12,6 +12,7 @@ System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Co
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.ConcurrentBidirectionalDictionary(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! collection, System.Collections.Generic.IEqualityComparer<TKey>? keyComparer, System.Collections.Generic.IEqualityComparer<TValue>? valueComparer) -> void
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.ConcurrentBidirectionalDictionary(System.Collections.Generic.IEqualityComparer<TKey>? keyComparer, System.Collections.Generic.IEqualityComparer<TValue>? valueComparer) -> void
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.ContainsKey(TKey key) -> bool
+System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.ContainsValue(TValue value) -> bool
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Count.get -> int
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator
 System.Collections.Concurrent.ConcurrentBidirectionalDictionary<TKey, TValue>.Enumerator.Current.get -> System.Collections.Generic.KeyValuePair<TKey, TValue>

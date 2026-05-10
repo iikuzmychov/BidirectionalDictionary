@@ -14,7 +14,7 @@ namespace System.Collections.Concurrent;
 /// concurrently from multiple threads.
 /// </remarks>
 [DebuggerDisplay("Count = {Count}")]
-public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>
+public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>, IDictionary
     where TKey : notnull
     where TValue : notnull
 {
@@ -140,6 +140,10 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
 
     /// <summary>Gets the inverse <see cref="ConcurrentBidirectionalDictionary{TKey,TValue}"/>.</summary>
     public ConcurrentBidirectionalDictionary<TValue, TKey> Inverse { get; }
+
+    IBidirectionalDictionary<TValue, TKey> IBidirectionalDictionary<TKey, TValue>.Inverse => Inverse;
+
+    IReadOnlyBidirectionalDictionary<TValue, TKey> IReadOnlyBidirectionalDictionary<TKey, TValue>.Inverse => Inverse;
 
     /// <summary>Gets the equality comparer that is used to determine equality of keys.</summary>
     public IEqualityComparer<TKey> KeyComparer => _forward.Comparer;
@@ -302,6 +306,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
             ExitReadLock();
         }
     }
+
+    /// <summary>Determines whether the dictionary contains the specified value.</summary>
+    public bool ContainsValue(TValue value) => ContainsValueCore(value);
 
     /// <summary>Attempts to remove and return the value with the specified key from the dictionary.</summary>
     public bool TryRemove(TKey key, out TValue value)
@@ -751,6 +758,21 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
         }
     }
 
+    private bool ContainsValueCore(TValue value)
+    {
+        ThrowIfNull(value, nameof(value));
+
+        EnterReadLock();
+        try
+        {
+            return _reverse.ContainsKey(value);
+        }
+        finally
+        {
+            ExitReadLock();
+        }
+    }
+
     private bool TryAddNoLock(TKey key, TValue value)
     {
         if (_forward.ContainsKey(key) || _reverse.ContainsKey(value))
@@ -958,10 +980,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IDictionary<TKey,
 
     private sealed class DictionaryEnumerator : IDictionaryEnumerator
     {
-        private IEnumerator<KeyValuePair<TKey, TValue>> _enumerator;
+        private readonly IEnumerator<KeyValuePair<TKey, TValue>> _enumerator;
 
-        internal DictionaryEnumerator(KeyValuePair<TKey, TValue>[] snapshot) =>
+        internal DictionaryEnumerator(KeyValuePair<TKey, TValue>[] snapshot)
+        {
             _enumerator = new Enumerator(snapshot);
+        }
 
         public DictionaryEntry Entry => new(_enumerator.Current.Key, _enumerator.Current.Value);
 

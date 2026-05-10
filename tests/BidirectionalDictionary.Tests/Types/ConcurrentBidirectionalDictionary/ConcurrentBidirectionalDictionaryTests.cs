@@ -357,6 +357,16 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
+    public void ContainsValue_FilledConcurrentBidirectionalDictionary_ReturnsExpectedResult()
+    {
+        var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
+        dictionary.TryAdd('a', 1);
+
+        Assert.True(dictionary.ContainsValue(1));
+        Assert.False(dictionary.ContainsValue(2));
+    }
+
+    [Fact]
     public void Indexer_SetMissingKey_AddsForwardAndInverseEntry()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
