@@ -401,7 +401,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void GetOrAdd_ValueFactory_MissingKey_AddsProducedValue()
+    public void GetOrAdd_MissingKeyWithValueFactory_AddsProducedValue()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
 
@@ -413,7 +413,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void GetOrAdd_ValueFactory_ExistingKey_DoesNotInvokeFactory()
+    public void GetOrAdd_ExistingKeyWithValueFactory_DoesNotInvokeFactory()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
         dictionary.TryAdd('a', 1);
@@ -434,7 +434,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void GetOrAdd_Value_MissingKey_AddsValue()
+    public void GetOrAdd_MissingKeyWithValue_AddsValue()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
 
@@ -446,7 +446,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void GetOrAdd_Value_ExistingKey_ReturnsExistingValue()
+    public void GetOrAdd_ExistingKeyWithValue_ReturnsExistingValue()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
         dictionary.TryAdd('a', 1);
@@ -458,7 +458,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void GetOrAdd_ValueFactoryWithArgument_MissingKey_AddsProducedValue()
+    public void GetOrAdd_MissingKeyWithValueFactoryAndArgument_AddsProducedValue()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
 
@@ -469,7 +469,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void GetOrAdd_ValueFactoryWithArgument_ExistingKey_DoesNotInvokeFactory()
+    public void GetOrAdd_ExistingKeyWithValueFactoryAndArgument_DoesNotInvokeFactory()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
         dictionary.TryAdd('a', 1);
@@ -532,7 +532,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void AddOrUpdate_AddValueFactory_MissingKey_AddsProducedValue()
+    public void AddOrUpdate_MissingKeyWithAddValueFactory_AddsProducedValue()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
 
@@ -543,7 +543,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void AddOrUpdate_AddValueFactory_ExistingKey_UpdatesValue()
+    public void AddOrUpdate_ExistingKeyWithAddValueFactory_UpdatesValue()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
         dictionary.TryAdd('a', 1);
@@ -555,7 +555,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void AddOrUpdate_FactoriesWithArgument_MissingKey_AddsProducedValue()
+    public void AddOrUpdate_MissingKeyWithFactoriesAndArgument_AddsProducedValue()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
 
@@ -566,7 +566,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
-    public void AddOrUpdate_FactoriesWithArgument_ExistingKey_UpdatesValue()
+    public void AddOrUpdate_ExistingKeyWithFactoriesAndArgument_UpdatesValue()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
         dictionary.TryAdd('a', 1);
