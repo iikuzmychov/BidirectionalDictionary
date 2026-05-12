@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        library-target-framework: [netstandard2.0, netstandard2.1, net6.0]
+        library-target-framework: [netstandard2.0, netstandard2.1, net6.0, net9.0]
 
     steps:
       - name: Check out repository

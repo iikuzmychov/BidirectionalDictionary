@@ -10,7 +10,7 @@
 	<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(LibraryTargetFramework)' == 'netstandard2.1' Or '$(LibraryTargetFramework)' == 'net6.0'">
+  <PropertyGroup Condition="'$(LibraryTargetFramework)' == 'netstandard2.1' Or '$(LibraryTargetFramework)' == 'net6.0' Or '$(LibraryTargetFramework)' == 'net9.0'">
     <DefineConstants>$(DefineConstants);BIDIRECTIONALDICTIONARY_LIBRARY_HAS_CAPACITY_APIS</DefineConstants>
   </PropertyGroup>
 

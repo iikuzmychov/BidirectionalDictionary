@@ -29,6 +29,7 @@ jobs:
           dotnet test --solution BidirectionalDictionary.slnx --configuration Release -p:LibraryTargetFramework=netstandard2.0 --no-restore
           dotnet test --solution BidirectionalDictionary.slnx --configuration Release -p:LibraryTargetFramework=netstandard2.1 --no-restore
           dotnet test --solution BidirectionalDictionary.slnx --configuration Release -p:LibraryTargetFramework=net6.0 --no-restore
+          dotnet test --solution BidirectionalDictionary.slnx --configuration Release -p:LibraryTargetFramework=net9.0 --no-restore
 
       - name: Read package version
         id: version
