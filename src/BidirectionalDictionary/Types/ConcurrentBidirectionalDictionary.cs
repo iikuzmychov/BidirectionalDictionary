@@ -986,12 +986,6 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             second = v1;
             third = v2;
         }
-        else if (keyIndex < v2)
-        {
-            first = v1;
-            second = keyIndex;
-            third = v2;
-        }
         else
         {
             first = v1;
