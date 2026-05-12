@@ -46,6 +46,20 @@ IBidirectionalDictionary<Key, Value> bidirectionalDictionary = ...;
 var readOnly = new ReadOnlyBidirectionalDictionary<Key, Value>(dictionary);
 ```
 
+## Thread safety
+
+You can use `ConcurrentBidirectionalDictionary` for multi-threaded scenarios:
+
+```cs
+using System.Collections.Concurrent;
+
+var countryCapitals = new ConcurrentBidirectionalDictionary<string, string>();
+countryCapitals.TryAdd("Italy", "Rome");
+
+Console.WriteLine(countryCapitals["Italy"]); // "Rome"
+Console.WriteLine(countryCapitals.Inverse["Rome"]); // "Italy"
+```
+
 ## Interfaces
 
 To support abstraction-friendly code, the package exposes two interfaces:
@@ -53,8 +67,8 @@ To support abstraction-friendly code, the package exposes two interfaces:
 - `IBidirectionalDictionary`
 - `IReadOnlyBidirectionalDictionary`
 
-Both `BidirectionalDictionary` and `ReadOnlyBidirectionalDictionary` implement these interfaces,
-so you can depend on contracts instead of concrete types when needed.
+`BidirectionalDictionary`, `ReadOnlyBidirectionalDictionary`, and `ConcurrentBidirectionalDictionary`
+all implement these interfaces, so you can depend on contracts instead of concrete types when needed.
 
 ## LINQ extensions
 
