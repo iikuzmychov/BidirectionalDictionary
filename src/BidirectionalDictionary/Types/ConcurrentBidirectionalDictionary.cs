@@ -1,8 +1,11 @@
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
+#if NET9_0_OR_GREATER
+using LockType = System.Threading.Lock;
+#else
+using LockType = System.Object;
+#endif
 
 namespace System.Collections.Concurrent;
 
@@ -26,8 +29,8 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     private readonly ConcurrentDictionary<TValue, TKey> _reverse;
     private readonly IEqualityComparer<TKey> _keyComparer;
     private readonly IEqualityComparer<TValue> _valueComparer;
-    private readonly object[] _keyLocks;
-    private readonly object[] _valueLocks;
+    private readonly LockType[] _keyLocks;
+    private readonly LockType[] _valueLocks;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConcurrentBidirectionalDictionary{TKey,TValue}"/> class that is empty,
@@ -140,8 +143,8 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ConcurrentDictionary<TValue, TKey> reverse,
         IEqualityComparer<TKey> keyComparer,
         IEqualityComparer<TValue> valueComparer,
-        object[] keyLocks,
-        object[] valueLocks,
+        LockType[] keyLocks,
+        LockType[] valueLocks,
         ConcurrentBidirectionalDictionary<TValue, TKey> inverse)
     {
         _forward = forward;
@@ -173,10 +176,10 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     public bool IsEmpty => _forward.IsEmpty;
 
     /// <summary>Gets a snapshot containing all keys in the dictionary.</summary>
-    public ICollection<TKey> Keys => GetKeys();
+    public ICollection<TKey> Keys => _forward.Keys;
 
     /// <summary>Gets a snapshot containing all values in the dictionary.</summary>
-    public ICollection<TValue> Values => GetValues();
+    public ICollection<TValue> Values => _forward.Values;
 
     /// <summary>Gets or sets the value associated with the specified key.</summary>
     /// <param name="key">The key of the value to get or set.</param>
@@ -304,7 +307,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                     return false;
                 }
 
-                if (!ValueComparer.Equals(current, candidate))
+                if (!_valueComparer.Equals(current, candidate))
                 {
                     continue;
                 }
@@ -332,7 +335,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         EnterPairLock(keyIndex, valueIndex);
         try
         {
-            if (!_forward.TryGetValue(item.Key, out TValue? existing) || !ValueComparer.Equals(existing, item.Value))
+            if (!_forward.TryGetValue(item.Key, out TValue? existing) || !_valueComparer.Equals(existing, item.Value))
             {
                 return false;
             }
@@ -421,7 +424,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             throw new ArgumentNullException(nameof(valueFactory));
         }
 
-        if (TryGetExisting(key, out TValue? existing))
+        if (_forward.TryGetValue(key, out TValue? existing))
         {
             return existing;
         }
@@ -440,7 +443,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             throw new ArgumentNullException(nameof(valueFactory));
         }
 
-        if (TryGetExisting(key, out TValue? existing))
+        if (_forward.TryGetValue(key, out TValue? existing))
         {
             return existing;
         }
@@ -525,7 +528,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ThrowIfNull(item.Key, nameof(item));
         ThrowIfNull(item.Value, nameof(item));
 
-        return _forward.TryGetValue(item.Key, out TValue? value) && ValueComparer.Equals(value, item.Value);
+        return _forward.TryGetValue(item.Key, out TValue? value) && _valueComparer.Equals(value, item.Value);
     }
 
     bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) => TryRemove(item);
@@ -712,8 +715,6 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         }
     }
 
-    private bool TryGetExisting(TKey key, out TValue value) => _forward.TryGetValue(key, out value!);
-
     private bool TryAddNoLock(TKey key, TValue value)
     {
         if (!_forward.TryAdd(key, value))
@@ -738,7 +739,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         {
             if (_forward.TryGetValue(key, out TValue? oldValue))
             {
-                if (ValueComparer.Equals(oldValue, value))
+                if (_valueComparer.Equals(oldValue, value))
                 {
                     return;
                 }
@@ -754,12 +755,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                         continue;
                     }
 
-                    if (!ValueComparer.Equals(current, oldValue))
+                    if (!_valueComparer.Equals(current, oldValue))
                     {
                         continue;
                     }
 
-                    if (_reverse.TryGetValue(value, out TKey? owner) && !KeyComparer.Equals(owner, key))
+                    if (_reverse.TryGetValue(value, out TKey? owner) && !_keyComparer.Equals(owner, key))
                     {
                         throw new ArgumentException("The value already exists.", nameof(value));
                     }
@@ -813,17 +814,17 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 return false;
             }
 
-            if (!ValueComparer.Equals(current, comparisonValue))
+            if (!_valueComparer.Equals(current, comparisonValue))
             {
                 return false;
             }
 
-            if (ValueComparer.Equals(current, newValue))
+            if (_valueComparer.Equals(current, newValue))
             {
                 return true;
             }
 
-            if (_reverse.TryGetValue(newValue, out TKey? owner) && !KeyComparer.Equals(owner, key))
+            if (_reverse.TryGetValue(newValue, out TKey? owner) && !_keyComparer.Equals(owner, key))
             {
                 if (throwOnDuplicateValue)
                 {
@@ -843,10 +844,6 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             ExitTripleLock(keyIndex, firstValueIndex, secondValueIndex);
         }
     }
-
-    private ReadOnlyCollection<TKey> GetKeys() => new(_forward.Keys.ToArray());
-
-    private ReadOnlyCollection<TValue> GetValues() => new(_forward.Values.ToArray());
 
     private static int GetCapacityFromCollection(IEnumerable<KeyValuePair<TKey, TValue>> collection)
     {
@@ -869,29 +866,47 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     }
 
     private int GetKeyLockIndex(TKey key) =>
-        (int)((uint)KeyComparer.GetHashCode(key) % (uint)_keyLocks.Length);
+        (int)((uint)_keyComparer.GetHashCode(key) % (uint)_keyLocks.Length);
 
     private int GetValueLockIndex(TValue value) =>
-        (int)((uint)ValueComparer.GetHashCode(value) % (uint)_valueLocks.Length);
+        (int)((uint)_valueComparer.GetHashCode(value) % (uint)_valueLocks.Length);
+
+    private static void EnterLock(LockType lockObject)
+    {
+#if NET9_0_OR_GREATER
+        lockObject.Enter();
+#else
+        Monitor.Enter(lockObject);
+#endif
+    }
+
+    private static void ExitLock(LockType lockObject)
+    {
+#if NET9_0_OR_GREATER
+        lockObject.Exit();
+#else
+        Monitor.Exit(lockObject);
+#endif
+    }
 
     private void EnterPairLock(int keyIndex, int valueIndex)
     {
-        Monitor.Enter(_keyLocks[keyIndex]);
-        Monitor.Enter(_valueLocks[valueIndex]);
+        EnterLock(_keyLocks[keyIndex]);
+        EnterLock(_valueLocks[valueIndex]);
     }
 
     private void ExitPairLock(int keyIndex, int valueIndex)
     {
-        Monitor.Exit(_valueLocks[valueIndex]);
-        Monitor.Exit(_keyLocks[keyIndex]);
+        ExitLock(_valueLocks[valueIndex]);
+        ExitLock(_keyLocks[keyIndex]);
     }
 
     private void EnterTripleLock(int keyIndex, int valueIndexA, int valueIndexB, out int firstValueIndex, out int secondValueIndex)
     {
-        Monitor.Enter(_keyLocks[keyIndex]);
+        EnterLock(_keyLocks[keyIndex]);
         if (valueIndexA == valueIndexB)
         {
-            Monitor.Enter(_valueLocks[valueIndexA]);
+            EnterLock(_valueLocks[valueIndexA]);
             firstValueIndex = valueIndexA;
             secondValueIndex = -1;
             return;
@@ -908,29 +923,29 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             secondValueIndex = valueIndexA;
         }
 
-        Monitor.Enter(_valueLocks[firstValueIndex]);
-        Monitor.Enter(_valueLocks[secondValueIndex]);
+        EnterLock(_valueLocks[firstValueIndex]);
+        EnterLock(_valueLocks[secondValueIndex]);
     }
 
     private void ExitTripleLock(int keyIndex, int firstValueIndex, int secondValueIndex)
     {
         if (secondValueIndex >= 0)
         {
-            Monitor.Exit(_valueLocks[secondValueIndex]);
+            ExitLock(_valueLocks[secondValueIndex]);
         }
-        Monitor.Exit(_valueLocks[firstValueIndex]);
-        Monitor.Exit(_keyLocks[keyIndex]);
+        ExitLock(_valueLocks[firstValueIndex]);
+        ExitLock(_keyLocks[keyIndex]);
     }
 
     private void EnterAllLocks()
     {
         for (int i = 0; i < _keyLocks.Length; i++)
         {
-            Monitor.Enter(_keyLocks[i]);
+            EnterLock(_keyLocks[i]);
         }
         for (int i = 0; i < _valueLocks.Length; i++)
         {
-            Monitor.Enter(_valueLocks[i]);
+            EnterLock(_valueLocks[i]);
         }
     }
 
@@ -938,11 +953,11 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     {
         for (int i = _valueLocks.Length - 1; i >= 0; i--)
         {
-            Monitor.Exit(_valueLocks[i]);
+            ExitLock(_valueLocks[i]);
         }
         for (int i = _keyLocks.Length - 1; i >= 0; i--)
         {
-            Monitor.Exit(_keyLocks[i]);
+            ExitLock(_keyLocks[i]);
         }
     }
 
@@ -973,12 +988,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         return Math.Max(1, (int)(((long)capacity + shardCount - 1) / shardCount));
     }
 
-    private static object[] CreateLocks(int count)
+    private static LockType[] CreateLocks(int count)
     {
-        var locks = new object[count];
+        var locks = new LockType[count];
         for (int i = 0; i < count; i++)
         {
-            locks[i] = new object();
+            locks[i] = new LockType();
         }
         return locks;
     }
