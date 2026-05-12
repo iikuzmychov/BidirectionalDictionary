@@ -276,6 +276,15 @@ public partial class ConcurrentBidirectionalDictionaryTests
         Assert.Throws<ArgumentException>(() => dictionary.CopyTo(entries, 1));
     }
 
+    [Fact]
+    public void ICollection_CopyTo_FilledConcurrentBidirectionalDictionaryAndCovariantObjectArray_ThrowsArgumentException()
+    {
+        var dictionary = (ICollection)CreateConcurrentBidirectionalDictionaryForDictionary();
+        var entries = new string[2];
+
+        Assert.Throws<ArgumentException>(() => dictionary.CopyTo(entries, 0));
+    }
+
     private static ConcurrentBidirectionalDictionary<char, int> CreateConcurrentBidirectionalDictionaryForDictionary() =>
         new(
         [
