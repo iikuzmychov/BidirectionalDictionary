@@ -15,9 +15,10 @@ namespace System.Collections.Concurrent;
 /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
 /// <remarks>
 /// All public and protected members of <see cref="ConcurrentBidirectionalDictionary{TKey,TValue}"/> are thread-safe and may be used
-/// concurrently from multiple threads. Each individual operation is atomic. Read operations are lock-free and may briefly observe
-/// a state where the forward and inverse views are not yet synchronized with each other during an in-progress write; once any
-/// write completes, both views are consistent.
+/// concurrently from multiple threads. Writes are serialized through internal locks: any two writes observe each other as a single
+/// step. Reads are lock-free; a single read call returns a self-consistent result, but a reader can briefly observe a state where
+/// the forward and inverse views are not yet synchronized with each other during an in-progress write. Once any write completes,
+/// both views are consistent.
 /// </remarks>
 [DebuggerDisplay("Count = {Count}")]
 public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>, IDictionary
