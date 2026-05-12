@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+
 #if NET9_0_OR_GREATER
 using LockType = System.Threading.Lock;
 #else
@@ -121,6 +122,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         IEqualityComparer<TValue>? valueComparer)
     {
         concurrencyLevel = ResolveConcurrencyLevel(concurrencyLevel);
+
         if (capacity < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(capacity));
@@ -253,7 +255,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 
         int keyIndex = GetKeyLockIndex(key);
         int valueIndex = GetValueLockIndex(value);
+
         EnterPairLock(keyIndex, valueIndex);
+
         try
         {
             return TryAddNoLock(key, value);
@@ -292,9 +296,11 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 return false;
             }
 
-            TValue candidate = value;
-            int valueIndex = GetValueLockIndex(candidate);
+            var candidate = value;
+            var valueIndex = GetValueLockIndex(candidate);
+
             EnterPairLock(keyIndex, valueIndex);
+
             try
             {
                 if (!_forward.TryGetValue(key, out TValue? current))
@@ -310,6 +316,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 
                 _forward.TryRemove(key, out _);
                 _reverse.TryRemove(candidate, out _);
+
                 return true;
             }
             finally
@@ -325,9 +332,11 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ThrowIfNull(item.Key, nameof(item));
         ThrowIfNull(item.Value, nameof(item));
 
-        int keyIndex = GetKeyLockIndex(item.Key);
-        int valueIndex = GetValueLockIndex(item.Value);
+        var keyIndex = GetKeyLockIndex(item.Key);
+        var valueIndex = GetValueLockIndex(item.Value);
+
         EnterPairLock(keyIndex, valueIndex);
+
         try
         {
             if (!_forward.TryGetValue(item.Key, out TValue? existing) || !ValueComparer.Equals(existing, item.Value))
@@ -337,6 +346,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 
             _forward.TryRemove(item.Key, out _);
             _reverse.TryRemove(item.Value, out _);
+
             return true;
         }
         finally
@@ -366,6 +376,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     public void Clear()
     {
         EnterAllLocks();
+
         try
         {
             _forward.Clear();
@@ -386,9 +397,11 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ThrowIfNull(key, nameof(key));
         ThrowIfNull(value, nameof(value));
 
-        int keyIndex = GetKeyLockIndex(key);
-        int valueIndex = GetValueLockIndex(value);
+        var keyIndex = GetKeyLockIndex(key);
+        var valueIndex = GetValueLockIndex(value);
+
         EnterPairLock(keyIndex, valueIndex);
+
         try
         {
             if (_forward.TryGetValue(key, out TValue? existing))
@@ -414,6 +427,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     public TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory)
     {
         ThrowIfNull(key, nameof(key));
+
         if (valueFactory is null)
         {
             throw new ArgumentNullException(nameof(valueFactory));
@@ -424,8 +438,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             return existing;
         }
 
-        TValue value = valueFactory(key);
+        var value = valueFactory(key);
         ThrowIfNull(value, nameof(valueFactory));
+
         return GetOrAdd(key, value);
     }
 
@@ -433,6 +448,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     public TValue GetOrAdd<TArg>(TKey key, Func<TKey, TArg, TValue> valueFactory, TArg factoryArgument)
     {
         ThrowIfNull(key, nameof(key));
+
         if (valueFactory is null)
         {
             throw new ArgumentNullException(nameof(valueFactory));
@@ -443,8 +459,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             return existing;
         }
 
-        TValue value = valueFactory(key, factoryArgument);
+        var value = valueFactory(key, factoryArgument);
         ThrowIfNull(value, nameof(valueFactory));
+
         return GetOrAdd(key, value);
     }
 
@@ -453,6 +470,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     {
         ThrowIfNull(key, nameof(key));
         ThrowIfNull(addValue, nameof(addValue));
+
         if (updateValueFactory is null)
         {
             throw new ArgumentNullException(nameof(updateValueFactory));
@@ -465,10 +483,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     public TValue AddOrUpdate(TKey key, Func<TKey, TValue> addValueFactory, Func<TKey, TValue, TValue> updateValueFactory)
     {
         ThrowIfNull(key, nameof(key));
+
         if (addValueFactory is null)
         {
             throw new ArgumentNullException(nameof(addValueFactory));
         }
+
         if (updateValueFactory is null)
         {
             throw new ArgumentNullException(nameof(updateValueFactory));
@@ -485,10 +505,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         TArg factoryArgument)
     {
         ThrowIfNull(key, nameof(key));
+
         if (addValueFactory is null)
         {
             throw new ArgumentNullException(nameof(addValueFactory));
         }
+
         if (updateValueFactory is null)
         {
             throw new ArgumentNullException(nameof(updateValueFactory));
@@ -592,6 +614,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         }
 
         KeyValuePair<TKey, TValue>[] snapshot = ToArray();
+
         if (array.Length - snapshot.Length < index)
         {
             throw new ArgumentException("The target array is not large enough.", nameof(array));
@@ -632,6 +655,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         {
             ThrowIfNull(pair.Key, nameof(collection));
             ThrowIfNull(pair.Value, nameof(collection));
+
             if (!TryAdd(pair.Key, pair.Value))
             {
                 throw new ArgumentException("The source contains duplicate keys or values.", nameof(collection));
@@ -645,7 +669,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         {
             if (_forward.TryGetValue(key, out TValue? oldValue))
             {
-                TValue newValue = updateValueFactory(key, oldValue);
+                var newValue = updateValueFactory(key, oldValue);
                 ThrowIfNull(newValue, nameof(updateValueFactory));
 
                 if (TryUpdateCore(key, newValue, oldValue, throwOnDuplicateValue: true))
@@ -656,8 +680,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 continue;
             }
 
-            TValue addValue = addValueFactory(key);
+            var addValue = addValueFactory(key);
             ThrowIfNull(addValue, nameof(addValueFactory));
+
             return GetOrAdd(key, addValue);
         }
     }
@@ -693,7 +718,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         {
             if (_forward.TryGetValue(key, out TValue? oldValue))
             {
-                TValue newValue = updateValueFactory(key, oldValue, factoryArgument);
+                var newValue = updateValueFactory(key, oldValue, factoryArgument);
                 ThrowIfNull(newValue, nameof(updateValueFactory));
 
                 if (TryUpdateCore(key, newValue, oldValue, throwOnDuplicateValue: true))
@@ -704,8 +729,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 continue;
             }
 
-            TValue addValue = addValueFactory(key, factoryArgument);
+            var addValue = addValueFactory(key, factoryArgument);
             ThrowIfNull(addValue, nameof(addValueFactory));
+
             return GetOrAdd(key, addValue);
         }
     }
@@ -739,10 +765,11 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                     return;
                 }
 
-                int oldValueIndex = GetValueLockIndex(oldValue);
-                int newValueIndex = GetValueLockIndex(value);
+                var oldValueIndex = GetValueLockIndex(oldValue);
+                var newValueIndex = GetValueLockIndex(value);
 
                 EnterTripleLock(keyIndex, oldValueIndex, newValueIndex, out int firstValueIndex, out int secondValueIndex);
+
                 try
                 {
                     if (!_forward.TryGetValue(key, out TValue? current))
@@ -771,8 +798,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 }
             }
 
-            int addValueIndex = GetValueLockIndex(value);
+            var addValueIndex = GetValueLockIndex(value);
             EnterPairLock(keyIndex, addValueIndex);
+
             try
             {
                 if (!_forward.TryAdd(key, value))
@@ -797,11 +825,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 
     private bool TryUpdateCore(TKey key, TValue newValue, TValue comparisonValue, bool throwOnDuplicateValue)
     {
-        int keyIndex = GetKeyLockIndex(key);
-        int comparisonValueIndex = GetValueLockIndex(comparisonValue);
-        int newValueIndex = GetValueLockIndex(newValue);
+        var keyIndex = GetKeyLockIndex(key);
+        var comparisonValueIndex = GetValueLockIndex(comparisonValue);
+        var newValueIndex = GetValueLockIndex(newValue);
 
-        EnterTripleLock(keyIndex, comparisonValueIndex, newValueIndex, out int firstValueIndex, out int secondValueIndex);
+        EnterTripleLock(keyIndex, comparisonValueIndex, newValueIndex, out var firstValueIndex, out var secondValueIndex);
+
         try
         {
             if (!_forward.TryGetValue(key, out TValue? current))
@@ -832,6 +861,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             _forward[key] = newValue;
             _reverse.TryRemove(current, out _);
             _reverse[newValue] = key;
+
             return true;
         }
         finally
@@ -860,11 +890,15 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         return DefaultCapacity;
     }
 
-    private int GetKeyLockIndex(TKey key) =>
-        (int)((uint)KeyComparer.GetHashCode(key) % (uint)_keyLocks.Length);
+    private int GetKeyLockIndex(TKey key)
+    {
+        return (int)((uint)KeyComparer.GetHashCode(key) % (uint)_keyLocks.Length);
+    }
 
-    private int GetValueLockIndex(TValue value) =>
-        (int)((uint)ValueComparer.GetHashCode(value) % (uint)_valueLocks.Length);
+    private int GetValueLockIndex(TValue value)
+    {
+        return (int)((uint)ValueComparer.GetHashCode(value) % (uint)_valueLocks.Length);
+    }
 
     private static void EnterLock(LockType lockObject)
     {
@@ -899,6 +933,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     private void EnterTripleLock(int keyIndex, int valueIndexA, int valueIndexB, out int firstValueIndex, out int secondValueIndex)
     {
         EnterLock(_keyLocks[keyIndex]);
+
         if (valueIndexA == valueIndexB)
         {
             EnterLock(_valueLocks[valueIndexA]);
@@ -928,6 +963,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         {
             ExitLock(_valueLocks[secondValueIndex]);
         }
+
         ExitLock(_valueLocks[firstValueIndex]);
         ExitLock(_keyLocks[keyIndex]);
     }
@@ -938,6 +974,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         {
             EnterLock(_keyLocks[i]);
         }
+
         for (int i = 0; i < _valueLocks.Length; i++)
         {
             EnterLock(_valueLocks[i]);
@@ -950,6 +987,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         {
             ExitLock(_valueLocks[i]);
         }
+
         for (int i = _keyLocks.Length - 1; i >= 0; i--)
         {
             ExitLock(_keyLocks[i]);
@@ -976,10 +1014,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     private static LockType[] CreateLocks(int count)
     {
         var locks = new LockType[count];
+
         for (int i = 0; i < count; i++)
         {
             locks[i] = new LockType();
         }
+
         return locks;
     }
 
@@ -1027,7 +1067,8 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         /// <summary>Advances the enumerator to the next element of the dictionary.</summary>
         public bool MoveNext()
         {
-            int next = _index + 1;
+            var next = _index + 1;
+
             if ((uint)next >= (uint)_snapshot.Length)
             {
                 _index = _snapshot.Length;
@@ -1036,6 +1077,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 
             _index = next;
             Current = _snapshot[next];
+
             return true;
         }
 
