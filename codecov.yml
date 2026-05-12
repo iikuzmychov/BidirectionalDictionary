@@ -1,5 +1,5 @@
 comment:
-  after_n_builds: 3
+  after_n_builds: 4
 
 flags:
   netstandard2.0:
@@ -9,5 +9,8 @@ flags:
     paths:
       - src/BidirectionalDictionary/
   net6.0:
+    paths:
+      - src/BidirectionalDictionary/
+  net9.0:
     paths:
       - src/BidirectionalDictionary/
