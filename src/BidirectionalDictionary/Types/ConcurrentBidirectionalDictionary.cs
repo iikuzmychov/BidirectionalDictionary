@@ -640,9 +640,16 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 
         if (array is object[] objects)
         {
-            for (int i = 0; i < snapshot.Length; i++)
+            try
             {
-                objects[index + i] = snapshot[i];
+                for (int i = 0; i < snapshot.Length; i++)
+                {
+                    objects[index + i] = snapshot[i];
+                }
+            }
+            catch (ArrayTypeMismatchException)
+            {
+                throw new ArgumentException("The target array type is invalid.", nameof(array));
             }
 
             return;
