@@ -105,12 +105,12 @@ public partial class ConcurrentBidirectionalDictionaryTests
 
         dictionary['b'] = 1;
 
-        Assert.Equal(
-            [new KeyValuePair<char, int>('a', 0), new KeyValuePair<char, int>('b', 1)],
-            concurrentBidirectionalDictionary);
-        Assert.Equal(
-            [new KeyValuePair<int, char>(0, 'a'), new KeyValuePair<int, char>(1, 'b')],
-            concurrentBidirectionalDictionary.Inverse);
+        Assert.Equal(2, concurrentBidirectionalDictionary.Count);
+        Assert.Contains(new KeyValuePair<char, int>('a', 0), concurrentBidirectionalDictionary);
+        Assert.Contains(new KeyValuePair<char, int>('b', 1), concurrentBidirectionalDictionary);
+        Assert.Equal(2, concurrentBidirectionalDictionary.Inverse.Count);
+        Assert.Contains(new KeyValuePair<int, char>(0, 'a'), concurrentBidirectionalDictionary.Inverse);
+        Assert.Contains(new KeyValuePair<int, char>(1, 'b'), concurrentBidirectionalDictionary.Inverse);
     }
 
     [Fact]
@@ -282,7 +282,7 @@ public partial class ConcurrentBidirectionalDictionaryTests
         var dictionary = (ICollection)CreateConcurrentBidirectionalDictionaryForDictionary();
         var entries = new string[2];
 
-        Assert.Throws<ArgumentException>(() => dictionary.CopyTo(entries, 0));
+        Assert.Throws<ArrayTypeMismatchException>(() => dictionary.CopyTo(entries, 0));
     }
 
     private static ConcurrentBidirectionalDictionary<char, int> CreateConcurrentBidirectionalDictionaryForDictionary() =>
