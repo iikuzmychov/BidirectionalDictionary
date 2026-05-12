@@ -4,6 +4,7 @@ BenchmarkDotNet suite comparing:
 
 - `BidirectionalDictionary<TKey, TValue>` vs `Dictionary<TKey, TValue>`
 - `ReadOnlyBidirectionalDictionary<TKey, TValue>` vs `ReadOnlyDictionary<TKey, TValue>`
+- `ConcurrentBidirectionalDictionary<TKey, TValue>` vs `ConcurrentDictionary<TKey, TValue>`
 
 The suite uses deterministic `int -> int` read data with `10_000` items for reading benchmarks,
 and `1_000_000` items for mutation benchmarks.
@@ -13,8 +14,9 @@ and `1_000_000` items for mutation benchmarks.
 Run benchmarks in Release mode:
 
 ```bash
-dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter '*BidirectionalDictionary*'
-dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter '*ReadOnlyBidirectionalDictionary*'
+dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter 'BidirectionalDictionary*'
+dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter 'ReadOnlyBidirectionalDictionary*'
+dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter 'ConcurrentBidirectionalDictionary*'
 dotnet run -c Release --project benchmarks/BidirectionalDictionary.Benchmarks -- --filter '*'
 ```
 
