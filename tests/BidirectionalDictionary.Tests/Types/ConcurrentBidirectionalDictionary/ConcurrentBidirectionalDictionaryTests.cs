@@ -255,6 +255,31 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
+    public void TryRemove_ValueChangesBetweenLockFreeReadAndLockedRecheck_RetriesAndRemovesNewValue()
+    {
+        var valueComparer = new HookableValueComparer<int>();
+        var dictionary = new ConcurrentBidirectionalDictionary<char, int>(null, valueComparer);
+        dictionary.TryAdd('a', 1);
+
+        int triggered = 0;
+        valueComparer.OnGetHashCode = observed =>
+        {
+            if (observed == 1 && Interlocked.Exchange(ref triggered, 1) == 0)
+            {
+                dictionary.TryUpdate('a', 2, 1);
+            }
+        };
+
+        var removed = dictionary.TryRemove('a', out int removedValue);
+
+        Assert.True(removed);
+        Assert.Equal(2, removedValue);
+        Assert.False(dictionary.ContainsKey('a'));
+        Assert.False(dictionary.Inverse.ContainsKey(1));
+        Assert.False(dictionary.Inverse.ContainsKey(2));
+    }
+
+    [Fact]
     public void TryUpdate_ExistingKeyAndExpectedValue_UpdatesForwardAndInverseEntry()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
@@ -705,5 +730,19 @@ public partial class ConcurrentBidirectionalDictionaryTests
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => ((IEnumerable<KeyValuePair<TKey, TValue>>)pairs).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    private sealed class HookableValueComparer<T> : IEqualityComparer<T>
+        where T : notnull
+    {
+        public Action<T>? OnGetHashCode { get; set; }
+
+        public bool Equals(T? x, T? y) => EqualityComparer<T>.Default.Equals(x, y);
+
+        public int GetHashCode(T obj)
+        {
+            OnGetHashCode?.Invoke(obj);
+            return EqualityComparer<T>.Default.GetHashCode(obj);
+        }
     }
 }
