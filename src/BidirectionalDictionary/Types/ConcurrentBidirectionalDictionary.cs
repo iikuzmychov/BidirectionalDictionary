@@ -15,9 +15,7 @@ namespace System.Collections.Concurrent;
 /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
 /// <remarks>
 /// All public and protected members of <see cref="ConcurrentBidirectionalDictionary{TKey,TValue}"/> are thread-safe and may be used
-/// concurrently from multiple threads. Each individual operation is atomic. Concurrent readers may briefly observe a state
-/// where the forward and inverse views are not yet synchronized with each other during an in-progress write; once any write
-/// completes, both views are consistent.
+/// concurrently from multiple threads.
 /// </remarks>
 [DebuggerDisplay("Count = {Count}")]
 public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>, IDictionary
@@ -28,8 +26,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 
     private readonly ConcurrentDictionary<TKey, TValue> _forward;
     private readonly ConcurrentDictionary<TValue, TKey> _reverse;
-    private readonly LockType[] _keyLocks;
-    private readonly LockType[] _valueLocks;
+    private readonly LockType[] _locks;
+    private readonly int _keyLockBase;
+    private readonly int _valueLockBase;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConcurrentBidirectionalDictionary{TKey,TValue}"/> class that is empty,
@@ -132,9 +131,10 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ValueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
         _forward = new ConcurrentDictionary<TKey, TValue>(concurrencyLevel, capacity, KeyComparer);
         _reverse = new ConcurrentDictionary<TValue, TKey>(concurrencyLevel, capacity, ValueComparer);
-        _keyLocks = CreateLocks(concurrencyLevel);
-        _valueLocks = CreateLocks(concurrencyLevel);
-        Inverse = new ConcurrentBidirectionalDictionary<TValue, TKey>(_reverse, _forward, ValueComparer, KeyComparer, _valueLocks, _keyLocks, this);
+        _locks = CreateLocks(concurrencyLevel * 2);
+        _keyLockBase = 0;
+        _valueLockBase = concurrencyLevel;
+        Inverse = new ConcurrentBidirectionalDictionary<TValue, TKey>(_reverse, _forward, ValueComparer, KeyComparer, _locks, _valueLockBase, _keyLockBase, this);
     }
 
     private ConcurrentBidirectionalDictionary(
@@ -142,16 +142,18 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ConcurrentDictionary<TValue, TKey> reverse,
         IEqualityComparer<TKey> keyComparer,
         IEqualityComparer<TValue> valueComparer,
-        LockType[] keyLocks,
-        LockType[] valueLocks,
+        LockType[] locks,
+        int keyLockBase,
+        int valueLockBase,
         ConcurrentBidirectionalDictionary<TValue, TKey> inverse)
     {
         _forward = forward;
         _reverse = reverse;
         KeyComparer = keyComparer;
         ValueComparer = valueComparer;
-        _keyLocks = keyLocks;
-        _valueLocks = valueLocks;
+        _locks = locks;
+        _keyLockBase = keyLockBase;
+        _valueLockBase = valueLockBase;
         Inverse = inverse;
     }
 
@@ -256,7 +258,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         int keyIndex = GetKeyLockIndex(key);
         int valueIndex = GetValueLockIndex(value);
 
-        EnterPairLock(keyIndex, valueIndex);
+        EnterPairLock(keyIndex, valueIndex, out int first, out int second);
 
         try
         {
@@ -264,7 +266,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         }
         finally
         {
-            ExitPairLock(keyIndex, valueIndex);
+            ExitPairLock(first, second);
         }
     }
 
@@ -299,7 +301,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             var candidate = value;
             var valueIndex = GetValueLockIndex(candidate);
 
-            EnterPairLock(keyIndex, valueIndex);
+            EnterPairLock(keyIndex, valueIndex, out int first, out int second);
 
             try
             {
@@ -321,7 +323,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             }
             finally
             {
-                ExitPairLock(keyIndex, valueIndex);
+                ExitPairLock(first, second);
             }
         }
     }
@@ -335,7 +337,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         var keyIndex = GetKeyLockIndex(item.Key);
         var valueIndex = GetValueLockIndex(item.Value);
 
-        EnterPairLock(keyIndex, valueIndex);
+        EnterPairLock(keyIndex, valueIndex, out int first, out int second);
 
         try
         {
@@ -351,7 +353,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         }
         finally
         {
-            ExitPairLock(keyIndex, valueIndex);
+            ExitPairLock(first, second);
         }
     }
 
@@ -400,7 +402,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         var keyIndex = GetKeyLockIndex(key);
         var valueIndex = GetValueLockIndex(value);
 
-        EnterPairLock(keyIndex, valueIndex);
+        EnterPairLock(keyIndex, valueIndex, out int first, out int second);
 
         try
         {
@@ -419,7 +421,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         }
         finally
         {
-            ExitPairLock(keyIndex, valueIndex);
+            ExitPairLock(first, second);
         }
     }
 
@@ -768,7 +770,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 var oldValueIndex = GetValueLockIndex(oldValue);
                 var newValueIndex = GetValueLockIndex(value);
 
-                EnterTripleLock(keyIndex, oldValueIndex, newValueIndex, out int firstValueIndex, out int secondValueIndex);
+                EnterTripleLock(keyIndex, oldValueIndex, newValueIndex, out int first, out int second, out int third);
 
                 try
                 {
@@ -794,12 +796,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 }
                 finally
                 {
-                    ExitTripleLock(keyIndex, firstValueIndex, secondValueIndex);
+                    ExitTripleLock(first, second, third);
                 }
             }
 
             var addValueIndex = GetValueLockIndex(value);
-            EnterPairLock(keyIndex, addValueIndex);
+            EnterPairLock(keyIndex, addValueIndex, out int addFirst, out int addSecond);
 
             try
             {
@@ -818,7 +820,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             }
             finally
             {
-                ExitPairLock(keyIndex, addValueIndex);
+                ExitPairLock(addFirst, addSecond);
             }
         }
     }
@@ -829,7 +831,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         var comparisonValueIndex = GetValueLockIndex(comparisonValue);
         var newValueIndex = GetValueLockIndex(newValue);
 
-        EnterTripleLock(keyIndex, comparisonValueIndex, newValueIndex, out var firstValueIndex, out var secondValueIndex);
+        EnterTripleLock(keyIndex, comparisonValueIndex, newValueIndex, out int first, out int second, out int third);
 
         try
         {
@@ -866,7 +868,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         }
         finally
         {
-            ExitTripleLock(keyIndex, firstValueIndex, secondValueIndex);
+            ExitTripleLock(first, second, third);
         }
     }
 
@@ -892,12 +894,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 
     private int GetKeyLockIndex(TKey key)
     {
-        return (int)((uint)KeyComparer.GetHashCode(key) % (uint)_keyLocks.Length);
+        return _keyLockBase + (int)((uint)KeyComparer.GetHashCode(key) % (uint)(_locks.Length / 2));
     }
 
     private int GetValueLockIndex(TValue value)
     {
-        return (int)((uint)ValueComparer.GetHashCode(value) % (uint)_valueLocks.Length);
+        return _valueLockBase + (int)((uint)ValueComparer.GetHashCode(value) % (uint)(_locks.Length / 2));
     }
 
     private static void EnterLock(LockType lockObject)
@@ -918,79 +920,117 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 #endif
     }
 
-    private void EnterPairLock(int keyIndex, int valueIndex)
+    private void EnterPairLock(int indexA, int indexB, out int first, out int second)
     {
-        EnterLock(_keyLocks[keyIndex]);
-        EnterLock(_valueLocks[valueIndex]);
-    }
-
-    private void ExitPairLock(int keyIndex, int valueIndex)
-    {
-        ExitLock(_valueLocks[valueIndex]);
-        ExitLock(_keyLocks[keyIndex]);
-    }
-
-    private void EnterTripleLock(int keyIndex, int valueIndexA, int valueIndexB, out int firstValueIndex, out int secondValueIndex)
-    {
-        EnterLock(_keyLocks[keyIndex]);
-
-        if (valueIndexA == valueIndexB)
+        // indexA and indexB live in disjoint key/value stripe ranges and are always distinct.
+        if (indexA < indexB)
         {
-            EnterLock(_valueLocks[valueIndexA]);
-            firstValueIndex = valueIndexA;
-            secondValueIndex = -1;
-            return;
-        }
-
-        if (valueIndexA < valueIndexB)
-        {
-            firstValueIndex = valueIndexA;
-            secondValueIndex = valueIndexB;
+            first = indexA;
+            second = indexB;
         }
         else
         {
-            firstValueIndex = valueIndexB;
-            secondValueIndex = valueIndexA;
+            first = indexB;
+            second = indexA;
         }
 
-        EnterLock(_valueLocks[firstValueIndex]);
-        EnterLock(_valueLocks[secondValueIndex]);
+        EnterLock(_locks[first]);
+        EnterLock(_locks[second]);
     }
 
-    private void ExitTripleLock(int keyIndex, int firstValueIndex, int secondValueIndex)
+    private void ExitPairLock(int first, int second)
     {
-        if (secondValueIndex >= 0)
+        ExitLock(_locks[second]);
+        ExitLock(_locks[first]);
+    }
+
+    private void EnterTripleLock(int keyIndex, int valueIndexA, int valueIndexB, out int first, out int second, out int third)
+    {
+        // valueIndexA and valueIndexB share the value range and may collide; keyIndex is in the
+        // disjoint key range, so it is always distinct from both.
+        int v1, v2;
+        if (valueIndexA == valueIndexB)
         {
-            ExitLock(_valueLocks[secondValueIndex]);
+            v1 = valueIndexA;
+            v2 = -1;
+        }
+        else if (valueIndexA < valueIndexB)
+        {
+            v1 = valueIndexA;
+            v2 = valueIndexB;
+        }
+        else
+        {
+            v1 = valueIndexB;
+            v2 = valueIndexA;
         }
 
-        ExitLock(_valueLocks[firstValueIndex]);
-        ExitLock(_keyLocks[keyIndex]);
+        if (v2 == -1)
+        {
+            if (keyIndex < v1)
+            {
+                first = keyIndex;
+                second = v1;
+            }
+            else
+            {
+                first = v1;
+                second = keyIndex;
+            }
+
+            third = -1;
+        }
+        else if (keyIndex < v1)
+        {
+            first = keyIndex;
+            second = v1;
+            third = v2;
+        }
+        else if (keyIndex < v2)
+        {
+            first = v1;
+            second = keyIndex;
+            third = v2;
+        }
+        else
+        {
+            first = v1;
+            second = v2;
+            third = keyIndex;
+        }
+
+        EnterLock(_locks[first]);
+        EnterLock(_locks[second]);
+        if (third >= 0)
+        {
+            EnterLock(_locks[third]);
+        }
+    }
+
+    private void ExitTripleLock(int first, int second, int third)
+    {
+        if (third >= 0)
+        {
+            ExitLock(_locks[third]);
+        }
+
+        ExitLock(_locks[second]);
+        ExitLock(_locks[first]);
     }
 
     private void EnterAllLocks()
     {
-        for (int i = 0; i < _keyLocks.Length; i++)
+        for (int i = 0; i < _locks.Length; i++)
         {
-            EnterLock(_keyLocks[i]);
-        }
-
-        for (int i = 0; i < _valueLocks.Length; i++)
-        {
-            EnterLock(_valueLocks[i]);
+            EnterLock(_locks[i]);
         }
     }
 
     private void ExitAllLocks()
     {
-        for (int i = _valueLocks.Length - 1; i >= 0; i--)
+        for (int i = _locks.Length - 1; i >= 0; i--)
         {
-            ExitLock(_valueLocks[i]);
-        }
-
-        for (int i = _keyLocks.Length - 1; i >= 0; i--)
-        {
-            ExitLock(_keyLocks[i]);
+            ExitLock(_locks[i]);
         }
     }
 
