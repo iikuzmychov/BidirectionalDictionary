@@ -479,6 +479,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     /// <exception cref="ArgumentNullException">The key, the factory, or the value produced by the factory is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The key is not present and the produced value already belongs to a different key.</exception>
     public TValue GetOrAdd<TArg>(TKey key, Func<TKey, TArg, TValue> valueFactory, TArg factoryArgument)
+#if NET9_0_OR_GREATER
+        where TArg : allows ref struct
+#endif
     {
         ThrowIfNull(key, nameof(key));
 
@@ -542,6 +545,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         Func<TKey, TArg, TValue> addValueFactory,
         Func<TKey, TValue, TArg, TValue> updateValueFactory,
         TArg factoryArgument)
+#if NET9_0_OR_GREATER
+        where TArg : allows ref struct
+#endif
     {
         ThrowIfNull(key, nameof(key));
 
@@ -706,6 +712,9 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         Func<TKey, TArg, TValue> addValueFactory,
         Func<TKey, TValue, TArg, TValue> updateValueFactory,
         TArg factoryArgument)
+#if NET9_0_OR_GREATER
+        where TArg : allows ref struct
+#endif
     {
         while (true)
         {
