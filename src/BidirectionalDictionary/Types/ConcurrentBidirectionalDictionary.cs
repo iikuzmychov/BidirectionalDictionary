@@ -11,7 +11,9 @@ namespace System.Collections.Concurrent;
 /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
 /// <remarks>
 /// All public and protected members of <see cref="ConcurrentBidirectionalDictionary{TKey,TValue}"/> are thread-safe and may be used
-/// concurrently from multiple threads.
+/// concurrently from multiple threads. Each individual operation is atomic. Concurrent readers may briefly observe a state
+/// where the forward and inverse views are not yet synchronized with each other during an in-progress write; once any write
+/// completes, both views are consistent.
 /// </remarks>
 [DebuggerDisplay("Count = {Count}")]
 public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>, IDictionary
@@ -20,8 +22,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 {
     private const int DefaultCapacity = 31;
 
-    private readonly ConcurrentBidirectionalDictionaryShard<TKey, TValue>[] _forwardShards;
-    private readonly ConcurrentBidirectionalDictionaryShard<TValue, TKey>[] _reverseShards;
+    private readonly ConcurrentDictionary<TKey, TValue> _forward;
+    private readonly ConcurrentDictionary<TValue, TKey> _reverse;
+    private readonly IEqualityComparer<TKey> _keyComparer;
+    private readonly IEqualityComparer<TValue> _valueComparer;
+    private readonly object[] _keyLocks;
+    private readonly object[] _valueLocks;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConcurrentBidirectionalDictionary{TKey,TValue}"/> class that is empty,
@@ -119,19 +125,31 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             throw new ArgumentOutOfRangeException(nameof(capacity));
         }
 
-        int capacityPerShard = GetCapacityPerShard(capacity, concurrencyLevel);
-        _forwardShards = CreateShards<TKey, TValue>(concurrencyLevel, capacityPerShard, keyComparer, orderOffset: 0);
-        _reverseShards = CreateShards<TValue, TKey>(concurrencyLevel, capacityPerShard, valueComparer, orderOffset: concurrencyLevel);
-        Inverse = new ConcurrentBidirectionalDictionary<TValue, TKey>(_reverseShards, _forwardShards, this);
+        int totalCapacity = GetCapacityPerShard(capacity, concurrencyLevel) * concurrencyLevel;
+        _keyComparer = keyComparer ?? EqualityComparer<TKey>.Default;
+        _valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
+        _forward = new ConcurrentDictionary<TKey, TValue>(concurrencyLevel, totalCapacity, _keyComparer);
+        _reverse = new ConcurrentDictionary<TValue, TKey>(concurrencyLevel, totalCapacity, _valueComparer);
+        _keyLocks = CreateLocks(concurrencyLevel);
+        _valueLocks = CreateLocks(concurrencyLevel);
+        Inverse = new ConcurrentBidirectionalDictionary<TValue, TKey>(_reverse, _forward, _valueComparer, _keyComparer, _valueLocks, _keyLocks, this);
     }
 
     private ConcurrentBidirectionalDictionary(
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue>[] forwardShards,
-        ConcurrentBidirectionalDictionaryShard<TValue, TKey>[] reverseShards,
+        ConcurrentDictionary<TKey, TValue> forward,
+        ConcurrentDictionary<TValue, TKey> reverse,
+        IEqualityComparer<TKey> keyComparer,
+        IEqualityComparer<TValue> valueComparer,
+        object[] keyLocks,
+        object[] valueLocks,
         ConcurrentBidirectionalDictionary<TValue, TKey> inverse)
     {
-        _forwardShards = forwardShards;
-        _reverseShards = reverseShards;
+        _forward = forward;
+        _reverse = reverse;
+        _keyComparer = keyComparer;
+        _valueComparer = valueComparer;
+        _keyLocks = keyLocks;
+        _valueLocks = valueLocks;
         Inverse = inverse;
     }
 
@@ -143,61 +161,16 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     IReadOnlyBidirectionalDictionary<TValue, TKey> IReadOnlyBidirectionalDictionary<TKey, TValue>.Inverse => Inverse;
 
     /// <summary>Gets the equality comparer that is used to determine equality of keys.</summary>
-    public IEqualityComparer<TKey> KeyComparer => _forwardShards[0].Dictionary.Comparer;
+    public IEqualityComparer<TKey> KeyComparer => _keyComparer;
 
     /// <summary>Gets the equality comparer that is used to determine equality of values.</summary>
-    public IEqualityComparer<TValue> ValueComparer => _reverseShards[0].Dictionary.Comparer;
+    public IEqualityComparer<TValue> ValueComparer => _valueComparer;
 
     /// <summary>Gets the number of key/value pairs contained in the dictionary.</summary>
-    public int Count
-    {
-        get
-        {
-            EnterAllForwardShardLocks();
-            try
-            {
-                int count = 0;
-                foreach (ConcurrentBidirectionalDictionaryShard<TKey, TValue> shard in _forwardShards)
-                {
-                    checked
-                    {
-                        count += shard.Dictionary.Count;
-                    }
-                }
-
-                return count;
-            }
-            finally
-            {
-                ExitAllForwardShardLocks();
-            }
-        }
-    }
+    public int Count => _forward.Count;
 
     /// <summary>Gets a value that indicates whether the dictionary is empty.</summary>
-    public bool IsEmpty
-    {
-        get
-        {
-            EnterAllForwardShardLocks();
-            try
-            {
-                foreach (ConcurrentBidirectionalDictionaryShard<TKey, TValue> shard in _forwardShards)
-                {
-                    if (shard.Dictionary.Count != 0)
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-            finally
-            {
-                ExitAllForwardShardLocks();
-            }
-        }
-    }
+    public bool IsEmpty => _forward.IsEmpty;
 
     /// <summary>Gets a snapshot containing all keys in the dictionary.</summary>
     public ICollection<TKey> Keys => GetKeys();
@@ -212,16 +185,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         get
         {
             ThrowIfNull(key, nameof(key));
-            ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(key);
-            Monitor.Enter(keyShard.Lock);
-            try
-            {
-                return keyShard.Dictionary[key];
-            }
-            finally
-            {
-                Monitor.Exit(keyShard.Lock);
-            }
+            return _forward[key];
         }
         set
         {
@@ -287,16 +251,16 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ThrowIfNull(key, nameof(key));
         ThrowIfNull(value, nameof(value));
 
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(key);
-        ConcurrentBidirectionalDictionaryShard<TValue, TKey> valueShard = GetReverseShard(value);
-        EnterShardLocks(keyShard, valueShard, out ConcurrentBidirectionalDictionaryShardBase first, out ConcurrentBidirectionalDictionaryShardBase? second);
+        int keyIndex = GetKeyLockIndex(key);
+        int valueIndex = GetValueLockIndex(value);
+        EnterPairLock(keyIndex, valueIndex);
         try
         {
-            return TryAddNoLock(keyShard, valueShard, key, value);
+            return TryAddNoLock(key, value);
         }
         finally
         {
-            ExitShardLocks(first, second);
+            ExitPairLock(keyIndex, valueIndex);
         }
     }
 
@@ -304,66 +268,55 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     public bool ContainsKey(TKey key)
     {
         ThrowIfNull(key, nameof(key));
-
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(key);
-        Monitor.Enter(keyShard.Lock);
-        try
-        {
-            return keyShard.Dictionary.ContainsKey(key);
-        }
-        finally
-        {
-            Monitor.Exit(keyShard.Lock);
-        }
+        return _forward.ContainsKey(key);
     }
 
     /// <summary>Determines whether the dictionary contains the specified value.</summary>
-    public bool ContainsValue(TValue value) => ContainsValueCore(value);
+    public bool ContainsValue(TValue value)
+    {
+        ThrowIfNull(value, nameof(value));
+        return _reverse.ContainsKey(value);
+    }
 
     /// <summary>Attempts to remove and return the value with the specified key from the dictionary.</summary>
     public bool TryRemove(TKey key, out TValue value)
     {
         ThrowIfNull(key, nameof(key));
 
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(key);
+        int keyIndex = GetKeyLockIndex(key);
+
         while (true)
         {
-            Monitor.Enter(keyShard.Lock);
-            try
+            if (!_forward.TryGetValue(key, out value!))
             {
-                if (!keyShard.Dictionary.TryGetValue(key, out value!))
-                {
-                    value = default!;
-                    return false;
-                }
-            }
-            finally
-            {
-                Monitor.Exit(keyShard.Lock);
+                value = default!;
+                return false;
             }
 
-            ConcurrentBidirectionalDictionaryShard<TValue, TKey> valueShard = GetReverseShard(value);
-            EnterShardLocks(keyShard, valueShard, out ConcurrentBidirectionalDictionaryShardBase first, out ConcurrentBidirectionalDictionaryShardBase? second);
+            TValue candidate = value;
+            int valueIndex = GetValueLockIndex(candidate);
+            EnterPairLock(keyIndex, valueIndex);
             try
             {
-                if (!keyShard.Dictionary.TryGetValue(key, out TValue? current))
+                if (!_forward.TryGetValue(key, out TValue? current))
                 {
                     value = default!;
                     return false;
                 }
 
-                if (!ValueComparer.Equals(current, value))
+                if (!ValueComparer.Equals(current, candidate))
                 {
                     continue;
                 }
 
-                keyShard.Dictionary.Remove(key);
-                valueShard.Dictionary.Remove(value);
+                _forward.TryRemove(key, out _);
+                _reverse.TryRemove(candidate, out _);
+                value = candidate;
                 return true;
             }
             finally
             {
-                ExitShardLocks(first, second);
+                ExitPairLock(keyIndex, valueIndex);
             }
         }
     }
@@ -374,23 +327,23 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ThrowIfNull(item.Key, nameof(item));
         ThrowIfNull(item.Value, nameof(item));
 
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(item.Key);
-        ConcurrentBidirectionalDictionaryShard<TValue, TKey> valueShard = GetReverseShard(item.Value);
-        EnterShardLocks(keyShard, valueShard, out ConcurrentBidirectionalDictionaryShardBase first, out ConcurrentBidirectionalDictionaryShardBase? second);
+        int keyIndex = GetKeyLockIndex(item.Key);
+        int valueIndex = GetValueLockIndex(item.Value);
+        EnterPairLock(keyIndex, valueIndex);
         try
         {
-            if (!keyShard.Dictionary.TryGetValue(item.Key, out TValue? existing) || !ValueComparer.Equals(existing, item.Value))
+            if (!_forward.TryGetValue(item.Key, out TValue? existing) || !ValueComparer.Equals(existing, item.Value))
             {
                 return false;
             }
 
-            keyShard.Dictionary.Remove(item.Key);
-            valueShard.Dictionary.Remove(item.Value);
+            _forward.TryRemove(item.Key, out _);
+            _reverse.TryRemove(item.Value, out _);
             return true;
         }
         finally
         {
-            ExitShardLocks(first, second);
+            ExitPairLock(keyIndex, valueIndex);
         }
     }
 
@@ -398,17 +351,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     public bool TryGetValue(TKey key, out TValue value)
     {
         ThrowIfNull(key, nameof(key));
-
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(key);
-        Monitor.Enter(keyShard.Lock);
-        try
-        {
-            return keyShard.Dictionary.TryGetValue(key, out value!);
-        }
-        finally
-        {
-            Monitor.Exit(keyShard.Lock);
-        }
+        return _forward.TryGetValue(key, out value!);
     }
 
     /// <summary>Updates the value associated with a key if the existing value is equal to the comparison value.</summary>
@@ -418,69 +361,26 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ThrowIfNull(newValue, nameof(newValue));
         ThrowIfNull(comparisonValue, nameof(comparisonValue));
 
-        return TryUpdateCore(key, newValue, comparisonValue, throwOnDuplicateValue: false, out _);
+        return TryUpdateCore(key, newValue, comparisonValue, throwOnDuplicateValue: false);
     }
 
     /// <summary>Removes all keys and values from the dictionary.</summary>
     public void Clear()
     {
-        EnterAllShardLocks();
+        EnterAllLocks();
         try
         {
-            foreach (ConcurrentBidirectionalDictionaryShard<TKey, TValue> shard in _forwardShards)
-            {
-                shard.Dictionary.Clear();
-            }
-
-            foreach (ConcurrentBidirectionalDictionaryShard<TValue, TKey> shard in _reverseShards)
-            {
-                shard.Dictionary.Clear();
-            }
+            _forward.Clear();
+            _reverse.Clear();
         }
         finally
         {
-            ExitAllShardLocks();
+            ExitAllLocks();
         }
     }
 
     /// <summary>Copies the key and value pairs stored in the dictionary to a new array.</summary>
-    public KeyValuePair<TKey, TValue>[] ToArray()
-    {
-        EnterAllForwardShardLocks();
-        try
-        {
-            int count = 0;
-            foreach (ConcurrentBidirectionalDictionaryShard<TKey, TValue> shard in _forwardShards)
-            {
-                checked
-                {
-                    count += shard.Dictionary.Count;
-                }
-            }
-
-            if (count == 0)
-            {
-                return Array.Empty<KeyValuePair<TKey, TValue>>();
-            }
-
-            var array = new KeyValuePair<TKey, TValue>[count];
-            int index = 0;
-            foreach (ConcurrentBidirectionalDictionaryShard<TKey, TValue> shard in _forwardShards)
-            {
-                foreach (KeyValuePair<TKey, TValue> pair in shard.Dictionary)
-                {
-                    array[index] = pair;
-                    index++;
-                }
-            }
-
-            return array;
-        }
-        finally
-        {
-            ExitAllForwardShardLocks();
-        }
-    }
+    public KeyValuePair<TKey, TValue>[] ToArray() => _forward.ToArray();
 
     /// <summary>Adds a key/value pair to the dictionary if the key does not already exist.</summary>
     public TValue GetOrAdd(TKey key, TValue value)
@@ -488,26 +388,27 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ThrowIfNull(key, nameof(key));
         ThrowIfNull(value, nameof(value));
 
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(key);
-        ConcurrentBidirectionalDictionaryShard<TValue, TKey> valueShard = GetReverseShard(value);
-        EnterShardLocks(keyShard, valueShard, out ConcurrentBidirectionalDictionaryShardBase first, out ConcurrentBidirectionalDictionaryShardBase? second);
+        int keyIndex = GetKeyLockIndex(key);
+        int valueIndex = GetValueLockIndex(value);
+        EnterPairLock(keyIndex, valueIndex);
         try
         {
-            if (keyShard.Dictionary.TryGetValue(key, out TValue? existing))
+            if (_forward.TryGetValue(key, out TValue? existing))
             {
                 return existing;
             }
 
-            if (!TryAddNoLock(keyShard, valueShard, key, value))
+            if (!_reverse.TryAdd(value, key))
             {
                 throw new ArgumentException("The value already exists.", nameof(value));
             }
 
+            _forward.TryAdd(key, value);
             return value;
         }
         finally
         {
-            ExitShardLocks(first, second);
+            ExitPairLock(keyIndex, valueIndex);
         }
     }
 
@@ -559,7 +460,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             throw new ArgumentNullException(nameof(updateValueFactory));
         }
 
-        return AddOrUpdateCore(key, _ => addValue, (k, oldValue) => updateValueFactory(k, oldValue));
+        return AddOrUpdateCore(key, addValue, updateValueFactory);
     }
 
     /// <summary>Adds or updates a key/value pair in the dictionary by using the specified functions.</summary>
@@ -595,10 +496,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
             throw new ArgumentNullException(nameof(updateValueFactory));
         }
 
-        return AddOrUpdateCore(
-            key,
-            k => addValueFactory(k, factoryArgument),
-            (k, oldValue) => updateValueFactory(k, oldValue, factoryArgument));
+        return AddOrUpdateCore(key, addValueFactory, updateValueFactory, factoryArgument);
     }
 
     private void AddCore(TKey key, TValue value)
@@ -627,16 +525,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         ThrowIfNull(item.Key, nameof(item));
         ThrowIfNull(item.Value, nameof(item));
 
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(item.Key);
-        Monitor.Enter(keyShard.Lock);
-        try
-        {
-            return keyShard.Dictionary.TryGetValue(item.Key, out TValue? value) && ValueComparer.Equals(value, item.Value);
-        }
-        finally
-        {
-            Monitor.Exit(keyShard.Lock);
-        }
+        return _forward.TryGetValue(item.Key, out TValue? value) && ValueComparer.Equals(value, item.Value);
     }
 
     bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) => TryRemove(item);
@@ -756,12 +645,12 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     {
         while (true)
         {
-            if (TryGetExisting(key, out TValue? oldValue))
+            if (_forward.TryGetValue(key, out TValue? oldValue))
             {
                 TValue newValue = updateValueFactory(key, oldValue);
                 ThrowIfNull(newValue, nameof(updateValueFactory));
 
-                if (TryUpdateCore(key, newValue, oldValue, throwOnDuplicateValue: true, out _))
+                if (TryUpdateCore(key, newValue, oldValue, throwOnDuplicateValue: true))
                 {
                     return newValue;
                 }
@@ -775,79 +664,92 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         }
     }
 
-    private bool TryGetExisting(TKey key, out TValue value)
+    private TValue AddOrUpdateCore(TKey key, TValue addValue, Func<TKey, TValue, TValue> updateValueFactory)
     {
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(key);
-        Monitor.Enter(keyShard.Lock);
-        try
+        while (true)
         {
-            return keyShard.Dictionary.TryGetValue(key, out value!);
-        }
-        finally
-        {
-            Monitor.Exit(keyShard.Lock);
+            if (_forward.TryGetValue(key, out TValue? oldValue))
+            {
+                TValue newValue = updateValueFactory(key, oldValue);
+                ThrowIfNull(newValue, nameof(updateValueFactory));
+
+                if (TryUpdateCore(key, newValue, oldValue, throwOnDuplicateValue: true))
+                {
+                    return newValue;
+                }
+
+                continue;
+            }
+
+            return GetOrAdd(key, addValue);
         }
     }
 
-    private bool ContainsValueCore(TValue value)
-    {
-        ThrowIfNull(value, nameof(value));
-
-        ConcurrentBidirectionalDictionaryShard<TValue, TKey> valueShard = GetReverseShard(value);
-        Monitor.Enter(valueShard.Lock);
-        try
-        {
-            return valueShard.Dictionary.ContainsKey(value);
-        }
-        finally
-        {
-            Monitor.Exit(valueShard.Lock);
-        }
-    }
-
-    private bool TryAddNoLock(
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard,
-        ConcurrentBidirectionalDictionaryShard<TValue, TKey> valueShard,
+    private TValue AddOrUpdateCore<TArg>(
         TKey key,
-        TValue value)
+        Func<TKey, TArg, TValue> addValueFactory,
+        Func<TKey, TValue, TArg, TValue> updateValueFactory,
+        TArg factoryArgument)
     {
-        if (keyShard.Dictionary.ContainsKey(key) || valueShard.Dictionary.ContainsKey(value))
+        while (true)
+        {
+            if (_forward.TryGetValue(key, out TValue? oldValue))
+            {
+                TValue newValue = updateValueFactory(key, oldValue, factoryArgument);
+                ThrowIfNull(newValue, nameof(updateValueFactory));
+
+                if (TryUpdateCore(key, newValue, oldValue, throwOnDuplicateValue: true))
+                {
+                    return newValue;
+                }
+
+                continue;
+            }
+
+            TValue addValue = addValueFactory(key, factoryArgument);
+            ThrowIfNull(addValue, nameof(addValueFactory));
+            return GetOrAdd(key, addValue);
+        }
+    }
+
+    private bool TryGetExisting(TKey key, out TValue value) => _forward.TryGetValue(key, out value!);
+
+    private bool TryAddNoLock(TKey key, TValue value)
+    {
+        if (!_forward.TryAdd(key, value))
         {
             return false;
         }
 
-        keyShard.Dictionary.Add(key, value);
-        valueShard.Dictionary.Add(value, key);
+        if (!_reverse.TryAdd(value, key))
+        {
+            _forward.TryRemove(key, out _);
+            return false;
+        }
+
         return true;
     }
 
     private void SetItem(TKey key, TValue value)
     {
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(key);
+        int keyIndex = GetKeyLockIndex(key);
 
         while (true)
         {
-            Monitor.Enter(keyShard.Lock);
-            try
+            if (_forward.TryGetValue(key, out TValue? oldValue))
             {
-                if (!keyShard.Dictionary.TryGetValue(key, out TValue? oldValue))
-                {
-                    break;
-                }
-
                 if (ValueComparer.Equals(oldValue, value))
                 {
                     return;
                 }
 
-                ConcurrentBidirectionalDictionaryShard<TValue, TKey> oldValueShard = GetReverseShard(oldValue);
-                ConcurrentBidirectionalDictionaryShard<TValue, TKey> newValueShard = GetReverseShard(value);
+                int oldValueIndex = GetValueLockIndex(oldValue);
+                int newValueIndex = GetValueLockIndex(value);
 
-                Monitor.Exit(keyShard.Lock);
-                EnterShardLocks(keyShard, oldValueShard, newValueShard, out ConcurrentBidirectionalDictionaryShardBase first, out ConcurrentBidirectionalDictionaryShardBase? second, out ConcurrentBidirectionalDictionaryShardBase? third);
+                EnterTripleLock(keyIndex, oldValueIndex, newValueIndex, out int firstValueIndex, out int secondValueIndex);
                 try
                 {
-                    if (!keyShard.Dictionary.TryGetValue(key, out TValue? current))
+                    if (!_forward.TryGetValue(key, out TValue? current))
                     {
                         continue;
                     }
@@ -857,62 +759,62 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                         continue;
                     }
 
-                    if (newValueShard.Dictionary.TryGetValue(value, out TKey? owner) && !KeyComparer.Equals(owner, key))
+                    if (_reverse.TryGetValue(value, out TKey? owner) && !KeyComparer.Equals(owner, key))
                     {
                         throw new ArgumentException("The value already exists.", nameof(value));
                     }
 
-                    keyShard.Dictionary[key] = value;
-                    oldValueShard.Dictionary.Remove(oldValue);
-                    newValueShard.Dictionary.Add(value, key);
+                    _forward[key] = value;
+                    _reverse.TryRemove(oldValue, out _);
+                    _reverse[value] = key;
                     return;
                 }
                 finally
                 {
-                    ExitShardLocks(first, second, third);
-                    Monitor.Enter(keyShard.Lock);
+                    ExitTripleLock(keyIndex, firstValueIndex, secondValueIndex);
                 }
+            }
+
+            int addValueIndex = GetValueLockIndex(value);
+            EnterPairLock(keyIndex, addValueIndex);
+            try
+            {
+                if (!_forward.TryAdd(key, value))
+                {
+                    continue;
+                }
+
+                if (!_reverse.TryAdd(value, key))
+                {
+                    _forward.TryRemove(key, out _);
+                    throw new ArgumentException("The value already exists.", nameof(value));
+                }
+
+                return;
             }
             finally
             {
-                Monitor.Exit(keyShard.Lock);
+                ExitPairLock(keyIndex, addValueIndex);
             }
-        }
-
-        ConcurrentBidirectionalDictionaryShard<TValue, TKey> valueShard = GetReverseShard(value);
-        EnterShardLocks(keyShard, valueShard, out ConcurrentBidirectionalDictionaryShardBase addFirst, out ConcurrentBidirectionalDictionaryShardBase? addSecond);
-        try
-        {
-            if (!TryAddNoLock(keyShard, valueShard, key, value))
-            {
-                throw new ArgumentException("The value already exists.", nameof(value));
-            }
-        }
-        finally
-        {
-            ExitShardLocks(addFirst, addSecond);
         }
     }
 
-    private bool TryUpdateCore(TKey key, TValue newValue, TValue comparisonValue, bool throwOnDuplicateValue, out bool retry)
+    private bool TryUpdateCore(TKey key, TValue newValue, TValue comparisonValue, bool throwOnDuplicateValue)
     {
-        retry = false;
+        int keyIndex = GetKeyLockIndex(key);
+        int comparisonValueIndex = GetValueLockIndex(comparisonValue);
+        int newValueIndex = GetValueLockIndex(newValue);
 
-        ConcurrentBidirectionalDictionaryShard<TKey, TValue> keyShard = GetForwardShard(key);
-        ConcurrentBidirectionalDictionaryShard<TValue, TKey> comparisonValueShard = GetReverseShard(comparisonValue);
-        ConcurrentBidirectionalDictionaryShard<TValue, TKey> newValueShard = GetReverseShard(newValue);
-
-        EnterShardLocks(keyShard, comparisonValueShard, newValueShard, out ConcurrentBidirectionalDictionaryShardBase first, out ConcurrentBidirectionalDictionaryShardBase? second, out ConcurrentBidirectionalDictionaryShardBase? third);
+        EnterTripleLock(keyIndex, comparisonValueIndex, newValueIndex, out int firstValueIndex, out int secondValueIndex);
         try
         {
-            if (!keyShard.Dictionary.TryGetValue(key, out TValue? current))
+            if (!_forward.TryGetValue(key, out TValue? current))
             {
                 return false;
             }
 
             if (!ValueComparer.Equals(current, comparisonValue))
             {
-                retry = true;
                 return false;
             }
 
@@ -921,14 +823,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 return true;
             }
 
-            ConcurrentBidirectionalDictionaryShard<TValue, TKey> currentValueShard = GetReverseShard(current);
-            if (!ReferenceEquals(currentValueShard, comparisonValueShard))
-            {
-                retry = true;
-                return false;
-            }
-
-            if (newValueShard.Dictionary.TryGetValue(newValue, out TKey? owner) && !KeyComparer.Equals(owner, key))
+            if (_reverse.TryGetValue(newValue, out TKey? owner) && !KeyComparer.Equals(owner, key))
             {
                 if (throwOnDuplicateValue)
                 {
@@ -938,64 +833,20 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 return false;
             }
 
-            keyShard.Dictionary[key] = newValue;
-            currentValueShard.Dictionary.Remove(current);
-            newValueShard.Dictionary.Add(newValue, key);
+            _forward[key] = newValue;
+            _reverse.TryRemove(current, out _);
+            _reverse[newValue] = key;
             return true;
         }
         finally
         {
-            ExitShardLocks(first, second, third);
+            ExitTripleLock(keyIndex, firstValueIndex, secondValueIndex);
         }
     }
 
-    private ReadOnlyCollection<TKey> GetKeys()
-    {
-        EnterAllForwardShardLocks();
-        try
-        {
-            var keys = new TKey[CountNoLocks()];
-            int index = 0;
-            foreach (ConcurrentBidirectionalDictionaryShard<TKey, TValue> shard in _forwardShards)
-            {
-                foreach (TKey key in shard.Dictionary.Keys)
-                {
-                    keys[index] = key;
-                    index++;
-                }
-            }
+    private ReadOnlyCollection<TKey> GetKeys() => new(_forward.Keys.ToArray());
 
-            return new ReadOnlyCollection<TKey>(keys);
-        }
-        finally
-        {
-            ExitAllForwardShardLocks();
-        }
-    }
-
-    private ReadOnlyCollection<TValue> GetValues()
-    {
-        EnterAllForwardShardLocks();
-        try
-        {
-            var values = new TValue[CountNoLocks()];
-            int index = 0;
-            foreach (ConcurrentBidirectionalDictionaryShard<TKey, TValue> shard in _forwardShards)
-            {
-                foreach (TValue value in shard.Dictionary.Values)
-                {
-                    values[index] = value;
-                    index++;
-                }
-            }
-
-            return new ReadOnlyCollection<TValue>(values);
-        }
-        finally
-        {
-            ExitAllForwardShardLocks();
-        }
-    }
+    private ReadOnlyCollection<TValue> GetValues() => new(_forward.Values.ToArray());
 
     private static int GetCapacityFromCollection(IEnumerable<KeyValuePair<TKey, TValue>> collection)
     {
@@ -1017,25 +868,83 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         return DefaultCapacity;
     }
 
-    private int CountNoLocks()
-    {
-        int count = 0;
-        foreach (ConcurrentBidirectionalDictionaryShard<TKey, TValue> shard in _forwardShards)
-        {
-            checked
-            {
-                count += shard.Dictionary.Count;
-            }
-        }
+    private int GetKeyLockIndex(TKey key) =>
+        (int)((uint)KeyComparer.GetHashCode(key) % (uint)_keyLocks.Length);
 
-        return count;
+    private int GetValueLockIndex(TValue value) =>
+        (int)((uint)ValueComparer.GetHashCode(value) % (uint)_valueLocks.Length);
+
+    private void EnterPairLock(int keyIndex, int valueIndex)
+    {
+        Monitor.Enter(_keyLocks[keyIndex]);
+        Monitor.Enter(_valueLocks[valueIndex]);
     }
 
-    private ConcurrentBidirectionalDictionaryShard<TKey, TValue> GetForwardShard(TKey key) =>
-        _forwardShards[GetShardIndex(key, KeyComparer, _forwardShards.Length)];
+    private void ExitPairLock(int keyIndex, int valueIndex)
+    {
+        Monitor.Exit(_valueLocks[valueIndex]);
+        Monitor.Exit(_keyLocks[keyIndex]);
+    }
 
-    private ConcurrentBidirectionalDictionaryShard<TValue, TKey> GetReverseShard(TValue value) =>
-        _reverseShards[GetShardIndex(value, ValueComparer, _reverseShards.Length)];
+    private void EnterTripleLock(int keyIndex, int valueIndexA, int valueIndexB, out int firstValueIndex, out int secondValueIndex)
+    {
+        Monitor.Enter(_keyLocks[keyIndex]);
+        if (valueIndexA == valueIndexB)
+        {
+            Monitor.Enter(_valueLocks[valueIndexA]);
+            firstValueIndex = valueIndexA;
+            secondValueIndex = -1;
+            return;
+        }
+
+        if (valueIndexA < valueIndexB)
+        {
+            firstValueIndex = valueIndexA;
+            secondValueIndex = valueIndexB;
+        }
+        else
+        {
+            firstValueIndex = valueIndexB;
+            secondValueIndex = valueIndexA;
+        }
+
+        Monitor.Enter(_valueLocks[firstValueIndex]);
+        Monitor.Enter(_valueLocks[secondValueIndex]);
+    }
+
+    private void ExitTripleLock(int keyIndex, int firstValueIndex, int secondValueIndex)
+    {
+        if (secondValueIndex >= 0)
+        {
+            Monitor.Exit(_valueLocks[secondValueIndex]);
+        }
+        Monitor.Exit(_valueLocks[firstValueIndex]);
+        Monitor.Exit(_keyLocks[keyIndex]);
+    }
+
+    private void EnterAllLocks()
+    {
+        for (int i = 0; i < _keyLocks.Length; i++)
+        {
+            Monitor.Enter(_keyLocks[i]);
+        }
+        for (int i = 0; i < _valueLocks.Length; i++)
+        {
+            Monitor.Enter(_valueLocks[i]);
+        }
+    }
+
+    private void ExitAllLocks()
+    {
+        for (int i = _valueLocks.Length - 1; i >= 0; i--)
+        {
+            Monitor.Exit(_valueLocks[i]);
+        }
+        for (int i = _keyLocks.Length - 1; i >= 0; i--)
+        {
+            Monitor.Exit(_keyLocks[i]);
+        }
+    }
 
     private static int DefaultConcurrencyLevel => Environment.ProcessorCount;
 
@@ -1064,27 +973,14 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         return Math.Max(1, (int)(((long)capacity + shardCount - 1) / shardCount));
     }
 
-    private static ConcurrentBidirectionalDictionaryShard<TShardKey, TShardValue>[] CreateShards<TShardKey, TShardValue>(
-        int count,
-        int capacityPerShard,
-        IEqualityComparer<TShardKey>? comparer,
-        int orderOffset)
-        where TShardKey : notnull
-        where TShardValue : notnull
+    private static object[] CreateLocks(int count)
     {
-        var shards = new ConcurrentBidirectionalDictionaryShard<TShardKey, TShardValue>[count];
-        for (int i = 0; i < shards.Length; i++)
+        var locks = new object[count];
+        for (int i = 0; i < count; i++)
         {
-            shards[i] = new ConcurrentBidirectionalDictionaryShard<TShardKey, TShardValue>(orderOffset + i, capacityPerShard, comparer);
+            locks[i] = new object();
         }
-
-        return shards;
-    }
-
-    private static int GetShardIndex<TShardKey>(TShardKey key, IEqualityComparer<TShardKey> comparer, int shardCount)
-        where TShardKey : notnull
-    {
-        return (int)((uint)comparer.GetHashCode(key) % (uint)shardCount);
+        return locks;
     }
 
     private static void ThrowIfNull<T>(T value, string paramName)
@@ -1108,152 +1004,6 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         {
             throw new ArgumentException($"The value is not of type {typeof(TValue)}.", nameof(value));
         }
-    }
-
-    private void EnterAllForwardShardLocks()
-    {
-        foreach (ConcurrentBidirectionalDictionaryShard<TKey, TValue> shard in _forwardShards)
-        {
-            Monitor.Enter(shard.Lock);
-        }
-    }
-
-    private void ExitAllForwardShardLocks()
-    {
-        for (int i = _forwardShards.Length - 1; i >= 0; i--)
-        {
-            Monitor.Exit(_forwardShards[i].Lock);
-        }
-    }
-
-    private void EnterAllShardLocks()
-    {
-        int forwardIndex = 0;
-        int reverseIndex = 0;
-
-        while (forwardIndex < _forwardShards.Length || reverseIndex < _reverseShards.Length)
-        {
-            if (reverseIndex >= _reverseShards.Length ||
-                (forwardIndex < _forwardShards.Length && _forwardShards[forwardIndex].LockOrder < _reverseShards[reverseIndex].LockOrder))
-            {
-                Monitor.Enter(_forwardShards[forwardIndex].Lock);
-                forwardIndex++;
-                continue;
-            }
-
-            Monitor.Enter(_reverseShards[reverseIndex].Lock);
-            reverseIndex++;
-        }
-    }
-
-    private void ExitAllShardLocks()
-    {
-        int forwardIndex = _forwardShards.Length - 1;
-        int reverseIndex = _reverseShards.Length - 1;
-
-        while (forwardIndex >= 0 || reverseIndex >= 0)
-        {
-            if (reverseIndex < 0 ||
-                (forwardIndex >= 0 && _forwardShards[forwardIndex].LockOrder > _reverseShards[reverseIndex].LockOrder))
-            {
-                Monitor.Exit(_forwardShards[forwardIndex].Lock);
-                forwardIndex--;
-                continue;
-            }
-
-            Monitor.Exit(_reverseShards[reverseIndex].Lock);
-            reverseIndex--;
-        }
-    }
-
-    private static void EnterShardLocks(ConcurrentBidirectionalDictionaryShardBase a, ConcurrentBidirectionalDictionaryShardBase b, out ConcurrentBidirectionalDictionaryShardBase first, out ConcurrentBidirectionalDictionaryShardBase? second)
-    {
-        if (ReferenceEquals(a, b))
-        {
-            first = a;
-            second = null;
-            Monitor.Enter(first.Lock);
-            return;
-        }
-
-        if (a.LockOrder < b.LockOrder)
-        {
-            first = a;
-            second = b;
-        }
-        else
-        {
-            first = b;
-            second = a;
-        }
-
-        Monitor.Enter(first.Lock);
-        Monitor.Enter(second.Lock);
-    }
-
-    private static void ExitShardLocks(ConcurrentBidirectionalDictionaryShardBase first, ConcurrentBidirectionalDictionaryShardBase? second)
-    {
-        if (second is not null)
-        {
-            Monitor.Exit(second.Lock);
-        }
-
-        Monitor.Exit(first.Lock);
-    }
-
-    private static void EnterShardLocks(ConcurrentBidirectionalDictionaryShardBase a, ConcurrentBidirectionalDictionaryShardBase b, ConcurrentBidirectionalDictionaryShardBase c, out ConcurrentBidirectionalDictionaryShardBase first, out ConcurrentBidirectionalDictionaryShardBase? second, out ConcurrentBidirectionalDictionaryShardBase? third)
-    {
-        if (ReferenceEquals(a, b))
-        {
-            EnterShardLocks(a, c, out first, out second);
-            third = null;
-            return;
-        }
-
-        if (ReferenceEquals(a, c) || ReferenceEquals(b, c))
-        {
-            EnterShardLocks(a, b, out first, out second);
-            third = null;
-            return;
-        }
-
-        first = a;
-        second = b;
-        third = c;
-
-        if (first.LockOrder > second.LockOrder)
-        {
-            (first, second) = (second, first);
-        }
-
-        if (second.LockOrder > third.LockOrder)
-        {
-            (second, third) = (third, second);
-        }
-
-        if (first.LockOrder > second.LockOrder)
-        {
-            (first, second) = (second, first);
-        }
-
-        Monitor.Enter(first.Lock);
-        Monitor.Enter(second.Lock);
-        Monitor.Enter(third.Lock);
-    }
-
-    private static void ExitShardLocks(ConcurrentBidirectionalDictionaryShardBase first, ConcurrentBidirectionalDictionaryShardBase? second, ConcurrentBidirectionalDictionaryShardBase? third)
-    {
-        if (third is not null)
-        {
-            Monitor.Exit(third.Lock);
-        }
-
-        if (second is not null)
-        {
-            Monitor.Exit(second.Lock);
-        }
-
-        Monitor.Exit(first.Lock);
     }
 
     /// <summary>Provides an enumerator implementation for the dictionary.</summary>
@@ -1323,30 +1073,3 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         public void Reset() => _enumerator.Reset();
     }
 }
-
-internal abstract class ConcurrentBidirectionalDictionaryShardBase
-{
-    protected ConcurrentBidirectionalDictionaryShardBase(int lockOrder)
-    {
-        LockOrder = lockOrder;
-    }
-
-    internal object Lock { get; } = new();
-
-    internal int LockOrder { get; }
-}
-
-internal sealed class ConcurrentBidirectionalDictionaryShard<TKey, TValue> : ConcurrentBidirectionalDictionaryShardBase
-    where TKey : notnull
-    where TValue : notnull
-{
-    internal ConcurrentBidirectionalDictionaryShard(int lockOrder, int capacity, IEqualityComparer<TKey>? comparer)
-        : base(lockOrder)
-    {
-        Dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
-    }
-
-    internal Dictionary<TKey, TValue> Dictionary { get; }
-}
-
-
