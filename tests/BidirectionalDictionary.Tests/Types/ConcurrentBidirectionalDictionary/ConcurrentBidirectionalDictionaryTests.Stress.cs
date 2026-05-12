@@ -21,9 +21,11 @@ public partial class ConcurrentBidirectionalDictionaryTests
         for (int t = 0; t < writerThreadCount; t++)
         {
             int seed = t;
+            bool useInverse = t % 2 == 1;
             writerTasks[t] = Task.Run(() =>
             {
                 var random = new Random(seed);
+                var view = useInverse ? dictionary.Inverse : dictionary;
                 for (int i = 0; i < operationsPerWriter; i++)
                 {
                     int key = random.Next(keySpace);
@@ -31,16 +33,16 @@ public partial class ConcurrentBidirectionalDictionaryTests
                     switch (random.Next(4))
                     {
                         case 0:
-                            dictionary.TryAdd(key, value);
+                            view.TryAdd(key, value);
                             break;
                         case 1:
-                            dictionary.TryRemove(key, out _);
+                            view.TryRemove(key, out _);
                             break;
                         case 2:
-                            try { dictionary[key] = value; } catch (ArgumentException) { }
+                            try { view[key] = value; } catch (ArgumentException) { }
                             break;
                         case 3:
-                            try { dictionary.AddOrUpdate(key, value, (_, _) => value); } catch (ArgumentException) { }
+                            try { view.AddOrUpdate(key, value, (_, _) => value); } catch (ArgumentException) { }
                             break;
                     }
                 }
