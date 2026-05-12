@@ -1,13 +1,13 @@
 using System.Collections.Concurrent;
 
-#pragma warning disable xUnit1051 // long-running stress test runs on its own threads; CancellationToken not needed
+#pragma warning disable xUnit1051 // worker Task.Run loops are bounded by the test logic; CancellationToken not needed
 
 namespace BidirectionalDictionary.Tests.Types.ConcurrentBidirectionalDictionary;
 
 public partial class ConcurrentBidirectionalDictionaryTests
 {
     [Fact]
-    public void Stress_LockFreeReadsDoNotCrashUnderConcurrentWrites_AndFinalStateIsConsistent()
+    public async Task Stress_LockFreeReadsDoNotCrashUnderConcurrentWrites_AndFinalStateIsConsistent()
     {
         const int writerThreadCount = 4;
         const int readerThreadCount = 4;
@@ -82,9 +82,9 @@ public partial class ConcurrentBidirectionalDictionaryTests
             });
         }
 
-        Task.WaitAll(writerTasks);
+        await Task.WhenAll(writerTasks);
         stopReaders.Set();
-        Task.WaitAll(readerTasks);
+        await Task.WhenAll(readerTasks);
 
         Assert.Empty(readerExceptions);
 

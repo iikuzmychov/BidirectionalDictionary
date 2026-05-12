@@ -24,14 +24,17 @@ public partial class ConcurrentBidirectionalDictionaryEnumeratorTests
         ]);
 
         using var enumerator = concurrentBidirectionalDictionary.GetEnumerator();
+        var observed = new List<KeyValuePair<char, int>>();
 
-        Assert.True(enumerator.MoveNext());
-        Assert.Equal(new KeyValuePair<char, int>('a', 0), enumerator.Current);
-
-        Assert.True(enumerator.MoveNext());
-        Assert.Equal(new KeyValuePair<char, int>('b', 1), enumerator.Current);
+        while (enumerator.MoveNext())
+        {
+            observed.Add(enumerator.Current);
+        }
 
         Assert.False(enumerator.MoveNext());
+        Assert.Equal(2, observed.Count);
+        Assert.Contains(new KeyValuePair<char, int>('a', 0), observed);
+        Assert.Contains(new KeyValuePair<char, int>('b', 1), observed);
     }
 
     [Fact]
