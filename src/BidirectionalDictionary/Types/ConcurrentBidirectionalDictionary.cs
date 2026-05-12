@@ -20,6 +20,7 @@ namespace System.Collections.Concurrent;
 /// but a reader can briefly observe a state where the forward and inverse views are not yet synchronized with each other during an
 /// in-progress write. Once any write completes, both views are consistent.
 /// </remarks>
+[DebuggerTypeProxy(typeof(DictionaryDebugView<,>))]
 [DebuggerDisplay("Count = {Count}")]
 public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TKey, TValue>, IReadOnlyBidirectionalDictionary<TKey, TValue>, IDictionary
     where TKey : notnull
