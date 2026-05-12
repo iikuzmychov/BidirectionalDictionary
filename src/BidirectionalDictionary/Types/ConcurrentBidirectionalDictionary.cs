@@ -411,12 +411,13 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 return existing;
             }
 
-            if (!_reverse.TryAdd(value, key))
+            if (_reverse.ContainsKey(value))
             {
                 throw new ArgumentException("The value already exists.", nameof(value));
             }
 
-            _forward.TryAdd(key, value);
+            _forward[key] = value;
+            _reverse[value] = key;
             return value;
         }
         finally
@@ -747,17 +748,13 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 
     private bool TryAddNoLock(TKey key, TValue value)
     {
-        if (!_forward.TryAdd(key, value))
+        if (_forward.ContainsKey(key) || _reverse.ContainsKey(value))
         {
             return false;
         }
 
-        if (!_reverse.TryAdd(value, key))
-        {
-            _forward.TryRemove(key, out _);
-            return false;
-        }
-
+        _forward[key] = value;
+        _reverse[value] = key;
         return true;
     }
 
@@ -812,17 +809,18 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
 
             try
             {
-                if (!_forward.TryAdd(key, value))
+                if (_forward.ContainsKey(key))
                 {
                     continue;
                 }
 
-                if (!_reverse.TryAdd(value, key))
+                if (_reverse.ContainsKey(value))
                 {
-                    _forward.TryRemove(key, out _);
                     throw new ArgumentException("The value already exists.", nameof(value));
                 }
 
+                _forward[key] = value;
+                _reverse[value] = key;
                 return;
             }
             finally
