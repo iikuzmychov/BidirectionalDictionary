@@ -60,6 +60,9 @@ Console.WriteLine(countryCapitals["Italy"]); // "Rome"
 Console.WriteLine(countryCapitals.Inverse["Rome"]); // "Italy"
 ```
 
+The concurrent implementation keeps read operations lock-free. Write operations
+use fine-grained key/value stripe locks instead of locking the whole dictionary.
+
 ## Interfaces
 
 To support abstraction-friendly code, the package exposes two interfaces:
