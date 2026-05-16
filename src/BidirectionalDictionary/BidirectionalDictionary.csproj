@@ -5,17 +5,19 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	<WarningsNotAsErrors>CS1591</WarningsNotAsErrors>	
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <Authors>Ihor Kuzmychov (iikuzmychov)</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Title>BidirectionalDictionary</Title>
-    <Description>Proper implementation of a bidirectional dictionary, also known as "BiMap" or "Two-way dictionary", for .NET Standard 2.0 and higher.</Description>
+    <Description>Proper implementation of a bidirectional dictionary, also known as "bidirectional map" or "two-way dictionary", for .NET Standard 2.0 and higher.</Description>
     <PackageProjectUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iiKuzmychov/BidirectionalDictionary</RepositoryUrl>
-    <PackageTags>bidirectional-dictionary;bidirectional;bidirect;bidictionary;bimap;two-way;dictionary;map;readonly;read-only</PackageTags>
-    <Version>3.1.1</Version>
+    <PackageTags>bidirectional-dictionary;bidirectional;bidirect;bidictionary;bimap;two-way;dictionary;map;readonly;read-only;concurrent;thread-safe</PackageTags>
+    <Version>3.1.2</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

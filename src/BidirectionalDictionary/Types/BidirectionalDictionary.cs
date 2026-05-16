@@ -22,7 +22,8 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     #region Properties
 
     /// <summary>
-    /// Gets the inverse <see cref="BidirectionalDictionary{TKey,TValue}"/>.
+    /// Gets the inverse <see cref="BidirectionalDictionary{TKey,TValue}"/> 
+    /// in which the roles of keys and values are swapped.
     /// </summary>
     public BidirectionalDictionary<TValue, TKey> Inverse { get; }
 
@@ -565,6 +566,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <returns>An object that acts as a read-only wrapper around the current <see cref="BidirectionalDictionary{TKey, TValue}"></see>.</returns>
     public ReadOnlyBidirectionalDictionary<TKey, TValue> AsReadOnly() => new(this);
 
+    /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
     public Enumerator GetEnumerator() => new(_dictionary);
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_dictionary).GetEnumerator();
@@ -616,6 +618,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
     #endregion
 
+    /// <summary/>
     public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
     {
         private readonly Dictionary<TKey, TValue> _dictionary;
@@ -627,16 +630,21 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
             _enumerator = dictionary.GetEnumerator();
         }
 
+        /// <inheritdoc cref="IEnumerator{T}.Current" />
         public KeyValuePair<TKey, TValue> Current => _enumerator.Current;
 
+        /// <inheritdoc cref="IDictionaryEnumerator.Entry" />
         public readonly DictionaryEntry Entry => ((IDictionaryEnumerator)_enumerator).Entry;
 
+        /// <inheritdoc cref="IDictionaryEnumerator.Key" />
         public readonly object Key => ((IDictionaryEnumerator)_enumerator).Key;
 
+        /// <inheritdoc cref="IDictionaryEnumerator.Value" />
         public readonly object? Value => ((IDictionaryEnumerator)_enumerator).Value;
 
         readonly object IEnumerator.Current => ((IEnumerator)_enumerator).Current;
 
+        /// <inheritdoc cref="IEnumerator.MoveNext" />
         public bool MoveNext() => _enumerator.MoveNext();
 
         void IEnumerator.Reset()
@@ -645,20 +653,24 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
             _enumerator = _dictionary.GetEnumerator();
         }
 
+        /// <inheritdoc cref="IDisposable.Dispose" />
         public void Dispose() => _enumerator.Dispose();
     }
 
+    /// <summary/>
     [DebuggerTypeProxy(typeof(DictionaryKeyCollectionDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
     public sealed class KeyCollection : ICollection<TKey>, ICollection, IReadOnlyCollection<TKey>
     {
         private readonly BidirectionalDictionary<TKey, TValue> _bidirectionalDictionary;
 
+        /// <summary/>
         public KeyCollection(BidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
         {
             _bidirectionalDictionary = bidirectionalDictionary ?? throw new ArgumentNullException(nameof(bidirectionalDictionary));
         }
 
+        /// <inheritdoc cref="ICollection{T}.Count" />
         public int Count => _bidirectionalDictionary.Count;
 
         bool ICollection<TKey>.IsReadOnly => true;
@@ -667,10 +679,13 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
         object ICollection.SyncRoot => ((ICollection)_bidirectionalDictionary._dictionary.Keys).SyncRoot;
 
+        /// <inheritdoc cref="ICollection{T}.Contains" />
         public bool Contains(TKey item) => _bidirectionalDictionary.ContainsKey(item);
 
+        /// <inheritdoc cref="ICollection{T}.CopyTo" />
         public void CopyTo(TKey[] array, int arrayIndex) => _bidirectionalDictionary._dictionary.Keys.CopyTo(array, arrayIndex);
 
+        /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
         public Enumerator GetEnumerator() => new(_bidirectionalDictionary);
 
         void ICollection<TKey>.Add(TKey item) => throw new NotSupportedException();
@@ -685,6 +700,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+        /// <summary/>
         public struct Enumerator : IEnumerator<TKey>
         {
             private readonly BidirectionalDictionary<TKey, TValue> _bidirectionalDictionary;
@@ -696,10 +712,12 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
                 _enumerator = bidirectionalDictionary._dictionary.Keys.GetEnumerator();
             }
 
+            /// <inheritdoc cref="IEnumerator{T}.Current" />
             public readonly TKey Current => _enumerator.Current;
 
             readonly object IEnumerator.Current => ((IEnumerator)_enumerator).Current;
 
+            /// <inheritdoc cref="IEnumerator.MoveNext" />
             public bool MoveNext() => _enumerator.MoveNext();
 
             void IEnumerator.Reset()
@@ -708,21 +726,25 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
                 _enumerator = _bidirectionalDictionary._dictionary.Keys.GetEnumerator();
             }
 
+            /// <inheritdoc cref="IDisposable.Dispose" />
             public void Dispose() => _enumerator.Dispose();
         }
     }
 
+    /// <summary/>
     [DebuggerTypeProxy(typeof(DictionaryValueCollectionDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
     public sealed class ValueCollection : ICollection<TValue>, ICollection, IReadOnlyCollection<TValue>
     {
         private readonly BidirectionalDictionary<TKey, TValue> _bidirectionalDictionary;
 
+        /// <summary/>
         public ValueCollection(BidirectionalDictionary<TKey, TValue> bidirectionalDictionary)
         {
             _bidirectionalDictionary = bidirectionalDictionary ?? throw new ArgumentNullException(nameof(bidirectionalDictionary));
         }
 
+        /// <inheritdoc cref="ICollection{T}.Count" />
         public int Count => _bidirectionalDictionary.Count;
 
         bool ICollection<TValue>.IsReadOnly => true;
@@ -731,10 +753,13 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
         object ICollection.SyncRoot => ((ICollection)_bidirectionalDictionary._dictionary.Values).SyncRoot;
 
+        /// <inheritdoc cref="ICollection{T}.Contains" />
         public bool Contains(TValue item) => _bidirectionalDictionary.ContainsValue(item);
 
+        /// <inheritdoc cref="ICollection{T}.CopyTo" />
         public void CopyTo(TValue[] array, int arrayIndex) => _bidirectionalDictionary._dictionary.Values.CopyTo(array, arrayIndex);
 
+        /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
         public Enumerator GetEnumerator() => new(_bidirectionalDictionary);
 
         void ICollection<TValue>.Add(TValue item) => throw new NotSupportedException();
@@ -749,6 +774,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+        /// <summary/>
         public struct Enumerator : IEnumerator<TValue>
         {
             private readonly BidirectionalDictionary<TKey, TValue> _bidirectionalDictionary;
@@ -760,10 +786,12 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
                 _enumerator = bidirectionalDictionary._dictionary.Values.GetEnumerator();
             }
 
+            /// <inheritdoc cref="IEnumerator{T}.Current" />
             public TValue Current => _enumerator.Current;
 
             readonly object IEnumerator.Current => ((IEnumerator)_enumerator).Current;
 
+            /// <inheritdoc cref="IEnumerator.MoveNext" />
             public bool MoveNext() => _enumerator.MoveNext();
 
             void IEnumerator.Reset()
@@ -772,6 +800,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
                 _enumerator = _bidirectionalDictionary._dictionary.Values.GetEnumerator();
             }
 
+            /// <inheritdoc cref="IDisposable.Dispose" />
             public void Dispose() => _enumerator.Dispose();
         }
     }

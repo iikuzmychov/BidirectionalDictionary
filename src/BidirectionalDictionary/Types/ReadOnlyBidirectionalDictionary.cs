@@ -21,7 +21,8 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     #region Properties
 
     /// <summary>
-    /// Gets the inverse <see cref="ReadOnlyBidirectionalDictionary{TKey,TValue}"/>.
+    /// Gets the inverse <see cref="ReadOnlyBidirectionalDictionary{TKey,TValue}"/> 
+    /// in which the roles of keys and values are swapped.
     /// </summary>
     public ReadOnlyBidirectionalDictionary<TValue, TKey> Inverse { get; }
 
@@ -177,6 +178,7 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
     /// an element with the specified key; otherwise, <see langword="false"/>.</returns>
     public bool TryGetValue(TKey key, out TValue value) => _bidirectionalDictionary.TryGetValue(key, out value!);
 
+    /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _bidirectionalDictionary.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -318,6 +320,7 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
         public void Reset() => _enumerator.Reset();
     }
 
+    /// <summary />
     [DebuggerTypeProxy(typeof(DictionaryKeyCollectionDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
     public sealed class KeyCollection : ICollection<TKey>, ICollection, IReadOnlyCollection<TKey>
@@ -329,6 +332,7 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
 
+        /// <inheritdoc cref="ICollection{TKey}.Count" />
         public int Count => _collection.Count;
 
         bool ICollection<TKey>.IsReadOnly => true;
@@ -337,10 +341,13 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
 
         object ICollection.SyncRoot => _collection is ICollection collection ? collection.SyncRoot : this;
 
+        /// <inheritdoc cref="ICollection{TKey}.Contains(TKey)" />
         public bool Contains(TKey item) => _collection.Contains(item);
 
+        /// <inheritdoc cref="ICollection{TKey}.CopyTo(TKey[], int)" />
         public void CopyTo(TKey[] array, int arrayIndex) => _collection.CopyTo(array, arrayIndex);
 
+        /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
         public IEnumerator<TKey> GetEnumerator() => _collection.GetEnumerator();
 
         void ICollection<TKey>.Add(TKey item) => throw new NotSupportedException();
@@ -354,6 +361,7 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_collection).GetEnumerator();
     }
 
+    /// <summary />
     [DebuggerTypeProxy(typeof(DictionaryValueCollectionDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
     public sealed class ValueCollection : ICollection<TValue>, ICollection, IReadOnlyCollection<TValue>
@@ -365,6 +373,7 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
 
+        /// <inheritdoc cref="ICollection{TValue}.Count" />
         public int Count => _collection.Count;
 
         bool ICollection<TValue>.IsReadOnly => true;
@@ -373,10 +382,13 @@ public class ReadOnlyBidirectionalDictionary<TKey, TValue> : IBidirectionalDicti
 
         object ICollection.SyncRoot => _collection is ICollection collection ? collection.SyncRoot : this;
 
+        /// <inheritdoc cref="ICollection{TValue}.Contains(TValue)" />
         public bool Contains(TValue item) => _collection.Contains(item);
 
+        /// <inheritdoc cref="ICollection{TValue}.CopyTo(TValue[], int)" />
         public void CopyTo(TValue[] array, int arrayIndex) => _collection.CopyTo(array, arrayIndex);
 
+        /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
         public IEnumerator<TValue> GetEnumerator() => _collection.GetEnumerator();
 
         void ICollection<TValue>.Add(TValue item) => throw new NotSupportedException();
