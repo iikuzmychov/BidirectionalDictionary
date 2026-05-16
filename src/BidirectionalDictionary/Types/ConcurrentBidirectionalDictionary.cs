@@ -270,6 +270,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     /// or replaces the existing value for the key. Because values are unique, setting a value that already
     /// belongs to a different key is rejected.
     /// </value>
+    /// <remarks>The stored key instance is preserved; the inverse view mirrors it.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="key"/> is a null reference (Nothing in Visual Basic), or the value being set is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The value being set already belongs to a different key.</exception>
     /// <exception cref="KeyNotFoundException">The property is retrieved and <paramref name="key"/> does not exist in the dictionary.</exception>
@@ -525,6 +526,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
     /// (returning <see langword="false"/>) when the key is missing, the existing value does not match
     /// <paramref name="comparisonValue"/>, or <paramref name="newValue"/> already belongs to a different key.
     /// </returns>
+    /// <remarks>The stored key instance is preserved; the inverse view mirrors it.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="key"/>, <paramref name="newValue"/>, or <paramref name="comparisonValue"/> is a null reference (Nothing in Visual Basic).</exception>
     public bool TryUpdate(TKey key, TValue newValue, TValue comparisonValue)
     {
@@ -978,11 +980,6 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
         {
             if (_forward.TryGetValue(key, out var oldValue))
             {
-                if (ValueComparer.Equals(oldValue, value))
-                {
-                    return;
-                }
-
                 var oldValueIndex = GetValueLockIndex(oldValue);
                 var newValueIndex = GetValueLockIndex(value);
 
@@ -1000,14 +997,15 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                         continue;
                     }
 
-                    if (_reverse.ContainsKey(value))
+                    if (!ValueComparer.Equals(oldValue, value) && _reverse.ContainsKey(value))
                     {
                         throw new ArgumentException("The value already exists.", nameof(value));
                     }
 
+                    var storedKey = _reverse[oldValue];
                     _forward[key] = value;
                     _reverse.TryRemove(oldValue, out _);
-                    _reverse[value] = key;
+                    _reverse[value] = storedKey;
 
                     return;
                 }
@@ -1064,12 +1062,7 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 return false;
             }
 
-            if (ValueComparer.Equals(current, newValue))
-            {
-                return true;
-            }
-
-            if (_reverse.ContainsKey(newValue))
+            if (!ValueComparer.Equals(current, newValue) && _reverse.ContainsKey(newValue))
             {
                 if (throwOnDuplicateValue)
                 {
@@ -1079,9 +1072,10 @@ public class ConcurrentBidirectionalDictionary<TKey, TValue> : IBidirectionalDic
                 return false;
             }
 
+            var storedKey = _reverse[current];
             _forward[key] = newValue;
             _reverse.TryRemove(current, out _);
-            _reverse[newValue] = key;
+            _reverse[newValue] = storedKey;
 
             return true;
         }

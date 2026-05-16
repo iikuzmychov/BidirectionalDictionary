@@ -58,6 +58,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
     /// <param name="key">The key of the value to get or set.</param>
     /// <returns>The value associated with the specified key. If the specified key is not found, a get operation throws a
     /// <see cref="KeyNotFoundException"/>, and a set operation creates a new element with the specified key.</returns>
+    /// <remarks>The stored key instance is preserved; the inverse view mirrors it.</remarks>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="KeyNotFoundException"></exception>
@@ -78,22 +79,15 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
 
             if (TryGetValue(key, out var oldValue))
             {
-                if (ValueComparer.Equals(oldValue, value))
-                {
-                    return;
-                }
-
-                if (ContainsValue(value))
+                if (!ValueComparer.Equals(oldValue, value) && ContainsValue(value))
                 {
                     throw new ArgumentException("The value already exists.", nameof(value));
                 }
-                else
-                {
-                    _dictionary[key] = value;
 
-                    Inverse._dictionary.Remove(oldValue);
-                    Inverse._dictionary.Add(value, key);
-                }
+                var storedKey = Inverse._dictionary[oldValue];
+                _dictionary[key] = value;
+                Inverse._dictionary.Remove(oldValue);
+                Inverse._dictionary.Add(value, storedKey);
             }
             else
             {
@@ -585,9 +579,12 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
             throw new ArgumentNullException(nameof(item));
         }
 
-        return
-            ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Remove(item) &&
-            Inverse._dictionary.Remove(item.Value);
+        if (!_dictionary.TryGetValue(item.Key, out var value) || !ValueComparer.Equals(value, item.Value))
+        {
+            return false;
+        }
+
+        return Remove(item.Key);
     }
 
     bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
@@ -602,7 +599,7 @@ public class BidirectionalDictionary<TKey, TValue> : IBidirectionalDictionary<TK
             throw new ArgumentNullException(nameof(item));
         }
 
-        return ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Contains(item);
+        return _dictionary.TryGetValue(item.Key, out var value) && ValueComparer.Equals(value, item.Value);
     }
 
     void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) =>

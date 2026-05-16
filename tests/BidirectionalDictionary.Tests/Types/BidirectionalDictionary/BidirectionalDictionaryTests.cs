@@ -713,5 +713,40 @@ public partial class BidirectionalDictionaryTests
         Assert.Single(bidirectionalDictionary.Inverse.Values, 'a');
     }
 
+    [Fact]
+    public void Indexer_Set_ExistingKeyAndComparerEqualValue_ReplacesStoredValueInstance()
+    {
+        var bidirectionalDictionary = new BidirectionalDictionary<string, string>(
+            keyComparer: null,
+            valueComparer: StringComparer.OrdinalIgnoreCase)
+        {
+            { "x", "abc" },
+        };
+
+        bidirectionalDictionary["x"] = "ABC";
+
+        Assert.Equal("ABC", bidirectionalDictionary["x"]);
+        Assert.Single(bidirectionalDictionary.Values, "ABC");
+        Assert.Single(bidirectionalDictionary.Inverse.Keys, "ABC");
+        Assert.Equal("x", bidirectionalDictionary.Inverse["ABC"]);
+    }
+
+    [Fact]
+    public void Indexer_Set_ComparerEqualKey_PreservesStoredKeyInstanceOnBothSides()
+    {
+        var storedKey = "x";
+        var bidirectionalDictionary = new BidirectionalDictionary<string, int>(
+            keyComparer: StringComparer.OrdinalIgnoreCase,
+            valueComparer: null)
+        {
+            { storedKey, 1 },
+        };
+
+        bidirectionalDictionary["X"] = 2;
+
+        Assert.Same(storedKey, bidirectionalDictionary.Keys.Single());
+        Assert.Same(storedKey, bidirectionalDictionary.Inverse[2]);
+    }
+
     #endregion
 }
