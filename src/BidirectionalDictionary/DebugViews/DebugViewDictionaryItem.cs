@@ -3,9 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace System.Collections.Generic;
 
-/// <summary>
-/// Defines a key/value pair for displaying an item of a dictionary by a debugger.
-/// </summary>
 [DebuggerDisplay("{Value}", Name = "[{Key}]")]
 [ExcludeFromCodeCoverage]
 internal readonly struct DebugViewDictionaryItem<TKey, TValue>

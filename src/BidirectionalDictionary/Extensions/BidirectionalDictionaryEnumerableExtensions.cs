@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace System.Linq;
 
+/// <summary/>
 public static class BidirectionalDictionaryEnumerableExtensions
 {
     /// <summary>
@@ -102,6 +103,7 @@ public static class BidirectionalDictionaryEnumerableExtensions
             valueComparer);
     }
 
+    /// <summary/>
     public static BidirectionalDictionary<TKey, TSource> ToBidirectionalDictionary<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector)
@@ -111,6 +113,7 @@ public static class BidirectionalDictionaryEnumerableExtensions
         return ToBidirectionalDictionary(source, keySelector, null, null);
     }
 
+    /// <summary/>
     public static BidirectionalDictionary<TKey, TSource> ToBidirectionalDictionary<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -182,6 +185,7 @@ public static class BidirectionalDictionaryEnumerableExtensions
     }
 #endif
 
+    /// <summary/>
     public static BidirectionalDictionary<TKey, TElement> ToBidirectionalDictionary<TSource, TKey, TElement>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -192,6 +196,7 @@ public static class BidirectionalDictionaryEnumerableExtensions
         return ToBidirectionalDictionary(source, keySelector, elementSelector, keyComparer: null, valueComparer: null);
     }
 
+    /// <summary/>
     public static BidirectionalDictionary<TKey, TElement> ToBidirectionalDictionary<TSource, TKey, TElement>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
