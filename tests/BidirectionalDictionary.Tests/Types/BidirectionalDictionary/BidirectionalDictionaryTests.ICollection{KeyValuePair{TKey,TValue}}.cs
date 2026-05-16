@@ -202,4 +202,82 @@ public partial class BidirectionalDictionaryTests
 
         Assert.Throws<ArgumentNullException>(() => ((ICollection<KeyValuePair<char?, int?>>)bidirectionalDictionary).Contains(pair));
     }
+
+    [Fact]
+    public void ICollectionKeyValuePairTKeyTValue_Contains_CustomValueComparer_UsesValueComparer()
+    {
+        var bidirectionalDictionary = new BidirectionalDictionary<string, string>(
+            keyComparer: null,
+            valueComparer: StringComparer.OrdinalIgnoreCase)
+        {
+            { "x", "abc" },
+        };
+
+        var collection = (ICollection<KeyValuePair<string, string>>)bidirectionalDictionary;
+
+        Assert.True(collection.Contains(new KeyValuePair<string, string>("x", "ABC")));
+        Assert.True(collection.Contains(new KeyValuePair<string, string>("x", "abc")));
+        Assert.False(collection.Contains(new KeyValuePair<string, string>("x", "xyz")));
+    }
+
+    [Fact]
+    public void ICollectionKeyValuePairTKeyTValue_Contains_ReferenceEqualityValueComparer_DistinguishesInstances()
+    {
+        var s1 = new string("abc".ToCharArray());
+        var s2 = new string("abc".ToCharArray());
+
+        var bidirectionalDictionary = new BidirectionalDictionary<int, string>(
+            keyComparer: null,
+            valueComparer: ReferenceEqualityComparer.Instance)
+        {
+            { 1, s1 },
+        };
+
+        var collection = (ICollection<KeyValuePair<int, string>>)bidirectionalDictionary;
+
+        Assert.True(collection.Contains(new KeyValuePair<int, string>(1, s1)));
+        Assert.False(collection.Contains(new KeyValuePair<int, string>(1, s2)));
+    }
+
+    [Fact]
+    public void ICollectionKeyValuePairTKeyTValue_Remove_ReferenceEqualityValueComparer_DoesNotDesyncMaps()
+    {
+        var s1 = new string("abc".ToCharArray());
+        var s2 = new string("abc".ToCharArray());
+
+        var bidirectionalDictionary = new BidirectionalDictionary<int, string>(
+            keyComparer: null,
+            valueComparer: ReferenceEqualityComparer.Instance)
+        {
+            { 1, s1 },
+        };
+
+        var collection = (ICollection<KeyValuePair<int, string>>)bidirectionalDictionary;
+
+        var isRemoved = collection.Remove(new KeyValuePair<int, string>(1, s2));
+
+        Assert.False(isRemoved);
+        Assert.Single(bidirectionalDictionary, new KeyValuePair<int, string>(1, s1));
+        Assert.Single(bidirectionalDictionary.Inverse.Keys, s1);
+        Assert.Equal(bidirectionalDictionary.Count, bidirectionalDictionary.Inverse.Count);
+    }
+
+    [Fact]
+    public void ICollectionKeyValuePairTKeyTValue_Remove_CustomValueComparerMatchingPair_RemovesFromBothMaps()
+    {
+        var bidirectionalDictionary = new BidirectionalDictionary<string, string>(
+            keyComparer: null,
+            valueComparer: StringComparer.OrdinalIgnoreCase)
+        {
+            { "x", "abc" },
+        };
+
+        var collection = (ICollection<KeyValuePair<string, string>>)bidirectionalDictionary;
+
+        var isRemoved = collection.Remove(new KeyValuePair<string, string>("x", "ABC"));
+
+        Assert.True(isRemoved);
+        Assert.Empty(bidirectionalDictionary);
+        Assert.Empty(bidirectionalDictionary.Inverse);
+    }
 }

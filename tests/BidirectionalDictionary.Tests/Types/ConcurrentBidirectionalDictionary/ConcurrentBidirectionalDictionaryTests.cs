@@ -343,6 +343,69 @@ public partial class ConcurrentBidirectionalDictionaryTests
     }
 
     [Fact]
+    public void TryUpdate_ComparerEqualNewValue_ReplacesStoredValueInstance()
+    {
+        var dictionary = new ConcurrentBidirectionalDictionary<string, string>(
+            keyComparer: null,
+            valueComparer: StringComparer.OrdinalIgnoreCase);
+        dictionary.TryAdd("x", "abc");
+
+        var updated = dictionary.TryUpdate("x", "ABC", "abc");
+
+        Assert.True(updated);
+        Assert.Equal("ABC", dictionary["x"]);
+        Assert.Single(dictionary.Values, "ABC");
+        Assert.Single(dictionary.Inverse.Keys, "ABC");
+    }
+
+    [Fact]
+    public void AddOrUpdate_FactoryProducesComparerEqualValue_ReplacesStoredValueInstance()
+    {
+        var dictionary = new ConcurrentBidirectionalDictionary<string, string>(
+            keyComparer: null,
+            valueComparer: StringComparer.OrdinalIgnoreCase);
+        dictionary.TryAdd("x", "abc");
+
+        var result = dictionary.AddOrUpdate("x", "ignored", (_, _) => "ABC");
+
+        Assert.Equal("ABC", result);
+        Assert.Equal("ABC", dictionary["x"]);
+        Assert.Single(dictionary.Values, "ABC");
+        Assert.Single(dictionary.Inverse.Keys, "ABC");
+    }
+
+    [Fact]
+    public void Indexer_Set_ComparerEqualKey_PreservesStoredKeyInstanceOnBothSides()
+    {
+        var storedKey = "x";
+        var dictionary = new ConcurrentBidirectionalDictionary<string, int>(
+            keyComparer: StringComparer.OrdinalIgnoreCase,
+            valueComparer: null);
+        dictionary.TryAdd(storedKey, 1);
+
+        dictionary["X"] = 2;
+
+        Assert.Same(storedKey, dictionary.Keys.Single());
+        Assert.Same(storedKey, dictionary.Inverse[2]);
+    }
+
+    [Fact]
+    public void TryUpdate_ComparerEqualKey_PreservesStoredKeyInstanceOnBothSides()
+    {
+        var storedKey = "x";
+        var dictionary = new ConcurrentBidirectionalDictionary<string, int>(
+            keyComparer: StringComparer.OrdinalIgnoreCase,
+            valueComparer: null);
+        dictionary.TryAdd(storedKey, 1);
+
+        var updated = dictionary.TryUpdate("X", 2, 1);
+
+        Assert.True(updated);
+        Assert.Same(storedKey, dictionary.Keys.Single());
+        Assert.Same(storedKey, dictionary.Inverse[2]);
+    }
+
+    [Fact]
     public void Clear_FilledDictionary_RemovesBothDirections()
     {
         var dictionary = new ConcurrentBidirectionalDictionary<char, int>();
@@ -423,6 +486,22 @@ public partial class ConcurrentBidirectionalDictionaryTests
 
         Assert.Single(dictionary, new KeyValuePair<char, int>('a', 1));
         Assert.Single(dictionary.Inverse, new KeyValuePair<int, char>(1, 'a'));
+    }
+
+    [Fact]
+    public void Indexer_SetExistingKeyAndComparerEqualValue_ReplacesStoredValueInstance()
+    {
+        var dictionary = new ConcurrentBidirectionalDictionary<string, string>(
+            keyComparer: null,
+            valueComparer: StringComparer.OrdinalIgnoreCase);
+        dictionary.TryAdd("x", "abc");
+
+        dictionary["x"] = "ABC";
+
+        Assert.Equal("ABC", dictionary["x"]);
+        Assert.Equal("x", dictionary.Inverse["ABC"]);
+        Assert.Single(dictionary.Values, "ABC");
+        Assert.Single(dictionary.Inverse.Keys, "ABC");
     }
 
     [Fact]
