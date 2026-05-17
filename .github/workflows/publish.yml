@@ -42,7 +42,7 @@ jobs:
         run: dotnet pack src/BidirectionalDictionary/BidirectionalDictionary.csproj --configuration Release --no-build --output ${{ github.workspace }}/artifacts
 
       - name: Publish package to NuGet
-        run: dotnet nuget push "${{ github.workspace }}/artifacts/*.*nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "${{ github.workspace }}/artifacts/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
 
       - name: Create GitHub release
         env:
